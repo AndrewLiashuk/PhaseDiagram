@@ -36,4 +36,26 @@ class MainActivity : AppCompatActivity() {
             else -> super.onOptionsItemSelected(item)
         }
     }
+
+    /*
+    private PlotModel CreatePlot(PhaseDiagramCalc newDiagram)
+        {
+            PlotModel plotModel = new PlotModel { Title = "Phase diagram" };
+            var series1 = new LineSeries { Title = "Liquid" }; // MarkerType = MarkerType.Circle
+            var series2 = new LineSeries { Title = "Solid" };
+
+            foreach (var point in newDiagram.Points)
+            {
+                series1.Points.Add(new DataPoint(point.Solid, point.Temperature));
+                series2.Points.Add(new DataPoint(point.Liquid, point.Temperature));
+            }
+
+            plotModel.Series.Add(series1);
+            plotModel.Series.Add(series2);
+            plotModel.Axes.Add(new LinearAxis { Position = AxisPosition.Bottom, Title = "%" });
+            plotModel.Axes.Add(new LinearAxis { Position = AxisPosition.Left, Title = "T" });// Minimum = 1700, Maximum = 1900
+
+            return plotModel;
+        }
+     */
 }
