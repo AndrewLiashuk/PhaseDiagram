@@ -98,7 +98,7 @@ class PhaseDiagramCalc(
     }
 
 
-    class PhasePoint(var solid: Double, var liquid: Double, temperature: Double) {
+    class PhasePoint(var solid: Double, var liquid: Double, var temperature: Double) {
         init {
             solid *= 100 //transfer into percentages
             liquid *= 100
