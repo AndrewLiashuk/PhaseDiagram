@@ -1,18 +1,21 @@
 package com.andrew.liashuk.phasediagram
 
-import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import com.andrew.liashuk.phasediagram.logic.CustomMarkerView
+import com.andrew.liashuk.phasediagram.ui.CustomMarkerView
 import com.andrew.liashuk.phasediagram.logic.PhaseDiagramCalc
+import com.crashlytics.android.Crashlytics
+import com.github.mikephil.charting.charts.Chart
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
-import com.google.android.material.snackbar.Snackbar
+import io.fabric.sdk.android.Fabric
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_main.*
 
@@ -23,18 +26,16 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
 
-        setupPlot()
+        Fabric.with(this, Crashlytics())
 
-        fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show()
-        }
+        setupPlot()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.menu_main, menu)
         return true
     }
+
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
@@ -60,6 +61,7 @@ class MainActivity : AppCompatActivity() {
         // if disabled, scaling can be done on x- and y-axis separately
         chart.setPinchZoom(true)
 
+        chart.animateX(1000)
 
         val mv = CustomMarkerView(this, R.layout.custom_marker_view)
         mv.chartView = chart // For bounds control
@@ -71,9 +73,6 @@ class MainActivity : AppCompatActivity() {
         xl.axisMaximum = 100f
 
         setData()
-
-        // redraw
-        chart.invalidate()
     }
 
 
@@ -104,31 +103,26 @@ class MainActivity : AppCompatActivity() {
         solidDataSet.lineWidth = 1.5f
         solidDataSet.setDrawCircles(false)
 
-        // create a data object with the data sets
-        val data = LineData(liquidDataSet, solidDataSet)
-        chart.data = data
+        chart.data = LineData(liquidDataSet, solidDataSet)
+        chart.invalidate()
+    }
+
+
+    private fun saveToGallery(chart: Chart<*>, name: String) {
+        if (chart.saveToGallery(name + "_" + System.currentTimeMillis(), 70))
+            Toast.makeText(
+                applicationContext, "Saving SUCCESSFUL!",
+                Toast.LENGTH_SHORT
+            ).show()
+        else
+            Toast.makeText(applicationContext, "Saving FAILED!", Toast.LENGTH_SHORT)
+                .show()
     }
 
 
     /*
-    private PlotModel CreatePlot(PhaseDiagramCalc newDiagram)
-        {
-            PlotModel plotModel = new PlotModel { Title = "Phase diagram" };
-            var series1 = new LineSeries { Title = "Liquid" }; // MarkerType = MarkerType.Circle
-            var series2 = new LineSeries { Title = "Solid" };
-
-            foreach (var point in newDiagram.Points)
-            {
-                series1.Points.Add(new DataPoint(point.Solid, point.Temperature));
-                series2.Points.Add(new DataPoint(point.Liquid, point.Temperature));
-            }
-
-            plotModel.Series.Add(series1);
-            plotModel.Series.Add(series2);
-            plotModel.Axes.Add(new LinearAxis { Position = AxisPosition.Bottom, Title = "%" });
-            plotModel.Axes.Add(new LinearAxis { Position = AxisPosition.Left, Title = "T" });// Minimum = 1700, Maximum = 1900
-
-            return plotModel;
-        }
+            Crashlytics.getInstance().core.setString("Key", "val")
+            Crashlytics.getInstance().core.log(Log.ERROR, "TestTag", "Log2")
+            Crashlytics.getInstance().core.logException(Exception("New error"))
      */
 }

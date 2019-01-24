@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "928006525539",
+    "firebase_url": "https://phasediagram-b5a20.firebaseio.com",
+    "project_id": "phasediagram-b5a20",
+    "storage_bucket": "phasediagram-b5a20.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:928006525539:android:9d6b8de7b059c09c",
+        "android_client_info": {
+          "package_name": "com.andrew.liashuk.phasediagram"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "928006525539-fbm3bkgte9gvkdru7kq7cu6nunh7g93s.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.andrew.liashuk.phasediagram",
+            "certificate_hash": "a96d15efc1d8c1e413db401a2d794478b2c34dc8"
+          }
+        },
+        {
+          "client_id": "928006525539-vrpf3cusjqg0qn9jh8f00io7qh7kjkb2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAbffL0vDMAA17qUROYgVS53PpHiHK5mSY"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "928006525539-vrpf3cusjqg0qn9jh8f00io7qh7kjkb2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
