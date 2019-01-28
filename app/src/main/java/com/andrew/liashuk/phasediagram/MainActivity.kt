@@ -1,24 +1,20 @@
 package com.andrew.liashuk.phasediagram
 
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.crashlytics.android.Crashlytics
 import io.fabric.sdk.android.Fabric
+import com.crashlytics.android.core.CrashlyticsCore
 
-class MainActivity : SingleFragmentActivity() {
+
+
+class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Fabric.with(this, Crashlytics())
+        setContentView(R.layout.activity_main)
+
+        val core = CrashlyticsCore.Builder().disabled(BuildConfig.DEBUG).build()
+        Fabric.with(this, Crashlytics.Builder().core(core).build())
     }
-
-
-    override fun createFragment(): Fragment {
-        return MainFragment.newInstance()
-    }
-
-    /*
-       Crashlytics.getInstance().core.setString("Key", "val")
-       Crashlytics.getInstance().core.log(Log.ERROR, "TestTag", "Log2")
-       Crashlytics.getInstance().core.logException(Exception("New error"))
-     */
 }

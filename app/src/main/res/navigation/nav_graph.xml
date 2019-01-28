@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/mainFragment">
+
+    <fragment
+        android:id="@+id/mainFragment"
+        android:name="com.andrew.liashuk.phasediagram.MainFragment"
+        android:label="main_fragment"
+        tools:layout="@layout/main_fragment" >
+        <action
+            android:id="@+id/action_mainFragment_to_graphFragment"
+            app:destination="@id/graphFragment"
+            app:enterAnim="@anim/left_in"
+            app:exitAnim="@anim/right_out"
+            app:popEnterAnim="@anim/right_in"
+            app:popExitAnim="@anim/left_out" />
+    </fragment>
+    <fragment
+        android:id="@+id/graphFragment"
+        android:name="com.andrew.liashuk.phasediagram.GraphFragment"
+        android:label="graph_fragment"
+        tools:layout="@layout/graph_fragment" >
+        <argument
+            android:name="phaseData"
+            app:argType="com.andrew.liashuk.phasediagram.types.PhaseData"
+            app:nullable="true"
+            android:defaultValue="@null" />
+    </fragment>
+</navigation>

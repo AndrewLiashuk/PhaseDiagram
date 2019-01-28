@@ -6,6 +6,8 @@ import android.view.*
 import androidx.fragment.app.Fragment
 import com.andrew.liashuk.phasediagram.viewmodal.MainViewModel
 import androidx.appcompat.app.AppCompatActivity
+import androidx.navigation.findNavController
+import com.andrew.liashuk.phasediagram.types.PhaseData
 import kotlinx.android.synthetic.main.main_fragment.*
 
 
@@ -36,11 +38,12 @@ class MainFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         (activity as AppCompatActivity).setSupportActionBar(toolbar)
-
         viewModel = ViewModelProviders.of(this).get(MainViewModel::class.java)
 
         fab.setOnClickListener {
-            (activity!! as MainActivity).openFragment(GraphFragment.newInstance())
+            val action = MainFragmentDirections.actionMainFragmentToGraphFragment()
+            action.phaseData = PhaseData(1000.0, 3000.0, 20.0, 30.0)
+            it.findNavController().navigate(action)
         }
     }
 
@@ -57,3 +60,9 @@ class MainFragment : Fragment() {
         }
     }
 }
+
+/*
+      Crashlytics.getInstance().core.setString("Key", "val")
+      Crashlytics.getInstance().core.log(Log.ERROR, "TestTag", "Log2")
+      Crashlytics.getInstance().core.logException(Exception("New error"))
+*/
