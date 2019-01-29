@@ -1,5 +1,6 @@
 package com.andrew.liashuk.phasediagram.logic
 
+import com.andrew.liashuk.phasediagram.types.PhaseData
 import kotlin.math.*
 
 class PhaseDiagramCalc(
@@ -27,6 +28,18 @@ class PhaseDiagramCalc(
 
     private var mTemperature = 0.0
     private var mPoints = mutableListOf<PhasePoint>()
+
+
+    constructor(phaseData: PhaseData) : this(
+        phaseData.meltingTempFirst,
+        phaseData.meltingTempSecond,
+        phaseData.entropFirst,
+        phaseData.entropSecond,
+        phaseData.alphaLFirst,
+        phaseData.alphaSFirst,
+        phaseData.alphaLSecond,
+        phaseData.alphaSSecond
+    )
 
 
     fun calculatePhaseDiagram() : MutableCollection<PhasePoint> {

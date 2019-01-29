@@ -20,7 +20,7 @@
     </fragment>
     <fragment
         android:id="@+id/graphFragment"
-        android:name="com.andrew.liashuk.phasediagram.GraphFragment"
+        android:name="com.andrew.liashuk.phasediagram.DiagramFragment"
         android:label="graph_fragment"
         tools:layout="@layout/graph_fragment" >
         <argument

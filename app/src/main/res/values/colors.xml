@@ -5,6 +5,8 @@
     <color name="colorPrimaryLight">#d05ce3</color>
     <color name="colorAccent">#ffc107</color>
 
+    <color name="main_background">#f0f0f0</color>
+
     <color name="textColor">#000000</color>
     <color name="redColor">#F44336</color>
 </resources>
