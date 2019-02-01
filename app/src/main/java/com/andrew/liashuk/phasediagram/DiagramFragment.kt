@@ -8,7 +8,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.databinding.DataBindingUtil
 import androidx.navigation.findNavController
+import com.andrew.liashuk.phasediagram.databinding.DiagramFragmentBinding
 import com.andrew.liashuk.phasediagram.types.PhaseData
 import com.andrew.liashuk.phasediagram.ui.CustomMarkerView
 import com.andrew.liashuk.phasediagram.viewmodal.DiagramViewModel
@@ -16,7 +18,7 @@ import com.crashlytics.android.Crashlytics
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
-import kotlinx.android.synthetic.main.graph_fragment.*
+import kotlinx.android.synthetic.main.diagram_fragment.*
 import kotlinx.coroutines.*
 import kotlin.coroutines.CoroutineContext
 
@@ -24,13 +26,14 @@ import kotlin.coroutines.CoroutineContext
 class DiagramFragment : Fragment(), CoroutineScope {
 
     private lateinit var viewModel: DiagramViewModel
+    private lateinit var binding: DiagramFragmentBinding
 
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.graph_fragment, container, false)
+        return inflater.inflate(R.layout.diagram_fragment, container, false)
     }
 
 
@@ -50,6 +53,9 @@ class DiagramFragment : Fragment(), CoroutineScope {
 
         viewModel = ViewModelProviders.of(this).get(DiagramViewModel::class.java)
         val phaseData = DiagramFragmentArgs.fromBundle(arguments!!).phaseData
+        //val phaseData = PhaseData(1000.0, 2000.0, 20.0, 30.0)
+
+        binding = DataBindingUtil.setContentView(activity!!, R.layout.diagram_fragment)
 
         setupPlot()
         setPlotData(phaseData)
@@ -57,23 +63,23 @@ class DiagramFragment : Fragment(), CoroutineScope {
 
 
     private fun setupPlot() {
-        with(chart) {
+        with(binding.chart) {
             setDrawGridBackground(false)
             description.isEnabled = false // no description text
             setTouchEnabled(true) // enable touch gestures
             isDragEnabled = true // enable scaling and dragging
             setScaleEnabled(true)
             setPinchZoom(true)  // if disabled, scaling can be done on x- and y-axis separately
+
+            val mv = CustomMarkerView(activity!!, R.layout.custom_marker_view)
+            mv.chartView = this // For bounds control
+            marker = mv // Set the marker to the chart
+
+            val xl = xAxis
+            xl.position = XAxis.XAxisPosition.BOTTOM
+            xl.axisMinimum = 0f
+            xl.axisMaximum = 100f
         }
-
-        val mv = CustomMarkerView(activity!!, R.layout.custom_marker_view)
-        mv.chartView = chart // For bounds control
-        chart.marker = mv // Set the marker to the chart
-
-        val xl = chart.xAxis
-        xl.position = XAxis.XAxisPosition.BOTTOM
-        xl.axisMinimum = 0f
-        xl.axisMaximum = 100f
     }
 
 
@@ -81,15 +87,15 @@ class DiagramFragment : Fragment(), CoroutineScope {
         if (phaseData == null) {
             Crashlytics.getInstance().core.logException(Exception("Phase data is null."))
             Toast.makeText(activity, "Please try again.", Toast.LENGTH_SHORT).show()
-            view?.findNavController()?.popBackStack()
+            view!!.findNavController().popBackStack()
             return@launch
         }
 
-        chart.data = createDiagramDataAsync(phaseData).await()
-        chart.invalidate()
-        chart.animateX(1000)
+        binding.chart.data = createDiagramDataAsync(phaseData).await()
+        binding.chart.invalidate()
+        binding.chart.animateX(1000)
 
-        progressBar.visibility = View.GONE
+        binding.progressBar.visibility = View.GONE
     }
 
 

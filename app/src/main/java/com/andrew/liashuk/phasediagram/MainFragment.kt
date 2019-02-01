@@ -1,17 +1,22 @@
 package com.andrew.liashuk.phasediagram
 
-import androidx.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.view.*
-import androidx.fragment.app.Fragment
 import androidx.appcompat.app.AppCompatActivity
+import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
+import androidx.navigation.NavController
+import androidx.navigation.Navigation
 import androidx.navigation.findNavController
+import com.andrew.liashuk.phasediagram.databinding.MainFragmentBinding
 import com.andrew.liashuk.phasediagram.types.PhaseData
-import kotlinx.android.synthetic.main.main_fragment.*
 
 
 class MainFragment : Fragment() {
 
+    // init with 0.0 value because on binding class PhaseData show 0.0 as ""
+    private var mPhaseData = PhaseData(1000.0, 2000.0, 10.0, 20.0)
+    private lateinit var mNavController: NavController
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -30,15 +35,18 @@ class MainFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        (activity as AppCompatActivity).setSupportActionBar(toolbar)
 
-        /*fab.setOnClickListener {
-            val action = MainFragmentDirections.actionMainFragmentToDiagramFragment()
-            action.phaseData = PhaseData(1000.0, 2000.0, 20.0, 30.0, 10000.0, 0.0)
-            it.findNavController().navigate(action)
-        }*/
+        val binding: MainFragmentBinding = DataBindingUtil.setContentView(activity!!, R.layout.main_fragment)
+        binding.phaseData = mPhaseData
+        binding.mainFragment = this
+
+        (activity as? AppCompatActivity)?.setSupportActionBar(binding.toolbar)
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        mNavController = Navigation.findNavController(view)
+    }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
         inflater?.inflate(R.menu.menu_main, menu)
@@ -62,6 +70,14 @@ class MainFragment : Fragment() {
             }
             else -> super.onOptionsItemSelected(item)
         }
+    }
+
+
+
+    fun onBuildClick() {
+        val action = MainFragmentDirections.actionMainFragmentToDiagramFragment()
+        action.phaseData = mPhaseData
+        view!!.findNavController().navigate(action)
     }
 }
 

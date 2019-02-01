@@ -4,6 +4,7 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'io.fabric'
 apply plugin: 'com.google.gms.google-services'
 apply plugin: 'androidx.navigation.safeargs'
+apply plugin: 'kotlin-kapt'
 
 android {
     compileSdkVersion 28
@@ -26,6 +27,9 @@ android {
     }
     androidExtensions {
         experimental = true
+    }
+    dataBinding {
+        enabled = true
     }
 }
 

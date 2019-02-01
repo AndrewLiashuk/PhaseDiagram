@@ -8,21 +8,20 @@
     <fragment
         android:id="@+id/mainFragment"
         android:name="com.andrew.liashuk.phasediagram.MainFragment"
-        android:label="main_fragment"
-        tools:layout="@layout/main_fragment" >
+        android:label="MainFragment" >
         <action
-            android:id="@+id/action_mainFragment_to_graphFragment"
-            app:destination="@id/graphFragment"
+            android:id="@+id/action_mainFragment_to_diagramFragment"
+            app:destination="@id/diagramFragment"
             app:enterAnim="@anim/left_in"
             app:exitAnim="@anim/right_out"
-            app:popEnterAnim="@anim/right_in"
-            app:popExitAnim="@anim/left_out" />
+            app:popEnterAnim="@anim/left_out"
+            app:popExitAnim="@anim/right_in" />
     </fragment>
     <fragment
-        android:id="@+id/graphFragment"
+        android:id="@+id/diagramFragment"
         android:name="com.andrew.liashuk.phasediagram.DiagramFragment"
-        android:label="graph_fragment"
-        tools:layout="@layout/graph_fragment" >
+        android:label="diagram_fragment"
+        tools:layout="@layout/diagram_fragment" >
         <argument
             android:name="phaseData"
             app:argType="com.andrew.liashuk.phasediagram.types.PhaseData"
