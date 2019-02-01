@@ -4,22 +4,20 @@ import android.os.Parcelable
 import androidx.databinding.BaseObservable
 import androidx.databinding.Bindable
 import com.andrew.liashuk.phasediagram.BR
-import kotlinx.android.parcel.IgnoredOnParcel
 import kotlinx.android.parcel.Parcelize
 
 
 @Parcelize
 data class PhaseData(
-    var meltingTempFirst: Double,
-    var meltingTempSecond: Double,
-    var entropFirst: Double,
-    var entropSecond: Double,
-    var alphaLFirst: Double = 0.0,
-    var alphaSFirst: Double = 0.0,
-    var alphaLSecond: Double = -1.0, // if -1 use regular formula
-    var alphaSSecond: Double = -1.0
+    var meltingTempFirst: Double? = null,
+    var meltingTempSecond: Double? = null,
+    var entropFirst: Double? = null,
+    var entropSecond: Double? = null,
+    var alphaLFirst: Double? = null,
+    var alphaSFirst: Double? = null,
+    var alphaLSecond: Double? = null,
+    var alphaSSecond: Double? = null
 ) : Parcelable, BaseObservable() {
-
     // str varibable need for data binding
     // if use double variable for binding compiler didn't create MainFragmentBindingImpl file
     var meltingTempFirstStr: String
@@ -125,14 +123,66 @@ data class PhaseData(
             }
         }
 
+    /**
+     * Check on correct data availability
+     *
+     * @param type  always check availability of temperature and entropy, they must be biggert then 0
+     *              for regular calculation need to exist alphaLFirst and alphaSFirst,
+     *              for subregular calculation must attend all variables.
+     *              Variables with suffix 'str' need for dataBinding,
+     *              no need to check them
+     * @return      <code>null</code> if all data is correct
+     *              <code>string</code> return error text to show for user
+     */
+    fun checkData(type: SolutionType): String? {
+        return when {
+            meltingTempFirst == null -> "Enter temp first"
+            meltingTempFirst ?: 0.0 < 0.0 -> "First temp must be bigger then 0"
 
-    // show double in normal format
-    // 20.00 show as 20,
-    // 20.10 as 20.1
-    // if 0.0 or -1.0 (default value), show nothing
-    private fun Double.toNormalString(): String {
+            meltingTempSecond == null -> "Enter temp second"
+            meltingTempSecond ?: 0.0 < 0.0 -> "Secong temp must be bigger then 0"
+
+            entropFirst == null -> "Enter entrop first"
+            entropFirst ?: 0.0 < 0.0 -> "First entrop must be bigger then 0"
+
+            entropSecond == null -> "Enter entrop second"
+            entropSecond ?: 0.0 < 0.0 -> "Secong entrop must be bigger then 0"
+
+
+            else -> {
+                when(type) {
+                    SolutionType.REGULAR -> {
+                        when {
+                            alphaLFirst == null -> "Enter alphaL"
+                            alphaSFirst == null -> "Enter alphaS"
+                            else -> null
+                        }
+                    }
+                    SolutionType.SUBREGULAR -> {
+                        when {
+                            alphaLFirst == null -> "Enter alphaL first"
+                            alphaSFirst == null -> "Enter alphaS first"
+                            alphaLSecond == null -> "Enter alphaL second"
+                            alphaSSecond == null -> "Enter alphaS second"
+                            else -> null
+                        }
+                    }
+                    SolutionType.IDEAL -> null
+                }
+            }
+        }
+    }
+
+    /**
+     * Show double in normal format
+     *
+     * 20.00 show as 20,
+     * 20.10 as 20.1
+     * if null, show nothing
+    */
+    private fun Double?.toNormalString(): String {
         return when (this) {
-            0.0, -1.0 -> ""
+            null -> ""
 
             // round double by converting to long and compare with original double, if same show rounded
             this.toLong().toDouble() -> String.format("%d", this.toLong()) // show 20.0 as 20

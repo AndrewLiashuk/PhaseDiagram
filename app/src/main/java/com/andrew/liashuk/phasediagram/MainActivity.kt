@@ -8,7 +8,6 @@ import io.fabric.sdk.android.Fabric
 import com.crashlytics.android.core.CrashlyticsCore
 
 
-
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

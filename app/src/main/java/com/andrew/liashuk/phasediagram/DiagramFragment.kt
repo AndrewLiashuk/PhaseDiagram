@@ -2,11 +2,10 @@ package com.andrew.liashuk.phasediagram
 
 import androidx.lifecycle.ViewModelProviders
 import android.os.Bundle
+import android.view.*
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.findNavController
@@ -18,15 +17,20 @@ import com.crashlytics.android.Crashlytics
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
-import kotlinx.android.synthetic.main.diagram_fragment.*
 import kotlinx.coroutines.*
 import kotlin.coroutines.CoroutineContext
 
 
 class DiagramFragment : Fragment(), CoroutineScope {
 
-    private lateinit var viewModel: DiagramViewModel
-    private lateinit var binding: DiagramFragmentBinding
+    private lateinit var mViewModel: DiagramViewModel
+    private lateinit var mBinding: DiagramFragmentBinding
+
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
+    }
 
 
     override fun onCreateView(
@@ -37,33 +41,57 @@ class DiagramFragment : Fragment(), CoroutineScope {
     }
 
 
-    private val job = SupervisorJob()
+    // start all coroutines in UI thread
+    private val mJob = SupervisorJob()
     override val coroutineContext: CoroutineContext
-        get() = Dispatchers.Main + job
+        get() = Dispatchers.Main + mJob
 
 
     override fun onDestroy() {
         super.onDestroy()
+        // cancel all coroutines on fragment destroy
         coroutineContext.cancelChildren()
+    }
+
+
+    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+        inflater?.inflate(R.menu.menu_diagram, menu)
     }
 
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        viewModel = ViewModelProviders.of(this).get(DiagramViewModel::class.java)
-        val phaseData = DiagramFragmentArgs.fromBundle(arguments!!).phaseData
-        //val phaseData = PhaseData(1000.0, 2000.0, 20.0, 30.0)
+        mBinding = DataBindingUtil.setContentView(activity!!, R.layout.diagram_fragment)
+        mBinding.graphToolbar.title = "Diagram"
+        (activity as? AppCompatActivity)?.setSupportActionBar(mBinding.graphToolbar)
 
-        binding = DataBindingUtil.setContentView(activity!!, R.layout.diagram_fragment)
+        mViewModel = ViewModelProviders.of(this).get(DiagramViewModel::class.java)
+        val phaseData = DiagramFragmentArgs.fromBundle(arguments!!).phaseData
 
         setupPlot()
         setPlotData(phaseData)
     }
 
 
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            android.R.id.home -> {
+                view?.findNavController()?.popBackStack()
+                true
+            }
+            R.id.menu_save -> {
+
+                // TODO create save
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+
     private fun setupPlot() {
-        with(binding.chart) {
+        with(mBinding.chart) {
             setDrawGridBackground(false)
             description.isEnabled = false // no description text
             setTouchEnabled(true) // enable touch gestures
@@ -71,14 +99,13 @@ class DiagramFragment : Fragment(), CoroutineScope {
             setScaleEnabled(true)
             setPinchZoom(true)  // if disabled, scaling can be done on x- and y-axis separately
 
+            xAxis.position = XAxis.XAxisPosition.BOTTOM
+            xAxis.axisMinimum = 0f
+            xAxis.axisMaximum = 100f
+
             val mv = CustomMarkerView(activity!!, R.layout.custom_marker_view)
             mv.chartView = this // For bounds control
             marker = mv // Set the marker to the chart
-
-            val xl = xAxis
-            xl.position = XAxis.XAxisPosition.BOTTOM
-            xl.axisMinimum = 0f
-            xl.axisMaximum = 100f
         }
     }
 
@@ -87,33 +114,37 @@ class DiagramFragment : Fragment(), CoroutineScope {
         if (phaseData == null) {
             Crashlytics.getInstance().core.logException(Exception("Phase data is null."))
             Toast.makeText(activity, "Please try again.", Toast.LENGTH_SHORT).show()
-            view!!.findNavController().popBackStack()
+            view?.findNavController()?.popBackStack()
             return@launch
         }
 
-        binding.chart.data = createDiagramDataAsync(phaseData).await()
-        binding.chart.invalidate()
-        binding.chart.animateX(1000)
+        mBinding.chart.data = createDiagramDataAsync(phaseData).await()
+        mBinding.chart.invalidate()
+        mBinding.chart.animateX(1000)
 
-        binding.progressBar.visibility = View.GONE
+        mBinding.groupDiagram.visibility = View.VISIBLE
+        mBinding.progressBar.visibility = View.GONE
     }
 
 
     private fun createDiagramDataAsync(phaseData: PhaseData): Deferred<LineData> =
+        // TODO add max time corutin
+
         async(Dispatchers.Default) {
             createDiagramData(phaseData)
         }
 
 
     private fun createDiagramData(phaseData: PhaseData): LineData {
-        val (solidEntries, liquidEntries) = viewModel.createDiagramBranches(phaseData)
+        val (solidEntries, liquidEntries) = mViewModel.createDiagramBranches(phaseData)
 
         val liquidDataSet = LineDataSet(liquidEntries, "Liquid")
+        liquidDataSet.color = ContextCompat.getColor(activity!!, R.color.colorAccent)
         liquidDataSet.lineWidth = 1.5f
         liquidDataSet.setDrawCircles(false)
 
         val solidDataSet = LineDataSet(solidEntries, "Solid")
-        solidDataSet.color = ContextCompat.getColor(activity!!, R.color.redColor)
+        solidDataSet.color = ContextCompat.getColor(activity!!, R.color.colorPrimary)
         solidDataSet.lineWidth = 1.5f
         solidDataSet.setDrawCircles(false)
 

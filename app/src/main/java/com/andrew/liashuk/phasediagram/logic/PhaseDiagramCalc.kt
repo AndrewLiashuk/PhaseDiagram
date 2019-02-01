@@ -1,6 +1,5 @@
 package com.andrew.liashuk.phasediagram.logic
 
-import com.andrew.liashuk.phasediagram.types.PhaseData
 import kotlin.math.*
 
 class PhaseDiagramCalc(
@@ -13,6 +12,18 @@ class PhaseDiagramCalc(
     alphaLSecond: Double = -1.0, // if -1 use regular formula
     alphaSSecond: Double = -1.0
 ) {
+
+    /**
+     * Step with which the algorithm find phase points.
+     * If value lower than the accuracy is greater.
+     *
+     * Change very carefully it very fast increases calculation time
+     */
+    @Suppress("MemberVisibilityCanBePrivate")
+    val calculationStep = 0.0001
+
+    private val startVal = calculationStep
+    private val finishVal = 0.99995 // not 1 because it greatly increases the calculation time
 
     private val GAS_CONSTANTE = 8.314 //universal gas constante
     private val ACCURACY = 1e-13
@@ -30,34 +41,37 @@ class PhaseDiagramCalc(
     private var mPoints = mutableListOf<PhasePoint>()
 
 
-    constructor(phaseData: PhaseData) : this(
-        phaseData.meltingTempFirst,
-        phaseData.meltingTempSecond,
-        phaseData.entropFirst,
-        phaseData.entropSecond,
-        phaseData.alphaLFirst,
-        phaseData.alphaSFirst,
-        phaseData.alphaLSecond,
-        phaseData.alphaSSecond
-    )
-
-
+    /**
+     * Function that calculate PhaseDiagram.
+     *
+     * @return  collection of PhasePoints that store value of solid and liquid phase
+     *          depending on temperature.
+     */
     fun calculatePhaseDiagram() : MutableCollection<PhasePoint> {
         mPoints.add(PhasePoint(0.0, 0.0, mMeltingTempFirst)) // add first point
 
-        val calcStep = 0.0001
-        val startVal = 0.0001
-        val finishVal = 0.99995
-
-        for (i in startVal..finishVal step calcStep) {
+        for (i in startVal..finishVal step calculationStep) {
             bisection(i)?.let {
                 mPoints.add(PhasePoint(i, it, mTemperature))
             }
         }
 
         mPoints.add(PhasePoint(1.0, 1.0, mMeltingTempSecond)) // add end point
-
         return mPoints
+    }
+
+
+    /**
+     * Store value of solid and liquid phase depending on temperature.
+     *
+     * Input value of solid and liquid transfer into percentages by multiply by 100.
+     * Temperature store in kelvins.
+     */
+    class PhasePoint(var solid: Double, var liquid: Double, var temperature: Double) {
+        init {
+            solid *= 100 //transfer into percentages
+            liquid *= 100
+        }
     }
 
 
@@ -108,14 +122,6 @@ class PhaseDiagramCalc(
 
         mTemperature = (ta1 / ta2 + tb1 / tb2) / 2
         return ta1 * tb2 - tb1 * ta2
-    }
-
-
-    class PhasePoint(var solid: Double, var liquid: Double, var temperature: Double) {
-        init {
-            solid *= 100 //transfer into percentages
-            liquid *= 100
-        }
     }
 
 
