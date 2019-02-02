@@ -81,7 +81,6 @@ class DiagramFragment : Fragment(), CoroutineScope {
                 true
             }
             R.id.menu_save -> {
-
                 // TODO create save
                 true
             }
@@ -113,7 +112,7 @@ class DiagramFragment : Fragment(), CoroutineScope {
     private fun setPlotData(phaseData: PhaseData?) = launch {
         if (phaseData == null) {
             Crashlytics.getInstance().core.logException(Exception("Phase data is null."))
-            Toast.makeText(activity, "Please try again.", Toast.LENGTH_SHORT).show()
+            Toast.makeText(activity, activity!!.getString(R.string.try_again), Toast.LENGTH_SHORT).show()
             view?.findNavController()?.popBackStack()
             return@launch
         }
@@ -138,12 +137,12 @@ class DiagramFragment : Fragment(), CoroutineScope {
     private fun createDiagramData(phaseData: PhaseData): LineData {
         val (solidEntries, liquidEntries) = mViewModel.createDiagramBranches(phaseData)
 
-        val liquidDataSet = LineDataSet(liquidEntries, "Liquid")
+        val liquidDataSet = LineDataSet(liquidEntries, activity!!.getString(R.string.diagram_liquid))
         liquidDataSet.color = ContextCompat.getColor(activity!!, R.color.colorAccent)
         liquidDataSet.lineWidth = 1.5f
         liquidDataSet.setDrawCircles(false)
 
-        val solidDataSet = LineDataSet(solidEntries, "Solid")
+        val solidDataSet = LineDataSet(solidEntries, activity!!.getString(R.string.diagram_solid))
         solidDataSet.color = ContextCompat.getColor(activity!!, R.color.colorPrimary)
         solidDataSet.lineWidth = 1.5f
         solidDataSet.setDrawCircles(false)

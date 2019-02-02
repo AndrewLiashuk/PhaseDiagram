@@ -1,4 +1,47 @@
 <resources>
     <string name="app_name">PhaseDiagram</string>
-    <string name="action_settings">Settings</string>
+
+    <!-- fragment view -->
+    <string name="second_component_textView">Second component</string>
+    <string name="first_component_textView">First component</string>
+    <string name="melting_temp_textView">Melting temperature T, K</string>
+    <string name="temperature_editText">Temperature</string>
+    <string name="melting_entropy_textView">Melting entropy S, J/mol*K</string>
+    <string name="entropy_editText">Entropy</string>
+    <string name="alpha_desc_textView">Parameters of intermolecular interaction</string>
+    <string name="alpha_l_editText">Alpha L</string>
+    <string name="alpha_s_editText">Alpha S</string>
+    <string name="build_button_text">Build</string>
+
+    <!-- menu -->
+    <string name="menu_solution_type">Solution Type</string>
+    <string name="menu_ideal">Ideal</string>
+    <string name="menu_regular">Regular</string>
+    <string name="menu_subregular">Subregular</string>
+    <string name="menu_sample">Sample</string>
+    <string name="menu_save">Save</string>
+    <string name="diagram_y">T, K</string>
+    <string name="diagram_x">%</string>
+
+    <!-- fragment -->
+    <string name="diagram_liquid">Liquid</string>
+    <string name="diagram_solid">Solid</string>
+
+    <!-- diaglogs -->
+    <string name="try_again">Please try again.</string>
+    <string name="empty_first_temp">Please enter temperature for first component</string>
+    <string name="small_first_temp">Temperature for first component must be bigger then 0</string>
+    <string name="empty_second_temp">Please enter temperature for second component</string>
+    <string name="small_second_temp">Temperature for second component must be bigger then 0</string>
+    <string name="empty_first_entrop">Please enter entropy for first component</string>
+    <string name="small_first_entrop">Entropy for first component must be bigger then 0</string>
+    <string name="empty_second_entrop">Please enter entropy for second component</string>
+    <string name="small_second_entrop">Entropy for second component must be bigger then 0</string>
+    <string name="empty_alpha_l">Please enter alphaL</string>
+    <string name="empty_alpha_s">Please enter alphaS</string>
+    <string name="empty_first_alpha_l">Please enter alphaL for first component</string>
+    <string name="empty_first_alpha_s">Please enter alphaS for first component</string>
+    <string name="empty_second_alpha_l">Please enter alphaL for second component</string>
+    <string name="empty_second_alpha_s">Please enter alphaS for second component</string>
+
 </resources>

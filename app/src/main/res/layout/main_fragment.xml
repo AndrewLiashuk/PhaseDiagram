@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
     <data>
-
         <variable
             name="phaseData"
             type="com.andrew.liashuk.phasediagram.types.PhaseData" />
@@ -11,10 +12,7 @@
             type="com.andrew.liashuk.phasediagram.MainFragment" />
     </data>
 
-    <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:card_view="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/main_background"
@@ -60,7 +58,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintVertical_bias="0.39"
-                    card_view:cardCornerRadius="4dp">
+                    app:cardCornerRadius="4dp">
 
                     <ScrollView
                         android:layout_width="match_parent"
@@ -68,8 +66,37 @@
                         android:fadeScrollbars="false">
 
                         <androidx.constraintlayout.widget.ConstraintLayout
+                            android:id="@+id/card_constraint_layout"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content">
+
+                            <TextView
+                                android:id="@+id/textView7"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="8dp"
+                                android:layout_marginLeft="8dp"
+                                android:layout_marginTop="16dp"
+                                android:layout_marginEnd="8dp"
+                                android:layout_marginRight="8dp"
+                                android:text="@string/first_component_textView"
+                                app:layout_constraintEnd_toStartOf="@+id/guideline_half"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+
+                            <TextView
+                                android:id="@+id/textView8"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="8dp"
+                                android:layout_marginLeft="8dp"
+                                android:layout_marginTop="16dp"
+                                android:layout_marginEnd="8dp"
+                                android:layout_marginRight="8dp"
+                                android:text="@string/second_component_textView"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toStartOf="@+id/guideline_half"
+                                app:layout_constraintTop_toTopOf="parent" />
 
                             <TextView
                                 android:id="@+id/textView"
@@ -80,10 +107,10 @@
                                 android:layout_marginTop="16dp"
                                 android:layout_marginEnd="8dp"
                                 android:layout_marginRight="8dp"
-                                android:text="Temp"
+                                android:text="@string/melting_temp_textView"
                                 app:layout_constraintEnd_toEndOf="parent"
                                 app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintTop_toTopOf="parent" />
+                                app:layout_constraintTop_toBottomOf="@+id/textView7" />
 
                             <com.google.android.material.textfield.TextInputLayout
                                 android:id="@+id/firstTempLayout"
@@ -94,7 +121,7 @@
                                 android:layout_marginTop="8dp"
                                 android:layout_marginEnd="8dp"
                                 android:layout_marginRight="8dp"
-                                app:layout_constraintEnd_toStartOf="@+id/guideline"
+                                app:layout_constraintEnd_toStartOf="@+id/guideline_half"
                                 app:layout_constraintStart_toStartOf="parent"
                                 app:layout_constraintTop_toBottomOf="@+id/textView">
 
@@ -104,7 +131,7 @@
                                     android:layout_height="wrap_content"
                                     android:ellipsize="start"
                                     android:gravity="center_horizontal"
-                                    android:hint="First Temp"
+                                    android:hint="@string/temperature_editText"
                                     android:imeOptions="actionNext"
                                     android:inputType="numberDecimal"
                                     android:maxLength="6"
@@ -123,7 +150,7 @@
                                 android:layout_marginEnd="8dp"
                                 android:layout_marginRight="8dp"
                                 app:layout_constraintEnd_toEndOf="parent"
-                                app:layout_constraintStart_toStartOf="@+id/guideline"
+                                app:layout_constraintStart_toStartOf="@+id/guideline_half"
                                 app:layout_constraintTop_toBottomOf="@+id/textView">
 
                                 <com.google.android.material.textfield.TextInputEditText
@@ -132,7 +159,7 @@
                                     android:layout_height="wrap_content"
                                     android:ellipsize="start"
                                     android:gravity="center_horizontal"
-                                    android:hint="Second Temp"
+                                    android:hint="@string/temperature_editText"
                                     android:imeOptions="actionNext"
                                     android:inputType="numberDecimal"
                                     android:maxLength="6"
@@ -150,7 +177,7 @@
                                 android:layout_marginTop="16dp"
                                 android:layout_marginEnd="8dp"
                                 android:layout_marginRight="8dp"
-                                android:text="Entrop"
+                                android:text="@string/melting_entropy_textView"
                                 app:layout_constraintEnd_toEndOf="parent"
                                 app:layout_constraintStart_toStartOf="parent"
                                 app:layout_constraintTop_toBottomOf="@+id/firstTempLayout" />
@@ -164,7 +191,7 @@
                                 android:layout_marginTop="8dp"
                                 android:layout_marginEnd="8dp"
                                 android:layout_marginRight="8dp"
-                                app:layout_constraintEnd_toStartOf="@+id/guideline"
+                                app:layout_constraintEnd_toStartOf="@+id/guideline_half"
                                 app:layout_constraintStart_toStartOf="parent"
                                 app:layout_constraintTop_toBottomOf="@+id/textView2">
 
@@ -174,7 +201,7 @@
                                     android:layout_height="wrap_content"
                                     android:ellipsize="start"
                                     android:gravity="center_horizontal"
-                                    android:hint="First Entrop"
+                                    android:hint="@string/entropy_editText"
                                     android:imeOptions="actionNext"
                                     android:inputType="numberDecimal"
                                     android:maxLength="6"
@@ -193,7 +220,7 @@
                                 android:layout_marginEnd="8dp"
                                 android:layout_marginRight="8dp"
                                 app:layout_constraintEnd_toEndOf="parent"
-                                app:layout_constraintStart_toStartOf="@+id/guideline"
+                                app:layout_constraintStart_toStartOf="@+id/guideline_half"
                                 app:layout_constraintTop_toBottomOf="@+id/textView2">
 
                                 <com.google.android.material.textfield.TextInputEditText
@@ -202,7 +229,7 @@
                                     android:layout_height="wrap_content"
                                     android:ellipsize="start"
                                     android:gravity="center_horizontal"
-                                    android:hint="Second Entrop"
+                                    android:hint="@string/entropy_editText"
                                     android:imeOptions="actionNext"
                                     android:inputType="numberDecimal"
                                     android:maxLength="6"
@@ -220,7 +247,7 @@
                                 android:layout_marginTop="16dp"
                                 android:layout_marginEnd="8dp"
                                 android:layout_marginRight="8dp"
-                                android:text="Alpha L"
+                                android:text="@string/alpha_desc_textView"
                                 app:layout_constraintEnd_toEndOf="parent"
                                 app:layout_constraintStart_toStartOf="parent"
                                 app:layout_constraintTop_toBottomOf="@+id/firstEntropLayout" />
@@ -234,7 +261,7 @@
                                 android:layout_marginTop="8dp"
                                 android:layout_marginEnd="8dp"
                                 android:layout_marginRight="8dp"
-                                app:layout_constraintEnd_toStartOf="@+id/guideline"
+                                app:layout_constraintEnd_toStartOf="@+id/guideline_half"
                                 app:layout_constraintStart_toStartOf="parent"
                                 app:layout_constraintTop_toBottomOf="@+id/textView3">
 
@@ -244,7 +271,7 @@
                                     android:layout_height="wrap_content"
                                     android:ellipsize="start"
                                     android:gravity="center_horizontal"
-                                    android:hint="Alpha L"
+                                    android:hint="@string/alpha_l_editText"
                                     android:inputType="numberDecimal|numberSigned"
                                     android:maxLength="8"
                                     android:singleLine="true"
@@ -261,7 +288,7 @@
                                 android:layout_marginEnd="8dp"
                                 android:layout_marginRight="8dp"
                                 app:layout_constraintEnd_toEndOf="parent"
-                                app:layout_constraintStart_toStartOf="@+id/guideline"
+                                app:layout_constraintStart_toStartOf="@+id/guideline_half"
                                 app:layout_constraintTop_toBottomOf="@+id/textView3">
 
                                 <com.google.android.material.textfield.TextInputEditText
@@ -270,26 +297,12 @@
                                     android:layout_height="wrap_content"
                                     android:ellipsize="start"
                                     android:gravity="center_horizontal"
-                                    android:hint="Alpha L"
-                                    android:inputType="numberDecimal"
+                                    android:hint="@string/alpha_l_editText"
+                                    android:inputType="numberDecimal|numberSigned"
                                     android:maxLength="8"
                                     android:singleLine="true"
                                     android:text="@={phaseData.alphaLSecondStr}" />
                             </com.google.android.material.textfield.TextInputLayout>
-
-                            <TextView
-                                android:id="@+id/textView4"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="8dp"
-                                android:layout_marginLeft="8dp"
-                                android:layout_marginTop="16dp"
-                                android:layout_marginEnd="8dp"
-                                android:layout_marginRight="8dp"
-                                android:text="Alpha S"
-                                app:layout_constraintEnd_toEndOf="parent"
-                                app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintTop_toBottomOf="@+id/firstAlphaLLayout" />
 
                             <com.google.android.material.textfield.TextInputLayout
                                 android:id="@+id/firstAlphaSLayout"
@@ -300,9 +313,9 @@
                                 android:layout_marginTop="8dp"
                                 android:layout_marginEnd="8dp"
                                 android:layout_marginRight="8dp"
-                                app:layout_constraintEnd_toStartOf="@+id/guideline"
+                                app:layout_constraintEnd_toStartOf="@+id/guideline_half"
                                 app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintTop_toBottomOf="@+id/textView4">
+                                app:layout_constraintTop_toBottomOf="@+id/firstAlphaLLayout">
 
                                 <com.google.android.material.textfield.TextInputEditText
                                     android:id="@+id/firstAlphaS"
@@ -310,8 +323,8 @@
                                     android:layout_height="wrap_content"
                                     android:ellipsize="start"
                                     android:gravity="center_horizontal"
-                                    android:hint="Alpha S"
-                                    android:inputType="numberDecimal"
+                                    android:hint="@string/alpha_s_editText"
+                                    android:inputType="numberDecimal|numberSigned"
                                     android:maxLength="8"
                                     android:singleLine="true"
                                     android:text="@={phaseData.alphaSFirstStr}" />
@@ -327,8 +340,8 @@
                                 android:layout_marginEnd="8dp"
                                 android:layout_marginRight="8dp"
                                 app:layout_constraintEnd_toEndOf="parent"
-                                app:layout_constraintStart_toStartOf="@+id/guideline"
-                                app:layout_constraintTop_toBottomOf="@+id/textView4">
+                                app:layout_constraintStart_toStartOf="@+id/guideline_half"
+                                app:layout_constraintTop_toBottomOf="@+id/secondAlphaLLayout">
 
                                 <com.google.android.material.textfield.TextInputEditText
                                     android:id="@+id/secondAlphaS"
@@ -336,8 +349,8 @@
                                     android:layout_height="wrap_content"
                                     android:ellipsize="start"
                                     android:gravity="center_horizontal"
-                                    android:hint="Alpha S"
-                                    android:inputType="numberDecimal"
+                                    android:hint="@string/alpha_s_editText"
+                                    android:inputType="numberDecimal|numberSigned"
                                     android:maxLength="8"
                                     android:singleLine="true"
                                     android:text="@={phaseData.alphaSSecondStr}" />
@@ -354,7 +367,7 @@
                                 android:layout_marginRight="8dp"
                                 android:layout_marginBottom="16dp"
                                 android:onClick="@{() -> mainFragment.onBuildClick()}"
-                                android:text="Button"
+                                android:text="@string/build_button_text"
                                 app:layout_constraintBottom_toBottomOf="parent"
                                 app:layout_constraintEnd_toEndOf="parent"
                                 app:layout_constraintStart_toStartOf="parent"
@@ -362,11 +375,39 @@
 
 
                             <androidx.constraintlayout.widget.Guideline
-                                android:id="@+id/guideline"
+                                android:id="@+id/guideline_half"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:orientation="vertical"
                                 app:layout_constraintGuide_percent="0.5" />
+
+                            <androidx.constraintlayout.widget.Group
+                                android:id="@+id/group_first_alphas"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:visibility="visible"
+                                app:constraint_referenced_ids="textView3,firstAlphaLLayout,firstAlphaSLayout" />
+
+                            <androidx.constraintlayout.widget.Group
+                                android:id="@+id/group_second_alphas"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:visibility="visible"
+                                app:constraint_referenced_ids="secondAlphaLLayout,secondAlphaSLayout" />
+
+                            <androidx.constraintlayout.widget.Guideline
+                                android:id="@+id/guideline_third_first"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical"
+                                app:layout_constraintGuide_percent="0.25" />
+
+                            <androidx.constraintlayout.widget.Guideline
+                                android:id="@+id/guideline_third_second"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical"
+                                app:layout_constraintGuide_percent="0.75" />
 
                         </androidx.constraintlayout.widget.ConstraintLayout>
 

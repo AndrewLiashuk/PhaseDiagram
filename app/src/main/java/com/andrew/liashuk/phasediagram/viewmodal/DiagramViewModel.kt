@@ -17,13 +17,13 @@ class DiagramViewModel : ViewModel() {
         }
 
         val phaseDiagram = PhaseDiagramCalc(
-            phaseData.meltingTempFirst ?: throw Exception(""), // TODO add exception
-            phaseData.meltingTempSecond ?: throw Exception(""),
-            phaseData.entropFirst ?: throw Exception(""),
-            phaseData.entropSecond ?: throw Exception(""),
-            phaseData.alphaLFirst ?: 0.0, // if 0 use ideal formula
+            phaseData.meltingTempFirst ?: throw Exception("First melting temperature not set!"),
+            phaseData.meltingTempSecond ?: throw Exception("Second melting temperature not set!"),
+            phaseData.entropFirst ?: throw Exception("First entropy not set!"),
+            phaseData.entropSecond ?: throw Exception("Second entropy not set!"),
+            phaseData.alphaLFirst ?: 0.0, // if not set 0 for ideal formula
             phaseData.alphaSFirst ?: 0.0,
-            phaseData.alphaLSecond ?: -1.0, // if -1 use regular formula
+            phaseData.alphaLSecond ?: -1.0, // if not set -1 for regular formula
             phaseData.alphaSSecond ?: -1.0
         )
 

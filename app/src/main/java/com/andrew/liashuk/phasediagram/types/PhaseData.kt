@@ -1,10 +1,13 @@
 package com.andrew.liashuk.phasediagram.types
 
+import android.content.Context
 import android.os.Parcelable
 import androidx.databinding.BaseObservable
 import androidx.databinding.Bindable
 import com.andrew.liashuk.phasediagram.BR
+import com.andrew.liashuk.phasediagram.R
 import kotlinx.android.parcel.Parcelize
+import kotlin.coroutines.CoroutineContext
 
 
 @Parcelize
@@ -24,7 +27,7 @@ data class PhaseData(
         @Bindable get() = meltingTempFirst.toNormalString()
 
         set(value) {
-            value.toDoubleOrNull()?.let {
+            value.toDoubleOrNull().let {
                 if (it != meltingTempFirst) {
                     meltingTempFirst = it
                     notifyPropertyChanged(BR.meltingTempFirstStr)
@@ -37,7 +40,7 @@ data class PhaseData(
         @Bindable get() = meltingTempSecond.toNormalString()
 
         set(value) {
-            value.toDoubleOrNull()?.let {
+            value.toDoubleOrNull().let {
                 if (it != meltingTempSecond) {
                     meltingTempSecond = it
                     notifyPropertyChanged(BR.meltingTempSecondStr)
@@ -50,7 +53,7 @@ data class PhaseData(
         @Bindable get() = entropFirst.toNormalString()
 
         set(value) {
-            value.toDoubleOrNull()?.let {
+            value.toDoubleOrNull().let {
                 if (it != entropFirst) {
                     entropFirst = it
                     notifyPropertyChanged(BR.entropFirstStr)
@@ -63,7 +66,7 @@ data class PhaseData(
         @Bindable get() = entropSecond.toNormalString()
 
         set(value) {
-            value.toDoubleOrNull()?.let {
+            value.toDoubleOrNull().let {
                 if (it != entropSecond) {
                     entropSecond = it
                     notifyPropertyChanged(BR.entropSecondStr)
@@ -76,7 +79,7 @@ data class PhaseData(
         @Bindable get() = alphaLFirst.toNormalString()
 
         set(value) {
-            value.toDoubleOrNull()?.let {
+            value.toDoubleOrNull().let {
                 if (it != alphaLFirst) {
                     alphaLFirst = it
                     notifyPropertyChanged(BR.alphaLFirstStr)
@@ -89,7 +92,7 @@ data class PhaseData(
         @Bindable get() = alphaSFirst.toNormalString()
 
         set(value) {
-            value.toDoubleOrNull()?.let {
+            value.toDoubleOrNull().let {
                 if (it != alphaSFirst) {
                     alphaSFirst = it
                     notifyPropertyChanged(BR.alphaSFirstStr)
@@ -102,7 +105,7 @@ data class PhaseData(
         @Bindable get() = alphaLSecond.toNormalString()
 
         set(value) {
-            value.toDoubleOrNull()?.let {
+            value.toDoubleOrNull().let {
                 if (it != alphaLSecond) {
                     alphaLSecond = it
                     notifyPropertyChanged(BR.alphaLSecondStr)
@@ -115,7 +118,7 @@ data class PhaseData(
         @Bindable get() = alphaSSecond.toNormalString()
 
         set(value) {
-            value.toDoubleOrNull()?.let {
+            value.toDoubleOrNull().let {
                 if (it != alphaSSecond) {
                     alphaSSecond = it
                     notifyPropertyChanged(BR.alphaSSecondStr)
@@ -134,36 +137,36 @@ data class PhaseData(
      * @return      <code>null</code> if all data is correct
      *              <code>string</code> return error text to show for user
      */
-    fun checkData(type: SolutionType): String? {
+    fun checkData(context: Context, type: SolutionType): String? {
         return when {
-            meltingTempFirst == null -> "Enter temp first"
-            meltingTempFirst ?: 0.0 < 0.0 -> "First temp must be bigger then 0"
+            meltingTempFirst == null -> context.getString(R.string.empty_first_temp)
+            meltingTempFirst ?: 0.0 < 0.0 -> context.getString(R.string.small_first_temp)
 
-            meltingTempSecond == null -> "Enter temp second"
-            meltingTempSecond ?: 0.0 < 0.0 -> "Secong temp must be bigger then 0"
+            meltingTempSecond == null -> context.getString(R.string.empty_second_temp)
+            meltingTempSecond ?: 0.0 < 0.0 -> context.getString(R.string.small_second_temp)
 
-            entropFirst == null -> "Enter entrop first"
-            entropFirst ?: 0.0 < 0.0 -> "First entrop must be bigger then 0"
+            entropFirst == null -> context.getString(R.string.empty_first_entrop)
+            entropFirst ?: 0.0 < 0.0 -> context.getString(R.string.small_first_entrop)
 
-            entropSecond == null -> "Enter entrop second"
-            entropSecond ?: 0.0 < 0.0 -> "Secong entrop must be bigger then 0"
+            entropSecond == null -> context.getString(R.string.empty_second_entrop)
+            entropSecond ?: 0.0 < 0.0 -> context.getString(R.string.small_second_entrop)
 
 
             else -> {
                 when(type) {
                     SolutionType.REGULAR -> {
                         when {
-                            alphaLFirst == null -> "Enter alphaL"
-                            alphaSFirst == null -> "Enter alphaS"
+                            alphaLFirst == null -> context.getString(R.string.empty_alpha_l)
+                            alphaSFirst == null -> context.getString(R.string.empty_alpha_s)
                             else -> null
                         }
                     }
                     SolutionType.SUBREGULAR -> {
                         when {
-                            alphaLFirst == null -> "Enter alphaL first"
-                            alphaSFirst == null -> "Enter alphaS first"
-                            alphaLSecond == null -> "Enter alphaL second"
-                            alphaSSecond == null -> "Enter alphaS second"
+                            alphaLFirst == null -> context.getString(R.string.empty_first_alpha_l)
+                            alphaSFirst == null -> context.getString(R.string.empty_first_alpha_s)
+                            alphaLSecond == null -> context.getString(R.string.empty_second_alpha_l)
+                            alphaSSecond == null -> context.getString(R.string.empty_second_alpha_s)
                             else -> null
                         }
                     }

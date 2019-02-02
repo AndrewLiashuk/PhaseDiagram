@@ -3,6 +3,7 @@ package com.andrew.liashuk.phasediagram
 import android.os.Bundle
 import android.view.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintSet
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
@@ -10,13 +11,15 @@ import com.andrew.liashuk.phasediagram.databinding.MainFragmentBinding
 import com.andrew.liashuk.phasediagram.types.PhaseData
 import com.andrew.liashuk.phasediagram.types.SolutionType
 import com.crashlytics.android.Crashlytics
+import android.content.DialogInterface
+import androidx.appcompat.app.AlertDialog
 
 
 class MainFragment : Fragment() {
 
     // dataBinging automatically update data
     private var mPhaseData = PhaseData()
-    private var mPhaseType = SolutionType.IDEAL
+    private var mPhaseType = SolutionType.SUBREGULAR
     private lateinit var mBinding: MainFragmentBinding
 
 
@@ -79,16 +82,86 @@ class MainFragment : Fragment() {
 
 
     fun onBuildClick() {
-        val action = MainFragmentDirections.actionMainFragmentToDiagramFragment()
-        action.phaseData = mPhaseData
-        view?.findNavController()?.navigate(action) ?: Crashlytics.getInstance().core.logException(Exception("Can't open DiagramFragment."))
+        val errorText = mPhaseData.checkData(activity!!.applicationContext, mPhaseType)
+
+        if (errorText != null) {
+            AlertDialog.Builder(activity!!)
+                .setMessage(errorText)
+                .setPositiveButton(activity!!.getString(android.R.string.ok), null)
+                .create()
+                .show()
+        } else {
+            val action = MainFragmentDirections.actionMainFragmentToDiagramFragment()
+            action.phaseData = mPhaseData
+            view?.findNavController()?.navigate(action) ?: Crashlytics.getInstance().core.logException(Exception("Can't open DiagramFragment."))
+        }
     }
 
 
     private fun changePhaseType(type: SolutionType) {
         mPhaseType = type
 
-        // TODO apply changes
+        when(type) {
+            SolutionType.IDEAL -> {
+                mBinding.groupFirstAlphas.visibility = View.GONE
+                mBinding.groupSecondAlphas.visibility = View.GONE
+            }
+            SolutionType.REGULAR -> {
+                mBinding.groupFirstAlphas.visibility = View.VISIBLE
+                mBinding.groupSecondAlphas.visibility = View.GONE
+                changeAlphaEditPosition(true)
+            }
+            SolutionType.SUBREGULAR -> {
+                mBinding.groupFirstAlphas.visibility = View.VISIBLE
+                mBinding.groupSecondAlphas.visibility = View.VISIBLE
+                changeAlphaEditPosition(false)
+            }
+        }
+    }
+
+
+    /**
+     * @param isRegular     <code>true</code> center alphaL and alphaS textViews by set constraint
+     *                      params and place between guideline_third_first and guideline_third_second
+     *                      <code>false</code> return to initial constraint params
+     */
+    private fun changeAlphaEditPosition(isRegular: Boolean) {
+        val constraintSet = ConstraintSet()
+        constraintSet.clone(mBinding.cardConstraintLayout)
+
+        // change AlphaL position
+        constraintSet.connect(
+            R.id.firstAlphaLLayout,
+            ConstraintSet.START,
+            if (isRegular) R.id.guideline_third_first else ConstraintSet.PARENT_ID,
+            ConstraintSet.START,
+            0
+        )
+        constraintSet.connect(
+            R.id.firstAlphaLLayout,
+            ConstraintSet.END,
+            if (isRegular) R.id.guideline_third_second else R.id.guideline_half,
+            ConstraintSet.START,
+            0
+        )
+
+        // change AlphaS position
+        constraintSet.connect(
+            R.id.firstAlphaSLayout,
+            ConstraintSet.START,
+            if (isRegular) R.id.guideline_third_first else ConstraintSet.PARENT_ID,
+            ConstraintSet.START,
+            0
+        )
+        constraintSet.connect(
+            R.id.firstAlphaSLayout,
+            ConstraintSet.END,
+            if (isRegular) R.id.guideline_third_second else R.id.guideline_half,
+            ConstraintSet.START,
+            0
+        )
+
+        constraintSet.applyTo(mBinding.cardConstraintLayout)
     }
 }
 
