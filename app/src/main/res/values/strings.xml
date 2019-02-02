@@ -19,7 +19,7 @@
     <string name="menu_regular">Regular</string>
     <string name="menu_subregular">Subregular</string>
     <string name="menu_sample">Sample</string>
-    <string name="menu_save">Save</string>
+    <string name="menu_save">Save diagram</string>
     <string name="diagram_y">T, K</string>
     <string name="diagram_x">%</string>
 
