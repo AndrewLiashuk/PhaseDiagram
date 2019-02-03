@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">PhaseDiagram</string>
+    <string name="app_name" translatable="false">PhaseDiagram</string>
 
     <!-- fragment view -->
     <string name="second_component_textView">Second component</string>
@@ -9,8 +9,8 @@
     <string name="melting_entropy_textView">Melting entropy S, J/mol*K</string>
     <string name="entropy_editText">Entropy</string>
     <string name="alpha_desc_textView">Parameters of intermolecular interaction</string>
-    <string name="alpha_l_editText">Alpha L</string>
-    <string name="alpha_s_editText">Alpha S</string>
+    <string name="alpha_l_editText" translatable="false">Alpha L</string>
+    <string name="alpha_s_editText" translatable="false">Alpha S</string>
     <string name="build_button_text">Build</string>
 
     <!-- menu -->
@@ -20,12 +20,12 @@
     <string name="menu_subregular">Subregular</string>
     <string name="menu_sample">Sample</string>
     <string name="menu_save">Save diagram</string>
-    <string name="diagram_y">T, K</string>
-    <string name="diagram_x">%</string>
+    <string name="diagram_y" translatable="false">T, K</string>
+    <string name="diagram_x" translatable="false">%</string>
 
     <!-- fragment -->
-    <string name="diagram_liquid">Liquid</string>
-    <string name="diagram_solid">Solid</string>
+    <string name="diagram_liquid" translatable="false">Liquid</string>
+    <string name="diagram_solid" translatable="false">Solid</string>
 
     <!-- diaglogs -->
     <string name="try_again">Please try again.</string>
@@ -43,5 +43,6 @@
     <string name="empty_first_alpha_s">Please enter alphaS for first component</string>
     <string name="empty_second_alpha_l">Please enter alphaL for second component</string>
     <string name="empty_second_alpha_s">Please enter alphaS for second component</string>
+    <string name="autor_label" translatable="false">Andrew Liashuk 2019</string>
 
 </resources>

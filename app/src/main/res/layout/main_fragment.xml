@@ -428,7 +428,7 @@
                     android:layout_marginEnd="8dp"
                     android:layout_marginRight="8dp"
                     android:layout_marginBottom="16dp"
-                    android:text="Andrew Liashuk 2019"
+                    android:text="@string/autor_label"
                     android:textSize="12sp"
                     android:textStyle="italic"
                     app:layout_constraintBottom_toBottomOf="parent"

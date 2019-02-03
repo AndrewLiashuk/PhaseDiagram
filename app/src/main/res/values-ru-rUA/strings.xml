@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="first_component_textView">Первый компонент</string>
+    <string name="second_component_textView">Второй компонент</string>
+    <string name="melting_temp_textView">Температура плавления T, K</string>
+    <string name="temperature_editText">Температура</string>
+    <string name="melting_entropy_textView">Энтропия плавления S, Дж/моль*K</string>
+    <string name="entropy_editText">Энтропия</string>
+    <string name="alpha_desc_textView">Параметры межмолекулярного взаимодействия</string>
+    <string name="build_button_text">Построить</string>
+    <string name="menu_solution_type">Тип раствора</string>
+    <string name="menu_ideal">Идеальный</string>
+    <string name="menu_regular">Регулярный</string>
+    <string name="menu_subregular">Субрегулярный</string>
+    <string name="menu_sample">Пример</string>
+    <string name="menu_save">Сохранить график</string>
+    <string name="try_again">Пожалуйста, попробуйте снова</string>
+    <string name="empty_first_temp">Пожалуйста, введите температуру плавления для первого компонента</string>
+    <string name="small_first_temp">Температура плавления первого компонента должна быть больше 0</string>
+    <string name="empty_second_temp">Пожалуйста, введите температуру плавления для второго компонента</string>
+    <string name="empty_first_entrop">Пожалуйста, введите энтропию для первого компонента</string>
+    <string name="empty_second_entrop">Пожалуйста, введите энтропию для второго компонента</string>
+    <string name="small_second_temp">Температура плавления второго компонента должна быть больше 0</string>
+    <string name="small_first_entrop">Энтропия первого компонента должна быть больше 0</string>
+    <string name="small_second_entrop">Энтропия второго компонента должна быть больше 0</string>
+    <string name="empty_alpha_l">Пожалуйста, введите alphaL</string>
+    <string name="empty_alpha_s">Пожалуйста, введите alphaS</string>
+    <string name="empty_first_alpha_l">Пожалуйста, введите alphaL для первого компонента</string>
+    <string name="empty_first_alpha_s">Пожалуйста, введите alphaS для первого компонента</string>
+    <string name="empty_second_alpha_l">Пожалуйста, введите alphaL для второго компонента</string>
+    <string name="empty_second_alpha_s">Пожалуйста, введите alphaS для второго компонента</string>
+</resources>
