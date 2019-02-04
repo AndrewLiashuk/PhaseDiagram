@@ -10,9 +10,11 @@ class DiagramViewModel : ViewModel() {
 
     private var mDiagramData: Pair<ArrayList<Entry>, ArrayList<Entry>>? = null
 
-
+    /**
+     * TODO
+     */
     fun createDiagramBranches(phaseData: PhaseData): Pair<ArrayList<Entry>, ArrayList<Entry>> {
-        if (mDiagramData != null) { // return if exist calculated data
+        if (mDiagramData != null) { // return DiagramData if exist
             return mDiagramData!!
         }
 

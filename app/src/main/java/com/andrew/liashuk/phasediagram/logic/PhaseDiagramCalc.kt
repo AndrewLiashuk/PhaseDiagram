@@ -52,7 +52,7 @@ class PhaseDiagramCalc(
 
         for (i in startVal..finishVal step calculationStep) {
             bisection(i)?.let {
-                mPoints.add(PhasePoint(i, it, mTemperature))
+                mPoints.add(PhasePoint(it, i, mTemperature))
             }
         }
 
@@ -116,9 +116,9 @@ class PhaseDiagramCalc(
         }
 
         val ta1 = mEntropFirst * mMeltingTempFirst + alphaL1 * i.pow(2) - alphaS1 * x.pow(2)
-        val ta2 = mEntropFirst + GAS_CONSTANTE * log10(((1 - x) / (1 - i)))
+        val ta2 = mEntropFirst + GAS_CONSTANTE * ln(((1 - x) / (1 - i)))
         val tb1 = mEntropSecond * mMeltingTempSecond + alphaL2 * (1 - i).pow(2) - alphaS2 * (1 - x).pow(2)
-        val tb2 = mEntropSecond + GAS_CONSTANTE * log10(x / i)
+        val tb2 = mEntropSecond + GAS_CONSTANTE * ln(x / i)
 
         mTemperature = (ta1 / ta2 + tb1 / tb2) / 2
         return ta1 * tb2 - tb1 * ta2

@@ -1,5 +1,6 @@
 package com.andrew.liashuk.phasediagram
 
+import android.Manifest
 import androidx.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.view.*
@@ -19,9 +20,18 @@ import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import kotlinx.coroutines.*
 import kotlin.coroutines.CoroutineContext
+import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.Color
+import android.provider.MediaStore
 
 
 class DiagramFragment : Fragment(), CoroutineScope {
+
+    companion object {
+        const val PERMISSIONS_REQUEST = 1
+    }
 
     private lateinit var mViewModel: DiagramViewModel
     private lateinit var mBinding: DiagramFragmentBinding
@@ -63,7 +73,7 @@ class DiagramFragment : Fragment(), CoroutineScope {
         super.onActivityCreated(savedInstanceState)
 
         mBinding = DataBindingUtil.setContentView(activity!!, R.layout.diagram_fragment)
-        mBinding.graphToolbar.title = "Diagram"
+        mBinding.graphToolbar.title = "Diagram" // TODO
         (activity as? AppCompatActivity)?.setSupportActionBar(mBinding.graphToolbar)
 
         mViewModel = ViewModelProviders.of(this).get(DiagramViewModel::class.java)
@@ -81,7 +91,9 @@ class DiagramFragment : Fragment(), CoroutineScope {
                 true
             }
             R.id.menu_save -> {
-                // TODO create save
+                if (checkPermission()) {
+                    saveDiagram()
+                }
                 true
             }
             else -> super.onOptionsItemSelected(item)
@@ -138,26 +150,93 @@ class DiagramFragment : Fragment(), CoroutineScope {
         val (solidEntries, liquidEntries) = mViewModel.createDiagramBranches(phaseData)
 
         val liquidDataSet = LineDataSet(liquidEntries, activity!!.getString(R.string.diagram_liquid))
-        liquidDataSet.color = ContextCompat.getColor(activity!!, R.color.colorAccent)
+        liquidDataSet.color = ContextCompat.getColor(activity!!, R.color.colorPrimary)
         liquidDataSet.lineWidth = 1.5f
         liquidDataSet.setDrawCircles(false)
 
         val solidDataSet = LineDataSet(solidEntries, activity!!.getString(R.string.diagram_solid))
-        solidDataSet.color = ContextCompat.getColor(activity!!, R.color.colorPrimary)
+        solidDataSet.color = ContextCompat.getColor(activity!!, R.color.colorAccent)
         solidDataSet.lineWidth = 1.5f
         solidDataSet.setDrawCircles(false)
 
         return LineData(liquidDataSet, solidDataSet)
     }
 
-/*    private fun saveToGallery(chart: Chart<*>, name: String) {
-        if (chart.saveToGallery(name + "_" + System.currentTimeMillis(), 70))
+
+    private fun saveDiagram() = launch {
+        try {
+            createAndSaveBitmapAsync().await()
+
             Toast.makeText(
-                applicationContext, "Saving SUCCESSFUL!",
+                activity!!,
+                "Image saved in gallery", // TODO
                 Toast.LENGTH_SHORT
             ).show()
-        else
-            Toast.makeText(applicationContext, "Saving FAILED!", Toast.LENGTH_SHORT)
-                .show()
-    }*/
+        } catch (ex: Exception) {
+            Toast.makeText(
+                activity!!,
+                "Saving FAILED!",
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+    }
+
+
+    private fun createAndSaveBitmapAsync() = async(Dispatchers.Default) {
+        createAndSaveBitmap()
+    }
+
+
+    private fun createAndSaveBitmap() {
+        val bitmap = Bitmap.createBitmap(
+            mBinding.diagramLayout.width,
+            mBinding.diagramLayout.height,
+            Bitmap.Config.ARGB_8888
+        )
+        val c = Canvas(bitmap)
+        c.drawColor(Color.WHITE)
+        mBinding.diagramLayout.draw(c)
+
+        MediaStore.Images.Media.insertImage(
+            activity!!.contentResolver,
+            bitmap,
+            "Diagram_image", // TODO
+            "Diagram image build in PhaseDiagram app"
+        )
+    }
+
+
+    private fun checkPermission(): Boolean {
+        val permission = ContextCompat.checkSelfPermission(activity!!, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+        return if (permission != PackageManager.PERMISSION_GRANTED) { // Permission is not granted
+            requestPermissions(
+                arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
+                PERMISSIONS_REQUEST
+            )
+
+            false
+        } else {
+            true //Permission has already been granted
+        }
+    }
+
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<String>,
+        grantResults: IntArray
+    ) {
+        when (requestCode) {
+            PERMISSIONS_REQUEST -> {
+                if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
+                    saveDiagram()
+                } else {
+                    // TODO
+                    Toast.makeText(activity!!, "Without storage permission can\\'t export photos!", Toast.LENGTH_SHORT).show()
+                }
+            }
+
+            else -> {}
+        }
+    }
 }
