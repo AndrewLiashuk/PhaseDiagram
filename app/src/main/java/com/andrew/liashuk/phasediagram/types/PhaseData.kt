@@ -177,6 +177,25 @@ data class PhaseData(
     }
 
     /**
+     * Set alpha as null for different solution types for prevent build with wrong data
+     */
+    fun changeType(type: SolutionType) {
+        when(type) {
+            SolutionType.IDEAL -> {
+                alphaLFirst = null
+                alphaSFirst = null
+                alphaLSecond = null
+                alphaSSecond = null
+            }
+            SolutionType.REGULAR -> {
+                alphaLSecond = null
+                alphaSSecond = null
+            }
+            SolutionType.SUBREGULAR -> Unit
+        }
+    }
+
+    /**
      * Show double in normal format
      *
      * 20.00 show as 20,

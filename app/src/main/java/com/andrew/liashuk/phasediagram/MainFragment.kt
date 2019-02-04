@@ -11,21 +11,26 @@ import com.andrew.liashuk.phasediagram.databinding.MainFragmentBinding
 import com.andrew.liashuk.phasediagram.types.PhaseData
 import com.andrew.liashuk.phasediagram.types.SolutionType
 import com.crashlytics.android.Crashlytics
-import android.content.DialogInterface
 import androidx.appcompat.app.AlertDialog
+import icepick.Icepick
+import icepick.State
 
 
 class MainFragment : Fragment() {
 
-    // dataBinging automatically update data
-    private var mPhaseData = PhaseData()
-    private var mPhaseType = SolutionType.SUBREGULAR
+    @State @JvmField
+    var mPhaseData = PhaseData() // dataBinging automatically update data
+    @State @JvmField
+    var mPhaseType = SolutionType.SUBREGULAR
+
     private lateinit var mBinding: MainFragmentBinding
+    private var mSubregularMenuItem: MenuItem? = null // set checked on sample menu click
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
+        Icepick.restoreInstanceState(this, savedInstanceState)
     }
 
 
@@ -45,11 +50,32 @@ class MainFragment : Fragment() {
         mBinding.mainFragment = this
 
         (activity as? AppCompatActivity)?.setSupportActionBar(mBinding.toolbar)
+
+        changePhaseType(mPhaseType) // update UI by phase type
+    }
+
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        Icepick.saveInstanceState(this, outState)
     }
 
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
         inflater?.inflate(R.menu.menu_main, menu)
+        mSubregularMenuItem = menu?.findItem(R.id.menu_subregular)
+
+        when(mPhaseType) {
+            SolutionType.IDEAL -> {
+                menu?.findItem(R.id.menu_ideal)?.isChecked = true
+            }
+            SolutionType.REGULAR -> {
+                menu?.findItem(R.id.menu_regular)?.isChecked = true
+            }
+            SolutionType.SUBREGULAR -> {
+                mSubregularMenuItem?.isChecked = true
+            }
+        }
     }
 
 
@@ -71,8 +97,9 @@ class MainFragment : Fragment() {
                 true
             }
             R.id.menu_sample -> { // set sample data
+                mSubregularMenuItem?.isChecked = true
                 changePhaseType(SolutionType.SUBREGULAR)
-                mPhaseData = PhaseData(1000.0, 2000.0, 20.0, 30.0, 10000.0, 0.0, -10000.0, 10000.0)
+                mPhaseData = PhaseData(1000.0, 1300.0, 30.0, 20.0, 20000.0, 0.0, 10000.0, -10000.0)
                 mBinding.phaseData = mPhaseData
                 true
             }
@@ -97,9 +124,12 @@ class MainFragment : Fragment() {
         }
     }
 
-
+    /**
+     *  Depending on the solution type show or hide some alpha editTexts
+     */
     private fun changePhaseType(type: SolutionType) {
         mPhaseType = type
+        mPhaseData.changeType(type)
 
         when(type) {
             SolutionType.IDEAL -> {
