@@ -92,7 +92,7 @@ class DiagramFragment : Fragment(), CoroutineScope {
                 true
             }
             R.id.menu_save -> {
-                if (mBuildDiagram && checkPermission()) { // TODO
+                if (mBuildDiagram && checkPermission()) {
                     saveDiagram()
                 }
                 true
@@ -131,7 +131,9 @@ class DiagramFragment : Fragment(), CoroutineScope {
         }
 
         try {
-            mBinding.chart.data = createDiagramDataAsync(phaseData).await()
+            withTimeout(10000L) {
+                mBinding.chart.data = createDiagramDataAsync(phaseData).await()
+            }
             mBinding.chart.invalidate()
             mBinding.chart.animateX(1000)
 
@@ -150,9 +152,7 @@ class DiagramFragment : Fragment(), CoroutineScope {
 
     private fun createDiagramDataAsync(phaseData: PhaseData): Deferred<LineData> =
         async(Dispatchers.Default) {
-            withTimeout(10000L) {
-                createDiagramData(phaseData)
-            }
+            createDiagramData(phaseData)
         }
 
 
@@ -176,7 +176,9 @@ class DiagramFragment : Fragment(), CoroutineScope {
     private fun saveDiagram() = launch {
         try {
             mBinding.progressBar.visibility = View.VISIBLE
-            createAndSaveBitmapAsync().await()
+            withTimeout(10000L) {
+                createAndSaveBitmapAsync().await()
+            }
             Helpers.showToast(activity, R.string.successful_image_save)
 
         } catch (timout: TimeoutCancellationException) {
@@ -192,9 +194,7 @@ class DiagramFragment : Fragment(), CoroutineScope {
 
 
     private fun createAndSaveBitmapAsync() = async(Dispatchers.Default) {
-        withTimeout(10000L) {
-            createAndSaveBitmap()
-        }
+        createAndSaveBitmap()
     }
 
 
