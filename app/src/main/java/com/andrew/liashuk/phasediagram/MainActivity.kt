@@ -12,7 +12,9 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val core = CrashlyticsCore.Builder().disabled(BuildConfig.DEBUG).build()
-        Fabric.with(this, Crashlytics.Builder().core(core).build())
+        //val core = CrashlyticsCore.Builder().disabled(BuildConfig.DEBUG).build()
+        //Fabric.with(this, Crashlytics.Builder().core(core).build())
+
+        Fabric.with(this, Crashlytics())
     }
 }
