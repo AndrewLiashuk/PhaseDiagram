@@ -5,7 +5,6 @@ import androidx.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.view.*
 import androidx.fragment.app.Fragment
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
@@ -25,6 +24,7 @@ import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
 import android.provider.MediaStore
+import com.andrew.liashuk.phasediagram.helpers.Helpers
 
 
 class DiagramFragment : Fragment(), CoroutineScope {
@@ -35,6 +35,7 @@ class DiagramFragment : Fragment(), CoroutineScope {
 
     private lateinit var mViewModel: DiagramViewModel
     private lateinit var mBinding: DiagramFragmentBinding
+    private var mBuildDiagram = false
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -73,7 +74,7 @@ class DiagramFragment : Fragment(), CoroutineScope {
         super.onActivityCreated(savedInstanceState)
 
         mBinding = DataBindingUtil.setContentView(activity!!, R.layout.diagram_fragment)
-        mBinding.graphToolbar.title = "Diagram" // TODO
+        mBinding.graphToolbar.title = activity?.getString(R.string.diagram_fragment_title) ?: ""
         (activity as? AppCompatActivity)?.setSupportActionBar(mBinding.graphToolbar)
 
         mViewModel = ViewModelProviders.of(this).get(DiagramViewModel::class.java)
@@ -91,7 +92,7 @@ class DiagramFragment : Fragment(), CoroutineScope {
                 true
             }
             R.id.menu_save -> {
-                if (checkPermission()) {
+                if (mBuildDiagram && checkPermission()) { // TODO
                     saveDiagram()
                 }
                 true
@@ -124,25 +125,34 @@ class DiagramFragment : Fragment(), CoroutineScope {
     private fun setPlotData(phaseData: PhaseData?) = launch {
         if (phaseData == null) {
             Crashlytics.getInstance().core.logException(Exception("Phase data is null."))
-            Toast.makeText(activity, activity!!.getString(R.string.try_again), Toast.LENGTH_SHORT).show()
+            Helpers.showToast(activity, R.string.try_again)
             view?.findNavController()?.popBackStack()
             return@launch
         }
 
-        mBinding.chart.data = createDiagramDataAsync(phaseData).await()
-        mBinding.chart.invalidate()
-        mBinding.chart.animateX(1000)
+        try {
+            mBinding.chart.data = createDiagramDataAsync(phaseData).await()
+            mBinding.chart.invalidate()
+            mBinding.chart.animateX(1000)
 
-        mBinding.groupDiagram.visibility = View.VISIBLE
-        mBinding.progressBar.visibility = View.GONE
+            mBuildDiagram = true
+            mBinding.groupDiagram.visibility = View.VISIBLE
+            mBinding.progressBar.visibility = View.GONE
+        } catch (timout: TimeoutCancellationException) {
+            Crashlytics.getInstance().core.logException(timout)
+            Helpers.showErrorAlert(activity, R.string.long_time_calculation)
+        } catch (ex: Exception) {
+            Crashlytics.getInstance().core.logException(ex)
+            Helpers.showErrorAlert(activity, ex)
+        }
     }
 
 
     private fun createDiagramDataAsync(phaseData: PhaseData): Deferred<LineData> =
-        // TODO add max time corutin
-
         async(Dispatchers.Default) {
-            createDiagramData(phaseData)
+            withTimeout(10000L) {
+                createDiagramData(phaseData)
+            }
         }
 
 
@@ -165,25 +175,26 @@ class DiagramFragment : Fragment(), CoroutineScope {
 
     private fun saveDiagram() = launch {
         try {
+            mBinding.progressBar.visibility = View.VISIBLE
             createAndSaveBitmapAsync().await()
+            Helpers.showToast(activity, R.string.successful_image_save)
 
-            Toast.makeText(
-                activity!!,
-                "Image saved in gallery", // TODO
-                Toast.LENGTH_SHORT
-            ).show()
+        } catch (timout: TimeoutCancellationException) {
+            Crashlytics.getInstance().core.logException(timout)
+            Helpers.showErrorAlert(activity, R.string.long_time_save)
         } catch (ex: Exception) {
-            Toast.makeText(
-                activity!!,
-                "Saving FAILED!",
-                Toast.LENGTH_SHORT
-            ).show()
+            Crashlytics.getInstance().core.logException(ex)
+            Helpers.showToast(activity, R.string.failed_image_save)
+        } finally {
+            mBinding.progressBar.visibility = View.GONE
         }
     }
 
 
     private fun createAndSaveBitmapAsync() = async(Dispatchers.Default) {
-        createAndSaveBitmap()
+        withTimeout(10000L) {
+            createAndSaveBitmap()
+        }
     }
 
 
@@ -200,8 +211,8 @@ class DiagramFragment : Fragment(), CoroutineScope {
         MediaStore.Images.Media.insertImage(
             activity!!.contentResolver,
             bitmap,
-            "Diagram_image", // TODO
-            "Diagram image build in PhaseDiagram app"
+            activity!!.getString(R.string.saved_image_name),
+            activity!!.getString(R.string.saved_image_desc)
         )
     }
 
@@ -231,11 +242,9 @@ class DiagramFragment : Fragment(), CoroutineScope {
                 if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
                     saveDiagram()
                 } else {
-                    // TODO
-                    Toast.makeText(activity!!, "Without storage permission can\\'t export photos!", Toast.LENGTH_SHORT).show()
+                    Helpers.showToast(activity, R.string.permissions_not_grant)
                 }
             }
-
             else -> {}
         }
     }

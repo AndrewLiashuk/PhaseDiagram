@@ -29,4 +29,12 @@
     <string name="empty_first_alpha_s">Пожалуйста, введите alphaS для первого компонента</string>
     <string name="empty_second_alpha_l">Пожалуйста, введите alphaL для второго компонента</string>
     <string name="empty_second_alpha_s">Пожалуйста, введите alphaS для второго компонента</string>
+    <string name="successful_image_save">Изображение сохранено в галерее</string>
+    <string name="failed_image_save">Ошибка при сохранении!</string>
+    <string name="internal_error">Внутренняя ошибка</string>
+    <string name="null_message">Текст ошибку отсутствует</string>
+    <string name="exception_title">Ошибка</string>
+    <string name="permissions_not_grant">Без разрешения на хранение невозможно сохранить диаграмму!</string>
+    <string name="long_time_calculation">Слишком много времени уходит на расчеты. Попробуйте снова.</string>
+    <string name="long_time_save">Слишком много времени ушло на сохранение. Попробуйте снова.</string>
 </resources>

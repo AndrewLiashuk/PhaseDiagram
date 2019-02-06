@@ -26,9 +26,21 @@
     <!-- fragment -->
     <string name="diagram_liquid" translatable="false">Liquid</string>
     <string name="diagram_solid" translatable="false">Solid</string>
+    <string name="diagram_fragment_title" translatable="false">Diagram</string>
+    <string name="saved_image_name" translatable="false">Diagram_image</string>
+    <string name="saved_image_desc" translatable="false">"Diagram image build in PhaseDiagram app"</string>
 
     <!-- diaglogs -->
     <string name="try_again">Please try again.</string>
+    <string name="successful_image_save">Image saved in gallery</string>
+    <string name="failed_image_save">Saving FAILED!</string>
+    <string name="internal_error">Internal Error</string>
+    <string name="null_message">Null message</string>
+    <string name="exception_title">Exception</string>
+    <string name="permissions_not_grant">Without storage permission can\'t save diagram!</string>
+    <string name="long_time_calculation">Too much time spent on calculations. Try again.</string>
+    <string name="long_time_save">Too much time spent on save. Try again.</string>
+
     <string name="empty_first_temp">Please enter temperature for first component</string>
     <string name="small_first_temp">Temperature for first component must be bigger then 0</string>
     <string name="empty_second_temp">Please enter temperature for second component</string>

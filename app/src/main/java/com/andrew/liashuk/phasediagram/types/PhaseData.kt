@@ -1,13 +1,11 @@
 package com.andrew.liashuk.phasediagram.types
 
-import android.content.Context
 import android.os.Parcelable
 import androidx.databinding.BaseObservable
 import androidx.databinding.Bindable
 import com.andrew.liashuk.phasediagram.BR
 import com.andrew.liashuk.phasediagram.R
 import kotlinx.android.parcel.Parcelize
-import kotlin.coroutines.CoroutineContext
 
 
 @Parcelize
@@ -135,38 +133,38 @@ data class PhaseData(
      *              Variables with suffix 'str' need for dataBinding,
      *              no need to check them
      * @return      <code>null</code> if all data is correct
-     *              <code>string</code> return error text to show for user
+     *              <code>int</code> return error text id to show for user
      */
-    fun checkData(context: Context, type: SolutionType): String? {
+    fun checkData(type: SolutionType): Int? {
         return when {
-            meltingTempFirst == null -> context.getString(R.string.empty_first_temp)
-            meltingTempFirst ?: 0.0 < 0.0 -> context.getString(R.string.small_first_temp)
+            meltingTempFirst == null -> R.string.empty_first_temp
+            meltingTempFirst ?: 0.0 < 0.0 -> R.string.small_first_temp
 
-            meltingTempSecond == null -> context.getString(R.string.empty_second_temp)
-            meltingTempSecond ?: 0.0 < 0.0 -> context.getString(R.string.small_second_temp)
+            meltingTempSecond == null -> R.string.empty_second_temp
+            meltingTempSecond ?: 0.0 < 0.0 -> R.string.small_second_temp
 
-            entropFirst == null -> context.getString(R.string.empty_first_entrop)
-            entropFirst ?: 0.0 < 0.0 -> context.getString(R.string.small_first_entrop)
+            entropFirst == null -> R.string.empty_first_entrop
+            entropFirst ?: 0.0 < 0.0 -> R.string.small_first_entrop
 
-            entropSecond == null -> context.getString(R.string.empty_second_entrop)
-            entropSecond ?: 0.0 < 0.0 -> context.getString(R.string.small_second_entrop)
+            entropSecond == null -> R.string.empty_second_entrop
+            entropSecond ?: 0.0 < 0.0 -> R.string.small_second_entrop
 
 
             else -> {
                 when(type) {
                     SolutionType.REGULAR -> {
                         when {
-                            alphaLFirst == null -> context.getString(R.string.empty_alpha_l)
-                            alphaSFirst == null -> context.getString(R.string.empty_alpha_s)
+                            alphaLFirst == null -> R.string.empty_alpha_l
+                            alphaSFirst == null -> R.string.empty_alpha_s
                             else -> null
                         }
                     }
                     SolutionType.SUBREGULAR -> {
                         when {
-                            alphaLFirst == null -> context.getString(R.string.empty_first_alpha_l)
-                            alphaSFirst == null -> context.getString(R.string.empty_first_alpha_s)
-                            alphaLSecond == null -> context.getString(R.string.empty_second_alpha_l)
-                            alphaSSecond == null -> context.getString(R.string.empty_second_alpha_s)
+                            alphaLFirst == null -> R.string.empty_first_alpha_l
+                            alphaSFirst == null -> R.string.empty_first_alpha_s
+                            alphaLSecond == null -> R.string.empty_second_alpha_l
+                            alphaSSecond == null -> R.string.empty_second_alpha_s
                             else -> null
                         }
                     }

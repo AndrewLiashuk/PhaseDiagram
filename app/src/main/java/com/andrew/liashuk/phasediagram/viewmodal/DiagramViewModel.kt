@@ -11,7 +11,15 @@ class DiagramViewModel : ViewModel() {
     private var mDiagramData: Pair<ArrayList<Entry>, ArrayList<Entry>>? = null
 
     /**
-     * TODO
+     * Calculate and store diagram points.
+     *
+     * @param phaseData     Input class that contains variables for diagram calculation.
+     *
+     * @return              Pair of ArrayList with Entrys. First is solid diagram data and second
+     *                      liquid diagram data.
+     *
+     * @throws Exception    Throw exception if input phaseData doesn't contain meltingTempFirst or
+     *                      meltingTempSecond or entropFirst or entropSecond.
      */
     fun createDiagramBranches(phaseData: PhaseData): Pair<ArrayList<Entry>, ArrayList<Entry>> {
         if (mDiagramData != null) { // return DiagramData if exist

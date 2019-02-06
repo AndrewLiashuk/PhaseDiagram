@@ -11,7 +11,7 @@ import com.andrew.liashuk.phasediagram.databinding.MainFragmentBinding
 import com.andrew.liashuk.phasediagram.types.PhaseData
 import com.andrew.liashuk.phasediagram.types.SolutionType
 import com.crashlytics.android.Crashlytics
-import androidx.appcompat.app.AlertDialog
+import com.andrew.liashuk.phasediagram.helpers.Helpers
 import icepick.Icepick
 import icepick.State
 
@@ -109,18 +109,19 @@ class MainFragment : Fragment() {
 
 
     fun onBuildClick() {
-        val errorText = mPhaseData.checkData(activity!!.applicationContext, mPhaseType)
+        try {
+            val errorTextId = mPhaseData.checkData(mPhaseType)
 
-        if (errorText != null) {
-            AlertDialog.Builder(activity!!)
-                .setMessage(errorText)
-                .setPositiveButton(activity!!.getString(android.R.string.ok), null)
-                .create()
-                .show()
-        } else {
-            val action = MainFragmentDirections.actionMainFragmentToDiagramFragment()
-            action.phaseData = mPhaseData
-            view?.findNavController()?.navigate(action) ?: Crashlytics.getInstance().core.logException(Exception("Can't open DiagramFragment."))
+            if (errorTextId != null) {
+                Helpers.showAlert(activity, errorTextId)
+            } else {
+                val action = MainFragmentDirections.actionMainFragmentToDiagramFragment()
+                action.phaseData = mPhaseData
+                view!!.findNavController().navigate(action)
+            }
+        } catch (ex: Exception) {
+            Crashlytics.getInstance().core.logException(ex)
+            Helpers.showErrorAlert(activity, ex)
         }
     }
 
@@ -128,27 +129,31 @@ class MainFragment : Fragment() {
      *  Depending on the solution type show or hide some alpha editTexts
      */
     private fun changePhaseType(type: SolutionType) {
-        mPhaseType = type
-        mPhaseData.changeType(type)
+        try {
+            mPhaseType = type
+            mPhaseData.changeType(type)
 
-        when(type) {
-            SolutionType.IDEAL -> {
-                mBinding.groupFirstAlphas.visibility = View.GONE
-                mBinding.groupSecondAlphas.visibility = View.GONE
+            when(type) {
+                SolutionType.IDEAL -> {
+                    mBinding.groupFirstAlphas.visibility = View.GONE
+                    mBinding.groupSecondAlphas.visibility = View.GONE
+                }
+                SolutionType.REGULAR -> {
+                    mBinding.groupFirstAlphas.visibility = View.VISIBLE
+                    mBinding.groupSecondAlphas.visibility = View.GONE
+                    changeAlphaEditPosition(true)
+                }
+                SolutionType.SUBREGULAR -> {
+                    mBinding.groupFirstAlphas.visibility = View.VISIBLE
+                    mBinding.groupSecondAlphas.visibility = View.VISIBLE
+                    changeAlphaEditPosition(false)
+                }
             }
-            SolutionType.REGULAR -> {
-                mBinding.groupFirstAlphas.visibility = View.VISIBLE
-                mBinding.groupSecondAlphas.visibility = View.GONE
-                changeAlphaEditPosition(true)
-            }
-            SolutionType.SUBREGULAR -> {
-                mBinding.groupFirstAlphas.visibility = View.VISIBLE
-                mBinding.groupSecondAlphas.visibility = View.VISIBLE
-                changeAlphaEditPosition(false)
-            }
+        } catch (ex: Exception) {
+            Crashlytics.getInstance().core.logException(ex)
+            Helpers.showErrorAlert(activity, ex)
         }
     }
-
 
     /**
      * @param isRegular     <code>true</code> center alphaL and alphaS textViews by set constraint
