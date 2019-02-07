@@ -12,3 +12,4 @@
 /captures
 .externalNativeBuild
 .idea/encodings.xml
+app/fabric.properties
