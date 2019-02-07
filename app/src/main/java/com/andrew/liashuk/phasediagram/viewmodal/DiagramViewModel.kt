@@ -42,9 +42,9 @@ class DiagramViewModel : ViewModel() {
         val liquidEntries = ArrayList<Entry>(points.size)
 
         // divide collection for liquid and solid
-        points.map {
-            solidEntries.add(Entry(it.solid.toFloat(), it.temperature.toFloat()))
-            liquidEntries.add(Entry(it.liquid.toFloat(), it.temperature.toFloat()))
+        for ((solid, liquid, temperature) in points) {
+            solidEntries.add(Entry(solid.toFloat(), temperature.toFloat()))
+            liquidEntries.add(Entry(liquid.toFloat(), temperature.toFloat()))
         }
 
         mDiagramData = Pair(solidEntries, liquidEntries)

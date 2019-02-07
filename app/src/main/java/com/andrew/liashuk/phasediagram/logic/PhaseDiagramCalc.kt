@@ -67,7 +67,7 @@ class PhaseDiagramCalc(
      * Input value of solid and liquid transfer into percentages by multiply by 100.
      * Temperature store in kelvins.
      */
-    class PhasePoint(var solid: Double, var liquid: Double, var temperature: Double) {
+    data class PhasePoint(var solid: Double, var liquid: Double, var temperature: Double) {
         init {
             solid *= 100 //transfer into percentages
             liquid *= 100
