@@ -57,4 +57,15 @@
     <string name="empty_second_alpha_s">Please enter alphaS for second component</string>
     <string name="autor_label" translatable="false">Andrew Liashuk 2019</string>
 
+    <!-- Time indicating 1 minute before now -->
+    <string name="date_minute" translatable="false">a minute ago</string>
+    <!-- Time indicating several minutes before now -->
+    <string name="date_minutes" translatable="false">%1$d minutes ago</string>
+    <!-- Time indicating yesterday -->
+    <string name="date_yesterday" translatable="false">%1$s yesterday</string>
+    <!-- Time indicating one day -->
+    <string name="date_day" translatable="false">1 day</string>
+    <!-- Time indicating several days -->
+    <string name="date_days" translatable="false">%1$d days</string>
+
 </resources>
