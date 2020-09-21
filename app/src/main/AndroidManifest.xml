@@ -28,6 +28,10 @@
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="38a456fd892bb17875c4621526643c767fbefec6" />
+
+        <meta-data
+            android:name="google_analytics_adid_collection_enabled"
+            android:value="false" />
     </application>
 
 </manifest>
