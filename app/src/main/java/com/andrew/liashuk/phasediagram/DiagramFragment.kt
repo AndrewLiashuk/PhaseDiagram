@@ -13,7 +13,6 @@ import com.andrew.liashuk.phasediagram.databinding.DiagramFragmentBinding
 import com.andrew.liashuk.phasediagram.types.PhaseData
 import com.andrew.liashuk.phasediagram.ui.CustomMarkerView
 import com.andrew.liashuk.phasediagram.viewmodal.DiagramViewModel
-import com.crashlytics.android.Crashlytics
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
@@ -65,20 +64,19 @@ class DiagramFragment : Fragment(), CoroutineScope {
     }
 
 
-    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
-        inflater?.inflate(R.menu.menu_diagram, menu)
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.menu_diagram, menu)
     }
-
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        mBinding = DataBindingUtil.setContentView(activity!!, R.layout.diagram_fragment)
+        mBinding = DataBindingUtil.setContentView(requireActivity(), R.layout.diagram_fragment)
         mBinding.graphToolbar.title = activity?.getString(R.string.diagram_fragment_title) ?: ""
         (activity as? AppCompatActivity)?.setSupportActionBar(mBinding.graphToolbar)
 
         mViewModel = ViewModelProviders.of(this).get(DiagramViewModel::class.java)
-        val phaseData = DiagramFragmentArgs.fromBundle(arguments!!).phaseData
+        val phaseData = DiagramFragmentArgs.fromBundle(requireArguments()).phaseData
 
         setupPlot()
         setPlotData(phaseData)
@@ -115,7 +113,7 @@ class DiagramFragment : Fragment(), CoroutineScope {
             xAxis.axisMinimum = 0f
             xAxis.axisMaximum = 100f
 
-            val mv = CustomMarkerView(activity!!, R.layout.custom_marker_view)
+            val mv = CustomMarkerView(requireContext(), R.layout.custom_marker_view)
             mv.chartView = this // For bounds control
             marker = mv // Set the marker to the chart
         }
@@ -124,7 +122,7 @@ class DiagramFragment : Fragment(), CoroutineScope {
 
     private fun setPlotData(phaseData: PhaseData?) = launch {
         if (phaseData == null) {
-            Crashlytics.getInstance().core.logException(Exception("Phase data is null."))
+            //Crashlytics.getInstance().core.logException(Exception("Phase data is null."))
             Helpers.showToast(activity, R.string.try_again)
             view?.findNavController()?.popBackStack()
             return@launch
@@ -141,10 +139,10 @@ class DiagramFragment : Fragment(), CoroutineScope {
             mBinding.groupDiagram.visibility = View.VISIBLE
             mBinding.progressBar.visibility = View.GONE
         } catch (timout: TimeoutCancellationException) {
-            Crashlytics.getInstance().core.logException(timout)
+            //Crashlytics.getInstance().core.logException(timout)
             Helpers.showErrorAlert(activity, R.string.long_time_calculation)
         } catch (ex: Exception) {
-            Crashlytics.getInstance().core.logException(ex)
+            //Crashlytics.getInstance().core.logException(ex)
             Helpers.showErrorAlert(activity, ex)
         }
     }
@@ -159,13 +157,13 @@ class DiagramFragment : Fragment(), CoroutineScope {
     private fun createDiagramData(phaseData: PhaseData): LineData {
         val (solidEntries, liquidEntries) = mViewModel.createDiagramBranches(phaseData)
 
-        val liquidDataSet = LineDataSet(liquidEntries, activity!!.getString(R.string.diagram_liquid))
-        liquidDataSet.color = ContextCompat.getColor(activity!!, R.color.colorPrimary)
+        val liquidDataSet = LineDataSet(liquidEntries, requireContext().getString(R.string.diagram_liquid))
+        liquidDataSet.color = ContextCompat.getColor(requireActivity(), R.color.colorPrimary)
         liquidDataSet.lineWidth = 1.5f
         liquidDataSet.setDrawCircles(false)
 
-        val solidDataSet = LineDataSet(solidEntries, activity!!.getString(R.string.diagram_solid))
-        solidDataSet.color = ContextCompat.getColor(activity!!, R.color.colorAccent)
+        val solidDataSet = LineDataSet(solidEntries, requireContext().getString(R.string.diagram_solid))
+        solidDataSet.color = ContextCompat.getColor(requireContext(), R.color.colorAccent)
         solidDataSet.lineWidth = 1.5f
         solidDataSet.setDrawCircles(false)
 
@@ -182,10 +180,10 @@ class DiagramFragment : Fragment(), CoroutineScope {
             Helpers.showToast(activity, R.string.successful_image_save)
 
         } catch (timout: TimeoutCancellationException) {
-            Crashlytics.getInstance().core.logException(timout)
+            //Crashlytics.getInstance().core.logException(timout)
             Helpers.showErrorAlert(activity, R.string.long_time_save)
         } catch (ex: Exception) {
-            Crashlytics.getInstance().core.logException(ex)
+            //Crashlytics.getInstance().core.logException(ex)
             Helpers.showToast(activity, R.string.failed_image_save)
         } finally {
             mBinding.progressBar.visibility = View.GONE
@@ -209,16 +207,16 @@ class DiagramFragment : Fragment(), CoroutineScope {
         mBinding.diagramLayout.draw(c)
 
         MediaStore.Images.Media.insertImage(
-            activity!!.contentResolver,
+            requireActivity().contentResolver,
             bitmap,
-            activity!!.getString(R.string.saved_image_name),
-            activity!!.getString(R.string.saved_image_desc)
+            requireContext().getString(R.string.saved_image_name),
+            requireContext().getString(R.string.saved_image_desc)
         )
     }
 
 
     private fun checkPermission(): Boolean {
-        val permission = ContextCompat.checkSelfPermission(activity!!, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+        val permission = ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
         return if (permission != PackageManager.PERMISSION_GRANTED) { // Permission is not granted
             requestPermissions(
                 arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),

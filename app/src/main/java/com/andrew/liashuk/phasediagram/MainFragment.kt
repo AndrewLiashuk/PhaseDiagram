@@ -10,7 +10,6 @@ import androidx.navigation.findNavController
 import com.andrew.liashuk.phasediagram.databinding.MainFragmentBinding
 import com.andrew.liashuk.phasediagram.types.PhaseData
 import com.andrew.liashuk.phasediagram.types.SolutionType
-import com.crashlytics.android.Crashlytics
 import com.andrew.liashuk.phasediagram.helpers.Helpers
 import icepick.Icepick
 import icepick.State
@@ -45,7 +44,7 @@ class MainFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        mBinding = DataBindingUtil.setContentView(activity!!, R.layout.main_fragment)
+        mBinding = DataBindingUtil.setContentView(requireActivity(), R.layout.main_fragment)
         mBinding.phaseData = mPhaseData
         mBinding.mainFragment = this
 
@@ -61,16 +60,16 @@ class MainFragment : Fragment() {
     }
 
 
-    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
-        inflater?.inflate(R.menu.menu_main, menu)
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.menu_main, menu)
         mSubregularMenuItem = menu?.findItem(R.id.menu_subregular)
 
         when(mPhaseType) {
             SolutionType.IDEAL -> {
-                menu?.findItem(R.id.menu_ideal)?.isChecked = true
+                menu.findItem(R.id.menu_ideal).isChecked = true
             }
             SolutionType.REGULAR -> {
-                menu?.findItem(R.id.menu_regular)?.isChecked = true
+                menu.findItem(R.id.menu_regular).isChecked = true
             }
             SolutionType.SUBREGULAR -> {
                 mSubregularMenuItem?.isChecked = true
@@ -120,7 +119,7 @@ class MainFragment : Fragment() {
                 view!!.findNavController().navigate(action)
             }
         } catch (ex: Exception) {
-            Crashlytics.getInstance().core.logException(ex)
+            //Crashlytics.getInstance().core.logException(ex)
             Helpers.showErrorAlert(activity, ex)
         }
     }
@@ -150,7 +149,7 @@ class MainFragment : Fragment() {
                 }
             }
         } catch (ex: Exception) {
-            Crashlytics.getInstance().core.logException(ex)
+            //Crashlytics.getInstance().core.logException(ex)
             Helpers.showErrorAlert(activity, ex)
         }
     }
@@ -199,9 +198,3 @@ class MainFragment : Fragment() {
         constraintSet.applyTo(mBinding.cardConstraintLayout)
     }
 }
-
-/*
-      Crashlytics.getInstance().core.setString("Key", "val")
-      Crashlytics.getInstance().core.log(Log.ERROR, "TestTag", "Log2")
-      Crashlytics.getInstance().core.logException(Exception("New error"))
-*/

@@ -2,9 +2,6 @@ package com.andrew.liashuk.phasediagram
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.crashlytics.android.Crashlytics
-import io.fabric.sdk.android.Fabric
-import com.crashlytics.android.core.CrashlyticsCore
 
 
 class MainActivity : AppCompatActivity() {
@@ -15,6 +12,6 @@ class MainActivity : AppCompatActivity() {
         //val core = CrashlyticsCore.Builder().disabled(BuildConfig.DEBUG).build()
         //Fabric.with(this, Crashlytics.Builder().core(core).build())
 
-        Fabric.with(this, Crashlytics())
+        //Fabric.with(this, Crashlytics())
     }
 }
