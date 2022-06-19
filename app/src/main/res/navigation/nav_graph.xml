@@ -8,7 +8,8 @@
     <fragment
         android:id="@+id/mainFragment"
         android:name="com.andrew.liashuk.phasediagram.MainFragment"
-        android:label="MainFragment" >
+        android:label="MainFragment"
+        tools:layout="@layout/main_fragment">
         <action
             android:id="@+id/action_mainFragment_to_diagramFragment"
             app:destination="@id/diagramFragment"
@@ -17,6 +18,7 @@
             app:popEnterAnim="@anim/nav_default_pop_enter_anim"
             app:popExitAnim="@anim/nav_default_pop_exit_anim" />
     </fragment>
+
     <fragment
         android:id="@+id/diagramFragment"
         android:name="com.andrew.liashuk.phasediagram.DiagramFragment"

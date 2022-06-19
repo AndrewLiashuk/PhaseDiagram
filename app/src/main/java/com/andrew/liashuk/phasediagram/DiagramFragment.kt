@@ -25,12 +25,7 @@ import android.graphics.Color
 import android.provider.MediaStore
 import com.andrew.liashuk.phasediagram.helpers.Helpers
 
-
 class DiagramFragment : Fragment(), CoroutineScope {
-
-    companion object {
-        const val PERMISSIONS_REQUEST = 1
-    }
 
     private lateinit var mViewModel: DiagramViewModel
     private lateinit var mBinding: DiagramFragmentBinding
@@ -245,5 +240,9 @@ class DiagramFragment : Fragment(), CoroutineScope {
             }
             else -> {}
         }
+    }
+
+    companion object {
+        const val PERMISSIONS_REQUEST = 1
     }
 }

@@ -18,8 +18,6 @@ class CustomMarkerView(context: Context, layoutResource: Int) :
 
     private val tvContent: TextView = findViewById(R.id.tvContent)
 
-    // runs every time the MarkerView is redrawn, can be used to update the
-    // content (user-interface)
     override fun refreshContent(e: Entry?, highlight: Highlight?) {
         if (e == null) {
             return
