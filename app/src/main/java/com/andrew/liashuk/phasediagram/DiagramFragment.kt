@@ -20,18 +20,18 @@ import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
 import android.provider.MediaStore
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.andrew.liashuk.phasediagram.ext.setSupportActionBar
 import com.andrew.liashuk.phasediagram.helpers.Helpers
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
-class DiagramFragment : Fragment(), CoroutineScope {
+@AndroidEntryPoint
+class DiagramFragment : Fragment() {
 
-    // start all coroutines in UI thread
-    private val mJob = SupervisorJob()
-    override val coroutineContext: CoroutineContext
-        get() = Dispatchers.Main + mJob
-
-    private lateinit var mViewModel: DiagramViewModel
+    private val viewModel: DiagramViewModel by viewModels()
 
     private var _binding: DiagramFragmentBinding? = null
     private val binding: DiagramFragmentBinding
@@ -68,7 +68,6 @@ class DiagramFragment : Fragment(), CoroutineScope {
         binding.toolbar.title = getString(R.string.diagram_fragment_title)
         setSupportActionBar(binding.toolbar)
 
-        mViewModel = ViewModelProviders.of(this).get(DiagramViewModel::class.java)
         val phaseData = DiagramFragmentArgs.fromBundle(requireArguments()).phaseData
 
         setupPlot()
@@ -108,7 +107,7 @@ class DiagramFragment : Fragment(), CoroutineScope {
         }
     }
 
-    private fun setPlotData(phaseData: PhaseData) = launch {
+    private fun setPlotData(phaseData: PhaseData) = lifecycleScope.launch {
         try {
             withTimeout(10000L) {
                 binding.lineChart.data = createDiagramData(phaseData)
@@ -129,7 +128,7 @@ class DiagramFragment : Fragment(), CoroutineScope {
     }
 
     private suspend fun createDiagramData(phaseData: PhaseData): LineData = withContext(Dispatchers.Default) {
-        val (solidEntries, liquidEntries) = mViewModel.createDiagramBranches(phaseData)
+        val (solidEntries, liquidEntries) = viewModel.createDiagramBranches(phaseData)
 
         val liquidDataSet = LineDataSet(liquidEntries, getString(R.string.diagram_liquid)).apply {
             color = ContextCompat.getColor(requireActivity(), R.color.colorPrimary)
@@ -146,7 +145,7 @@ class DiagramFragment : Fragment(), CoroutineScope {
         LineData(liquidDataSet, solidDataSet)
     }
 
-    private fun saveDiagram() = launch {
+    private fun saveDiagram() = lifecycleScope.launch {
         try {
             binding.progressBar.visibility = View.VISIBLE
             withTimeout(10000L) {

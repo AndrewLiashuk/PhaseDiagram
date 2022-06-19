@@ -4,9 +4,11 @@ import androidx.lifecycle.ViewModel
 import com.andrew.liashuk.phasediagram.logic.PhaseDiagramCalc
 import com.andrew.liashuk.phasediagram.types.PhaseData
 import com.github.mikephil.charting.data.Entry
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
-
-class DiagramViewModel : ViewModel() {
+@HiltViewModel
+class DiagramViewModel @Inject constructor() : ViewModel() {
 
     private var mDiagramData: Pair<ArrayList<Entry>, ArrayList<Entry>>? = null
 

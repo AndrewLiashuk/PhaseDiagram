@@ -6,18 +6,22 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.andrew.liashuk.phasediagram.databinding.MainFragmentBinding
 import com.andrew.liashuk.phasediagram.types.PhaseData
 import com.andrew.liashuk.phasediagram.types.SolutionType
 import com.andrew.liashuk.phasediagram.helpers.Helpers
+import com.andrew.liashuk.phasediagram.viewmodal.MainViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainFragment : Fragment() {
 
-    @JvmField
     var mPhaseData = PhaseData() // dataBinging automatically update data
-    @JvmField
     var mPhaseType = SolutionType.SUBREGULAR
+
+    private val viewModel: MainViewModel by viewModels()
 
     private lateinit var mBinding: MainFragmentBinding
     private var mSubregularMenuItem: MenuItem? = null // set checked on sample menu click

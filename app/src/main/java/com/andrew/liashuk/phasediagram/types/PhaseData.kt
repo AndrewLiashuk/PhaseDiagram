@@ -148,7 +148,6 @@ data class PhaseData(
             entropSecond == null -> R.string.empty_second_entrop
             entropSecond ?: 0.0 < 0.0 -> R.string.small_second_entrop
 
-
             else -> {
                 when(type) {
                     SolutionType.REGULAR -> {
