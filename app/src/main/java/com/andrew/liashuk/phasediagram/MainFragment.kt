@@ -6,32 +6,26 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import com.andrew.liashuk.phasediagram.databinding.MainFragmentBinding
 import com.andrew.liashuk.phasediagram.types.PhaseData
 import com.andrew.liashuk.phasediagram.types.SolutionType
 import com.andrew.liashuk.phasediagram.helpers.Helpers
-import icepick.Icepick
-import icepick.State
-
 
 class MainFragment : Fragment() {
 
-    @State @JvmField
+    @JvmField
     var mPhaseData = PhaseData() // dataBinging automatically update data
-    @State @JvmField
+    @JvmField
     var mPhaseType = SolutionType.SUBREGULAR
 
     private lateinit var mBinding: MainFragmentBinding
     private var mSubregularMenuItem: MenuItem? = null // set checked on sample menu click
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
-        Icepick.restoreInstanceState(this, savedInstanceState)
     }
-
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -40,9 +34,8 @@ class MainFragment : Fragment() {
         return inflater.inflate(R.layout.main_fragment, container, false)
     }
 
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         mBinding = DataBindingUtil.setContentView(requireActivity(), R.layout.main_fragment)
         mBinding.phaseData = mPhaseData
@@ -53,16 +46,9 @@ class MainFragment : Fragment() {
         changePhaseType(mPhaseType) // update UI by phase type
     }
 
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        Icepick.saveInstanceState(this, outState)
-    }
-
-
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.menu_main, menu)
-        mSubregularMenuItem = menu?.findItem(R.id.menu_subregular)
+        mSubregularMenuItem = menu.findItem(R.id.menu_subregular)
 
         when(mPhaseType) {
             SolutionType.IDEAL -> {
@@ -76,7 +62,6 @@ class MainFragment : Fragment() {
             }
         }
     }
-
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
@@ -106,7 +91,6 @@ class MainFragment : Fragment() {
         }
     }
 
-
     fun onBuildClick() {
         try {
             val errorTextId = mPhaseData.checkData(mPhaseType)
@@ -114,9 +98,8 @@ class MainFragment : Fragment() {
             if (errorTextId != null) {
                 Helpers.showAlert(activity, errorTextId)
             } else {
-                val action = MainFragmentDirections.actionMainFragmentToDiagramFragment()
-                action.phaseData = mPhaseData
-                view!!.findNavController().navigate(action)
+                val action = MainFragmentDirections.actionMainFragmentToDiagramFragment(mPhaseData)
+                findNavController().navigate(action)
             }
         } catch (ex: Exception) {
             //Crashlytics.getInstance().core.logException(ex)

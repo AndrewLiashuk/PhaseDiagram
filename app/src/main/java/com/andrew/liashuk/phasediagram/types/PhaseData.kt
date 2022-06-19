@@ -5,8 +5,7 @@ import androidx.databinding.BaseObservable
 import androidx.databinding.Bindable
 import com.andrew.liashuk.phasediagram.BR
 import com.andrew.liashuk.phasediagram.R
-import kotlinx.android.parcel.Parcelize
-
+import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class PhaseData(

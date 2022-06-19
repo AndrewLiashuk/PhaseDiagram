@@ -5,10 +5,7 @@ import androidx.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.view.*
 import androidx.fragment.app.Fragment
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.databinding.DataBindingUtil
-import androidx.navigation.findNavController
 import com.andrew.liashuk.phasediagram.databinding.DiagramFragmentBinding
 import com.andrew.liashuk.phasediagram.types.PhaseData
 import com.andrew.liashuk.phasediagram.ui.CustomMarkerView
@@ -23,52 +20,53 @@ import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
 import android.provider.MediaStore
+import androidx.navigation.fragment.findNavController
+import com.andrew.liashuk.phasediagram.ext.setSupportActionBar
 import com.andrew.liashuk.phasediagram.helpers.Helpers
 
 class DiagramFragment : Fragment(), CoroutineScope {
-
-    private lateinit var mViewModel: DiagramViewModel
-    private lateinit var mBinding: DiagramFragmentBinding
-    private var mBuildDiagram = false
-
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setHasOptionsMenu(true)
-    }
-
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.diagram_fragment, container, false)
-    }
-
 
     // start all coroutines in UI thread
     private val mJob = SupervisorJob()
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.Main + mJob
 
+    private lateinit var mViewModel: DiagramViewModel
 
-    override fun onDestroy() {
-        super.onDestroy()
-        // cancel all coroutines on fragment destroy
-        coroutineContext.cancelChildren()
+    private var _binding: DiagramFragmentBinding? = null
+    private val binding: DiagramFragmentBinding
+        get() = checkNotNull(_binding) { "Binding property is only valid after onCreateView and before onDestroyView are called." }
+
+    private var mBuildDiagram = false
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
     }
 
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = DiagramFragmentBinding.inflate(inflater)
+        return binding.root
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.menu_diagram, menu)
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-        mBinding = DataBindingUtil.setContentView(requireActivity(), R.layout.diagram_fragment)
-        mBinding.graphToolbar.title = activity?.getString(R.string.diagram_fragment_title) ?: ""
-        (activity as? AppCompatActivity)?.setSupportActionBar(mBinding.graphToolbar)
+        binding.toolbar.title = getString(R.string.diagram_fragment_title)
+        setSupportActionBar(binding.toolbar)
 
         mViewModel = ViewModelProviders.of(this).get(DiagramViewModel::class.java)
         val phaseData = DiagramFragmentArgs.fromBundle(requireArguments()).phaseData
@@ -77,11 +75,10 @@ class DiagramFragment : Fragment(), CoroutineScope {
         setPlotData(phaseData)
     }
 
-
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             android.R.id.home -> {
-                view?.findNavController()?.popBackStack()
+                findNavController().popBackStack()
                 true
             }
             R.id.menu_save -> {
@@ -94,45 +91,34 @@ class DiagramFragment : Fragment(), CoroutineScope {
         }
     }
 
+    private fun setupPlot() = with(binding.lineChart) {
+        setDrawGridBackground(false)
+        description.isEnabled = false // no description text
+        setTouchEnabled(true) // enable touch gestures
+        isDragEnabled = true // enable scaling and dragging
+        setScaleEnabled(true)
+        setPinchZoom(true)  // if disabled, scaling can be done on x- and y-axis separately
 
-    private fun setupPlot() {
-        with(mBinding.chart) {
-            setDrawGridBackground(false)
-            description.isEnabled = false // no description text
-            setTouchEnabled(true) // enable touch gestures
-            isDragEnabled = true // enable scaling and dragging
-            setScaleEnabled(true)
-            setPinchZoom(true)  // if disabled, scaling can be done on x- and y-axis separately
+        xAxis.position = XAxis.XAxisPosition.BOTTOM
+        xAxis.axisMinimum = 0f
+        xAxis.axisMaximum = 100f
 
-            xAxis.position = XAxis.XAxisPosition.BOTTOM
-            xAxis.axisMinimum = 0f
-            xAxis.axisMaximum = 100f
-
-            val mv = CustomMarkerView(requireContext(), R.layout.custom_marker_view)
-            mv.chartView = this // For bounds control
-            marker = mv // Set the marker to the chart
+        marker = CustomMarkerView(requireContext(), R.layout.custom_marker_view).also {
+            it.chartView = this // For bounds control
         }
     }
 
-
-    private fun setPlotData(phaseData: PhaseData?) = launch {
-        if (phaseData == null) {
-            //Crashlytics.getInstance().core.logException(Exception("Phase data is null."))
-            Helpers.showToast(activity, R.string.try_again)
-            view?.findNavController()?.popBackStack()
-            return@launch
-        }
-
+    private fun setPlotData(phaseData: PhaseData) = launch {
         try {
             withTimeout(10000L) {
-                mBinding.chart.data = createDiagramDataAsync(phaseData).await()
+                binding.lineChart.data = createDiagramData(phaseData)
             }
-            mBinding.chart.invalidate()
-            mBinding.chart.animateX(1000)
+            binding.lineChart.invalidate()
+            binding.lineChart.animateX(1000)
 
             mBuildDiagram = true
-            mBinding.groupDiagram.visibility = View.VISIBLE
-            mBinding.progressBar.visibility = View.GONE
+            binding.groupDiagram.visibility = View.VISIBLE
+            binding.progressBar.visibility = View.GONE
         } catch (timout: TimeoutCancellationException) {
             //Crashlytics.getInstance().core.logException(timout)
             Helpers.showErrorAlert(activity, R.string.long_time_calculation)
@@ -142,35 +128,29 @@ class DiagramFragment : Fragment(), CoroutineScope {
         }
     }
 
-
-    private fun createDiagramDataAsync(phaseData: PhaseData): Deferred<LineData> =
-        async(Dispatchers.Default) {
-            createDiagramData(phaseData)
-        }
-
-
-    private fun createDiagramData(phaseData: PhaseData): LineData {
+    private suspend fun createDiagramData(phaseData: PhaseData): LineData = withContext(Dispatchers.Default) {
         val (solidEntries, liquidEntries) = mViewModel.createDiagramBranches(phaseData)
 
-        val liquidDataSet = LineDataSet(liquidEntries, requireContext().getString(R.string.diagram_liquid))
-        liquidDataSet.color = ContextCompat.getColor(requireActivity(), R.color.colorPrimary)
-        liquidDataSet.lineWidth = 1.5f
-        liquidDataSet.setDrawCircles(false)
+        val liquidDataSet = LineDataSet(liquidEntries, getString(R.string.diagram_liquid)).apply {
+            color = ContextCompat.getColor(requireActivity(), R.color.colorPrimary)
+            lineWidth = 1.5f
+            setDrawCircles(false)
+        }
 
-        val solidDataSet = LineDataSet(solidEntries, requireContext().getString(R.string.diagram_solid))
-        solidDataSet.color = ContextCompat.getColor(requireContext(), R.color.colorAccent)
-        solidDataSet.lineWidth = 1.5f
-        solidDataSet.setDrawCircles(false)
+        val solidDataSet = LineDataSet(solidEntries, getString(R.string.diagram_solid)).apply {
+            color = ContextCompat.getColor(requireContext(), R.color.colorAccent)
+            lineWidth = 1.5f
+            setDrawCircles(false)
+        }
 
-        return LineData(liquidDataSet, solidDataSet)
+        LineData(liquidDataSet, solidDataSet)
     }
-
 
     private fun saveDiagram() = launch {
         try {
-            mBinding.progressBar.visibility = View.VISIBLE
+            binding.progressBar.visibility = View.VISIBLE
             withTimeout(10000L) {
-                createAndSaveBitmapAsync().await()
+                createAndSaveBitmap()
             }
             Helpers.showToast(activity, R.string.successful_image_save)
 
@@ -181,34 +161,27 @@ class DiagramFragment : Fragment(), CoroutineScope {
             //Crashlytics.getInstance().core.logException(ex)
             Helpers.showToast(activity, R.string.failed_image_save)
         } finally {
-            mBinding.progressBar.visibility = View.GONE
+            binding.progressBar.visibility = View.GONE
         }
     }
 
-
-    private fun createAndSaveBitmapAsync() = async(Dispatchers.Default) {
-        createAndSaveBitmap()
-    }
-
-
-    private fun createAndSaveBitmap() {
+    private suspend fun createAndSaveBitmap() = withContext(Dispatchers.Default) {
         val bitmap = Bitmap.createBitmap(
-            mBinding.diagramLayout.width,
-            mBinding.diagramLayout.height,
+            binding.layoutDiagram.width,
+            binding.layoutDiagram.height,
             Bitmap.Config.ARGB_8888
         )
         val c = Canvas(bitmap)
         c.drawColor(Color.WHITE)
-        mBinding.diagramLayout.draw(c)
+        binding.layoutDiagram.draw(c)
 
         MediaStore.Images.Media.insertImage(
             requireActivity().contentResolver,
             bitmap,
-            requireContext().getString(R.string.saved_image_name),
-            requireContext().getString(R.string.saved_image_desc)
+            getString(R.string.saved_image_name),
+            getString(R.string.saved_image_desc)
         )
     }
-
 
     private fun checkPermission(): Boolean {
         val permission = ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
@@ -223,7 +196,6 @@ class DiagramFragment : Fragment(), CoroutineScope {
             true //Permission has already been granted
         }
     }
-
 
     override fun onRequestPermissionsResult(
         requestCode: Int,

@@ -5,6 +5,7 @@ import android.content.Context
 import android.widget.Toast
 import com.andrew.liashuk.phasediagram.R
 
+@Deprecated("")
 object Helpers {
     fun showToast(context: Context?, messageId: Int) {
         context?.let {

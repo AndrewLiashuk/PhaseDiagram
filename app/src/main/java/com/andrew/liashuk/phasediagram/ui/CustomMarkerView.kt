@@ -12,21 +12,19 @@ import com.github.mikephil.charting.highlight.Highlight
 import com.github.mikephil.charting.utils.MPPointF
 import com.github.mikephil.charting.utils.Utils
 
+// TODO get explanations
 @SuppressLint("ViewConstructor")
-class CustomMarkerView(context: Context, layoutResource: Int) :
-    MarkerView(context, layoutResource) {
+class CustomMarkerView(context: Context, layoutResource: Int) : MarkerView(context, layoutResource) {
 
     private val tvContent: TextView = findViewById(R.id.tvContent)
 
     override fun refreshContent(e: Entry?, highlight: Highlight?) {
-        if (e == null) {
-            return
-        }
+        tvContent.text = when (e) {
+            null -> return
 
-        if (e is CandleEntry) {
-            tvContent.text = Utils.formatNumber(e.high, 0, true, ' ')
-        } else {
-            tvContent.text = Utils.formatNumber(e.y, 0, true, ' ')
+            is CandleEntry -> Utils.formatNumber(e.high, 0, true, ' ')
+
+            else -> Utils.formatNumber(e.y, 0, true, ' ')
         }
 
         super.refreshContent(e, highlight)

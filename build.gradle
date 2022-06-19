@@ -22,7 +22,6 @@ allprojects {
         google()
         mavenCentral()
         maven { url 'https://jitpack.io' } // MPAndroidChart
-        maven { url "https://clojars.org/repo/" } // icepick
     }
 }
 
