@@ -13,6 +13,7 @@ import com.andrew.liashuk.phasediagram.ext.setSupportActionBar
 import com.andrew.liashuk.phasediagram.types.PhaseData
 import com.andrew.liashuk.phasediagram.types.SolutionType
 import com.andrew.liashuk.phasediagram.helpers.Helpers
+import com.andrew.liashuk.phasediagram.ui.validation.createValidator
 import com.andrew.liashuk.phasediagram.viewmodal.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -49,6 +50,8 @@ class MainFragment : Fragment() {
         binding.phaseData = mPhaseData
 
         binding.btnBuild.setOnClickListener { onBuildClick() }
+
+        binding.firstTempLayout.createValidator()
 
         binding.firstTemp.doOnTextChanged { text: CharSequence?, _, _, _ ->
             viewModel.updatePhaseData {

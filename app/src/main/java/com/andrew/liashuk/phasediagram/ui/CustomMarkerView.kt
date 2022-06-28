@@ -12,7 +12,7 @@ import com.github.mikephil.charting.highlight.Highlight
 import com.github.mikephil.charting.utils.MPPointF
 import com.github.mikephil.charting.utils.Utils
 
-// TODO get explanations
+// TODO add explanations
 @SuppressLint("ViewConstructor")
 class CustomMarkerView(context: Context, layoutResource: Int) : MarkerView(context, layoutResource) {
 
