@@ -2,13 +2,14 @@ package com.andrew.liashuk.phasediagram
 
 import android.os.Bundle
 import android.view.*
-import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintSet
+import androidx.core.widget.doOnTextChanged
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.andrew.liashuk.phasediagram.databinding.MainFragmentBinding
+import com.andrew.liashuk.phasediagram.ext.setSupportActionBar
 import com.andrew.liashuk.phasediagram.types.PhaseData
 import com.andrew.liashuk.phasediagram.types.SolutionType
 import com.andrew.liashuk.phasediagram.helpers.Helpers
@@ -23,7 +24,10 @@ class MainFragment : Fragment() {
 
     private val viewModel: MainViewModel by viewModels()
 
-    private lateinit var mBinding: MainFragmentBinding
+    private var _binding: MainFragmentBinding? = null
+    private val binding: MainFragmentBinding
+        get() = checkNotNull(_binding) { "Binding property is only valid after onCreateView and before onDestroyView are called." }
+
     private var mSubregularMenuItem: MenuItem? = null // set checked on sample menu click
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -41,11 +45,19 @@ class MainFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        mBinding = DataBindingUtil.setContentView(requireActivity(), R.layout.main_fragment)
-        mBinding.phaseData = mPhaseData
-        mBinding.mainFragment = this
+        _binding = DataBindingUtil.setContentView(requireActivity(), R.layout.main_fragment)
+        binding.phaseData = mPhaseData
 
-        (activity as? AppCompatActivity)?.setSupportActionBar(mBinding.toolbar)
+        binding.btnBuild.setOnClickListener { onBuildClick() }
+
+        binding.firstTemp.doOnTextChanged { text: CharSequence?, _, _, _ ->
+            viewModel.updatePhaseData {
+                // TODO
+                meltingTempFirst = text?.toString()?.toDoubleOrNull()
+            }
+        }
+
+        setSupportActionBar(binding.toolbar)
 
         changePhaseType(mPhaseType) // update UI by phase type
     }
@@ -88,7 +100,7 @@ class MainFragment : Fragment() {
                 mSubregularMenuItem?.isChecked = true
                 changePhaseType(SolutionType.SUBREGULAR)
                 mPhaseData = PhaseData(1000.0, 1300.0, 30.0, 20.0, 20000.0, 0.0, 10000.0, -10000.0)
-                mBinding.phaseData = mPhaseData
+                binding.phaseData = mPhaseData
                 true
             }
             else -> super.onOptionsItemSelected(item)
@@ -121,17 +133,17 @@ class MainFragment : Fragment() {
 
             when(type) {
                 SolutionType.IDEAL -> {
-                    mBinding.groupFirstAlphas.visibility = View.GONE
-                    mBinding.groupSecondAlphas.visibility = View.GONE
+                    binding.groupFirstAlphas.visibility = View.GONE
+                    binding.groupSecondAlphas.visibility = View.GONE
                 }
                 SolutionType.REGULAR -> {
-                    mBinding.groupFirstAlphas.visibility = View.VISIBLE
-                    mBinding.groupSecondAlphas.visibility = View.GONE
+                    binding.groupFirstAlphas.visibility = View.VISIBLE
+                    binding.groupSecondAlphas.visibility = View.GONE
                     changeAlphaEditPosition(true)
                 }
                 SolutionType.SUBREGULAR -> {
-                    mBinding.groupFirstAlphas.visibility = View.VISIBLE
-                    mBinding.groupSecondAlphas.visibility = View.VISIBLE
+                    binding.groupFirstAlphas.visibility = View.VISIBLE
+                    binding.groupSecondAlphas.visibility = View.VISIBLE
                     changeAlphaEditPosition(false)
                 }
             }
@@ -148,7 +160,7 @@ class MainFragment : Fragment() {
      */
     private fun changeAlphaEditPosition(isRegular: Boolean) {
         val constraintSet = ConstraintSet()
-        constraintSet.clone(mBinding.cardConstraintLayout)
+        constraintSet.clone(binding.cardConstraintLayout)
 
         // change AlphaL position
         constraintSet.connect(
@@ -182,6 +194,6 @@ class MainFragment : Fragment() {
             0
         )
 
-        constraintSet.applyTo(mBinding.cardConstraintLayout)
+        constraintSet.applyTo(binding.cardConstraintLayout)
     }
 }

@@ -7,9 +7,6 @@
             name="phaseData"
             type="com.andrew.liashuk.phasediagram.types.PhaseData" />
 
-        <variable
-            name="mainFragment"
-            type="com.andrew.liashuk.phasediagram.MainFragment" />
     </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -362,7 +359,6 @@
                                 android:layout_marginRight="8dp"
                                 android:layout_marginBottom="16dp"
                                 android:background="@drawable/btn_build_background"
-                                android:onClick="@{() -> mainFragment.onBuildClick()}"
                                 android:text="@string/build_button_text"
                                 android:textAllCaps="true"
                                 android:textSize="16sp"
