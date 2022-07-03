@@ -1,11 +1,16 @@
 package com.andrew.liashuk.phasediagram.ext
 
+import android.text.Editable
+import android.text.TextWatcher
+import android.widget.EditText
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.launch
 
 /**
@@ -43,4 +48,18 @@ inline fun <T> Flow<T>.collectFlow(
     crossinline action: suspend (value: T) -> Unit
 ) {
     collectFlow(fragment.viewLifecycleOwner, minActiveState, action)
+}
+
+fun EditText.textChanges(): Flow<String?> = callbackFlow {
+    val watcher = object : TextWatcher {
+        override fun afterTextChanged(editable: Editable) = Unit
+        override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) = Unit
+        override fun onTextChanged(text: CharSequence?, start: Int, before: Int, count: Int) {
+            trySend(text?.toString())
+        }
+    }
+
+    addTextChangedListener(watcher)
+
+    awaitClose { removeTextChangedListener(watcher) }
 }

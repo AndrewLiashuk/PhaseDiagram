@@ -1,9 +1,6 @@
 package com.andrew.liashuk.phasediagram.types
 
 import android.os.Parcelable
-import androidx.databinding.BaseObservable
-import androidx.databinding.Bindable
-import com.andrew.liashuk.phasediagram.BR
 import com.andrew.liashuk.phasediagram.R
 import kotlinx.parcelize.Parcelize
 
@@ -17,111 +14,7 @@ data class PhaseData(
     var alphaSFirst: Double? = null,
     var alphaLSecond: Double? = null,
     var alphaSSecond: Double? = null
-) : Parcelable, BaseObservable() {
-    // str varibable need for data binding
-    // if use double variable for binding compiler didn't create MainFragmentBindingImpl file
-    var meltingTempFirstStr: String
-        @Bindable get() = meltingTempFirst.toNormalString()
-
-        set(value) {
-            value.toDoubleOrNull().let {
-                if (it != meltingTempFirst) {
-                    meltingTempFirst = it
-                    notifyPropertyChanged(BR.meltingTempFirstStr)
-                }
-            }
-        }
-
-
-    var meltingTempSecondStr: String
-        @Bindable get() = meltingTempSecond.toNormalString()
-
-        set(value) {
-            value.toDoubleOrNull().let {
-                if (it != meltingTempSecond) {
-                    meltingTempSecond = it
-                    notifyPropertyChanged(BR.meltingTempSecondStr)
-                }
-            }
-        }
-
-
-    var entropFirstStr: String
-        @Bindable get() = entropFirst.toNormalString()
-
-        set(value) {
-            value.toDoubleOrNull().let {
-                if (it != entropFirst) {
-                    entropFirst = it
-                    notifyPropertyChanged(BR.entropFirstStr)
-                }
-            }
-        }
-
-
-    var entropSecondStr: String
-        @Bindable get() = entropSecond.toNormalString()
-
-        set(value) {
-            value.toDoubleOrNull().let {
-                if (it != entropSecond) {
-                    entropSecond = it
-                    notifyPropertyChanged(BR.entropSecondStr)
-                }
-            }
-        }
-
-
-    var alphaLFirstStr: String
-        @Bindable get() = alphaLFirst.toNormalString()
-
-        set(value) {
-            value.toDoubleOrNull().let {
-                if (it != alphaLFirst) {
-                    alphaLFirst = it
-                    notifyPropertyChanged(BR.alphaLFirstStr)
-                }
-            }
-        }
-
-
-    var alphaSFirstStr: String
-        @Bindable get() = alphaSFirst.toNormalString()
-
-        set(value) {
-            value.toDoubleOrNull().let {
-                if (it != alphaSFirst) {
-                    alphaSFirst = it
-                    notifyPropertyChanged(BR.alphaSFirstStr)
-                }
-            }
-        }
-
-
-    var alphaLSecondStr: String
-        @Bindable get() = alphaLSecond.toNormalString()
-
-        set(value) {
-            value.toDoubleOrNull().let {
-                if (it != alphaLSecond) {
-                    alphaLSecond = it
-                    notifyPropertyChanged(BR.alphaLSecondStr)
-                }
-            }
-        }
-
-
-    var alphaSSecondStr: String
-        @Bindable get() = alphaSSecond.toNormalString()
-
-        set(value) {
-            value.toDoubleOrNull().let {
-                if (it != alphaSSecond) {
-                    alphaSSecond = it
-                    notifyPropertyChanged(BR.alphaSSecondStr)
-                }
-            }
-        }
+) : Parcelable {
 
     /**
      * Check on correct data availability

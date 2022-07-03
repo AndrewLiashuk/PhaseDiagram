@@ -108,26 +108,18 @@ class DiagramFragment : Fragment() {
     }
 
     private fun setPlotData(phaseData: PhaseData) = lifecycleScope.launch {
-        try {
-            withTimeout(10000L) {
-                binding.lineChart.data = createDiagramData(phaseData)
-            }
-            binding.lineChart.invalidate()
-            binding.lineChart.animateX(1000)
-
-            mBuildDiagram = true
-            binding.groupDiagram.visibility = View.VISIBLE
-            binding.progressBar.visibility = View.GONE
-        } catch (timout: TimeoutCancellationException) {
-            //Crashlytics.getInstance().core.logException(timout)
-            Helpers.showErrorAlert(activity, R.string.long_time_calculation)
-        } catch (ex: Exception) {
-            //Crashlytics.getInstance().core.logException(ex)
-            Helpers.showErrorAlert(activity, ex)
+        withTimeout(10000L) {
+            binding.lineChart.data = createDiagramData(phaseData)
         }
+        binding.lineChart.invalidate()
+        binding.lineChart.animateX(1000)
+
+        mBuildDiagram = true
+        binding.groupDiagram.visibility = View.VISIBLE
+        binding.progressBar.visibility = View.GONE
     }
 
-    private suspend fun createDiagramData(phaseData: PhaseData): LineData = withContext(Dispatchers.Default) {
+    private fun createDiagramData(phaseData: PhaseData): LineData {
         val (solidEntries, liquidEntries) = viewModel.createDiagramBranches(phaseData)
 
         val liquidDataSet = LineDataSet(liquidEntries, getString(R.string.diagram_liquid)).apply {
@@ -142,7 +134,7 @@ class DiagramFragment : Fragment() {
             setDrawCircles(false)
         }
 
-        LineData(liquidDataSet, solidDataSet)
+        return LineData(liquidDataSet, solidDataSet)
     }
 
     private fun saveDiagram() = lifecycleScope.launch {

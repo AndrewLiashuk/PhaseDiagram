@@ -1,19 +1,15 @@
 package com.andrew.liashuk.phasediagram.ui.validation
 
-import androidx.core.widget.doOnTextChanged
-import com.google.android.material.textfield.TextInputLayout
 
 interface Validator {
 
     val isValid: Boolean
 
+    val isActive: Boolean
+
     fun start()
 
     fun stop()
-
-    fun setOnValidListener(onValid: ((String?) -> Unit)?)
-
-    fun setOnErrorListener(onError: ((String) -> Unit)?)
 
     fun validate(input: String?): String?
 
@@ -21,9 +17,8 @@ interface Validator {
 
     fun removeCondition(condition: Pair<Condition, String>)
 
-    fun removeCondition(condition:Condition)
+    fun removeCondition(condition: Condition)
 }
-
 
 internal class ValidatorImpl(
     conditions: List<Pair<Condition, String>>
@@ -34,24 +29,16 @@ internal class ValidatorImpl(
     override val isValid: Boolean
         get() = _isValid
 
-    var onValid: ((String?) -> Unit)? = null
-    var onError: ((String) -> Unit)? = null
-    var isActive: Boolean = true
+    private var _isActive: Boolean = false
+    override val isActive: Boolean
+        get() = _isActive
 
     override fun start() {
-        isActive = true
+        _isActive = true
     }
 
     override fun stop() {
-        isActive = false
-    }
-
-    override fun setOnValidListener(onValid: ((String?) -> Unit)?) {
-        this.onValid = onValid
-    }
-
-    override fun setOnErrorListener(onError: ((String) -> Unit)?) {
-        this.onError = onError
+        _isActive = false
     }
 
     override fun validate(input: String?): String? {
@@ -72,27 +59,8 @@ internal class ValidatorImpl(
     }
 
     override fun removeCondition(condition: Condition) {
-        conditions.firstOrNull { it.first == condition }?.let {
+        conditions.filter { it.first == condition }.forEach {
             conditions.remove(it)
         }
     }
 }
-
-fun TextInputLayout.createValidator(vararg conditions: Pair<Condition, String>): Validator {
-    return ValidatorImpl(conditions.toList()).also { validator ->
-        this.editText?.doOnTextChanged { text: CharSequence?, _, _, _ ->
-            if (validator.isActive) {
-                val value = text?.toString()
-                val errorText = validator.validate(value)
-                this.error = errorText
-
-                if (errorText == null) {
-                    validator.onValid?.invoke(value)
-                } else {
-                    validator.onError?.invoke(errorText)
-                }
-            }
-        }
-    }
-}
-

@@ -3,8 +3,6 @@ package com.andrew.liashuk.phasediagram
 import android.os.Bundle
 import android.view.*
 import androidx.constraintlayout.widget.ConstraintSet
-import androidx.core.widget.doOnTextChanged
-import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -12,16 +10,27 @@ import com.andrew.liashuk.phasediagram.databinding.MainFragmentBinding
 import com.andrew.liashuk.phasediagram.ext.setSupportActionBar
 import com.andrew.liashuk.phasediagram.types.PhaseData
 import com.andrew.liashuk.phasediagram.types.SolutionType
-import com.andrew.liashuk.phasediagram.helpers.Helpers
 import com.andrew.liashuk.phasediagram.ui.validation.createValidator
 import com.andrew.liashuk.phasediagram.viewmodal.MainViewModel
+import com.google.android.material.textfield.TextInputLayout
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainFragment : Fragment() {
 
-    var mPhaseData = PhaseData() // dataBinging automatically update data
-    var mPhaseType = SolutionType.SUBREGULAR
+    private val elementsLayoutPairs: List<Pair<Elements, TextInputLayout>> by lazy {
+        listOf(
+            Elements.MELTING_TEMPERATURE_FIRST to binding.firstTempLayout,
+            Elements.ENTROP_FIRST to binding.firstEntropLayout,
+            Elements.ALPHA_L_FIRST to binding.firstAlphaLLayout,
+            Elements.ALPHA_S_FIRST to binding.firstAlphaSLayout,
+
+            Elements.MELTING_TEMPERATURE_SECOND to binding.secondTempLayout,
+            Elements.ENTROP_SECOND to binding.secondTempLayout,
+            Elements.ALPHA_L_SECOND to binding.secondTempLayout,
+            Elements.ALPHA_S_SECOND to binding.secondTempLayout,
+        )
+    }
 
     private val viewModel: MainViewModel by viewModels()
 
@@ -29,7 +38,7 @@ class MainFragment : Fragment() {
     private val binding: MainFragmentBinding
         get() = checkNotNull(_binding) { "Binding property is only valid after onCreateView and before onDestroyView are called." }
 
-    private var mSubregularMenuItem: MenuItem? = null // set checked on sample menu click
+    private var menu: Menu? = null // set checked on sample menu click
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,120 +48,86 @@ class MainFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.main_fragment, container, false)
+    ): View {
+        _binding = MainFragmentBinding.inflate(inflater)
+        return binding.root
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+        menu = null
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        _binding = DataBindingUtil.setContentView(requireActivity(), R.layout.main_fragment)
-        binding.phaseData = mPhaseData
+        binding.btnBuild.setOnClickListener { viewModel.onBuildClick() }
 
-        binding.btnBuild.setOnClickListener { onBuildClick() }
-
-        binding.firstTempLayout.createValidator()
-
-        binding.firstTemp.doOnTextChanged { text: CharSequence?, _, _, _ ->
-            viewModel.updatePhaseData {
-                // TODO
-                meltingTempFirst = text?.toString()?.toDoubleOrNull()
+        elementsLayoutPairs.forEach { (element, editText) ->
+            val validator = editText.createValidator(this) { text ->
+                viewModel.updatePhaseData(element, text)
             }
+            viewModel.addValidator(element, validator)
         }
 
         setSupportActionBar(binding.toolbar)
 
-        changePhaseType(mPhaseType) // update UI by phase type
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.menu_main, menu)
-        mSubregularMenuItem = menu.findItem(R.id.menu_subregular)
-
-        when(mPhaseType) {
-            SolutionType.IDEAL -> {
-                menu.findItem(R.id.menu_ideal).isChecked = true
-            }
-            SolutionType.REGULAR -> {
-                menu.findItem(R.id.menu_regular).isChecked = true
-            }
-            SolutionType.SUBREGULAR -> {
-                mSubregularMenuItem?.isChecked = true
-            }
-        }
+        this.menu = menu
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            R.id.menu_ideal -> {
-                item.isChecked = true
-                changePhaseType(SolutionType.IDEAL)
-                true
-            }
-            R.id.menu_regular -> {
-                item.isChecked = true
-                changePhaseType(SolutionType.REGULAR)
-                true
-            }
-            R.id.menu_subregular -> {
-                item.isChecked = true
-                changePhaseType(SolutionType.SUBREGULAR)
-                true
-            }
-            R.id.menu_sample -> { // set sample data
-                mSubregularMenuItem?.isChecked = true
-                changePhaseType(SolutionType.SUBREGULAR)
-                mPhaseData = PhaseData(1000.0, 1300.0, 30.0, 20.0, 20000.0, 0.0, 10000.0, -10000.0)
-                binding.phaseData = mPhaseData
-                true
-            }
-            else -> super.onOptionsItemSelected(item)
+    override fun onOptionsItemSelected(item: MenuItem): Boolean = when (item.itemId) {
+        R.id.menu_ideal -> {
+            viewModel.changeType(SolutionType.IDEAL)
+            true
         }
+        R.id.menu_regular -> {
+            viewModel.changeType(SolutionType.REGULAR)
+            true
+        }
+        R.id.menu_subregular -> {
+            viewModel.changeType(SolutionType.SUBREGULAR)
+            true
+        }
+        R.id.menu_sample -> {
+            viewModel.showSmaple()
+
+            navigateNext(PhaseData(1000.0, 1300.0, 30.0, 20.0, 20000.0, 0.0, 10000.0, -10000.0))
+            true
+        }
+        else -> super.onOptionsItemSelected(item)
     }
 
-    fun onBuildClick() {
-        try {
-            val errorTextId = mPhaseData.checkData(mPhaseType)
 
-            if (errorTextId != null) {
-                Helpers.showAlert(activity, errorTextId)
-            } else {
-                val action = MainFragmentDirections.actionMainFragmentToDiagramFragment(mPhaseData)
-                findNavController().navigate(action)
-            }
-        } catch (ex: Exception) {
-            //Crashlytics.getInstance().core.logException(ex)
-            Helpers.showErrorAlert(activity, ex)
-        }
+    fun navigateNext(phaseData: PhaseData) {
+        val action = MainFragmentDirections.actionMainFragmentToDiagramFragment(phaseData)
+        findNavController().navigate(action)
     }
 
     /**
      *  Depending on the solution type show or hide some alpha editTexts
      */
     private fun changePhaseType(type: SolutionType) {
-        try {
-            mPhaseType = type
-            mPhaseData.changeType(type)
-
-            when(type) {
-                SolutionType.IDEAL -> {
-                    binding.groupFirstAlphas.visibility = View.GONE
-                    binding.groupSecondAlphas.visibility = View.GONE
-                }
-                SolutionType.REGULAR -> {
-                    binding.groupFirstAlphas.visibility = View.VISIBLE
-                    binding.groupSecondAlphas.visibility = View.GONE
-                    changeAlphaEditPosition(true)
-                }
-                SolutionType.SUBREGULAR -> {
-                    binding.groupFirstAlphas.visibility = View.VISIBLE
-                    binding.groupSecondAlphas.visibility = View.VISIBLE
-                    changeAlphaEditPosition(false)
-                }
+        when (type) {
+            SolutionType.IDEAL -> {
+                binding.groupFirstAlphas.visibility = View.GONE
+                binding.groupSecondAlphas.visibility = View.GONE
             }
-        } catch (ex: Exception) {
-            //Crashlytics.getInstance().core.logException(ex)
-            Helpers.showErrorAlert(activity, ex)
+            SolutionType.REGULAR -> {
+                binding.groupFirstAlphas.visibility = View.VISIBLE
+                binding.groupSecondAlphas.visibility = View.GONE
+                changeAlphaEditPosition(true)
+            }
+            SolutionType.SUBREGULAR -> {
+                binding.groupFirstAlphas.visibility = View.VISIBLE
+                binding.groupSecondAlphas.visibility = View.VISIBLE
+                changeAlphaEditPosition(false)
+            }
         }
     }
 
@@ -198,5 +173,18 @@ class MainFragment : Fragment() {
         )
 
         constraintSet.applyTo(binding.cardConstraintLayout)
+    }
+
+
+    enum class Elements {
+        MELTING_TEMPERATURE_FIRST,
+        ENTROP_FIRST,
+        ALPHA_L_FIRST,
+        ALPHA_S_FIRST,
+
+        MELTING_TEMPERATURE_SECOND,
+        ENTROP_SECOND,
+        ALPHA_L_SECOND,
+        ALPHA_S_SECOND,
     }
 }
