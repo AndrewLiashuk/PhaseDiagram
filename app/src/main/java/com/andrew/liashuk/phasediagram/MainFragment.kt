@@ -10,6 +10,9 @@ import com.andrew.liashuk.phasediagram.databinding.MainFragmentBinding
 import com.andrew.liashuk.phasediagram.ext.setSupportActionBar
 import com.andrew.liashuk.phasediagram.types.PhaseData
 import com.andrew.liashuk.phasediagram.types.SolutionType
+import com.andrew.liashuk.phasediagram.ui.validation.Condition
+import com.andrew.liashuk.phasediagram.ui.validation.MoreThanCondition
+import com.andrew.liashuk.phasediagram.ui.validation.NotEmptyCondition
 import com.andrew.liashuk.phasediagram.ui.validation.createValidator
 import com.andrew.liashuk.phasediagram.viewmodal.MainViewModel
 import com.google.android.material.textfield.TextInputLayout
@@ -20,15 +23,15 @@ class MainFragment : Fragment() {
 
     private val elementsLayoutPairs: List<Pair<Elements, TextInputLayout>> by lazy {
         listOf(
-            Elements.MELTING_TEMPERATURE_FIRST to binding.firstTempLayout,
-            Elements.ENTROP_FIRST to binding.firstEntropLayout,
-            Elements.ALPHA_L_FIRST to binding.firstAlphaLLayout,
-            Elements.ALPHA_S_FIRST to binding.firstAlphaSLayout,
+            Elements.MELTING_TEMPERATURE_FIRST to binding.layoutFirstTemp,
+            Elements.ENTROP_FIRST to binding.layoutFirstEntrop,
+            Elements.ALPHA_L_FIRST to binding.layoutFirstAlphaL,
+            Elements.ALPHA_S_FIRST to binding.layoutFirstAlphaS,
 
-            Elements.MELTING_TEMPERATURE_SECOND to binding.secondTempLayout,
-            Elements.ENTROP_SECOND to binding.secondTempLayout,
-            Elements.ALPHA_L_SECOND to binding.secondTempLayout,
-            Elements.ALPHA_S_SECOND to binding.secondTempLayout,
+            Elements.MELTING_TEMPERATURE_SECOND to binding.layoutSecondTemp,
+            Elements.ENTROP_SECOND to binding.layoutSecondEntrop,
+            Elements.ALPHA_L_SECOND to binding.layoutSecondAlphaL,
+            Elements.ALPHA_S_SECOND to binding.layoutSecondAlphaS,
         )
     }
 
@@ -63,17 +66,8 @@ class MainFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.btnBuild.setOnClickListener { viewModel.onBuildClick() }
-
-        elementsLayoutPairs.forEach { (element, editText) ->
-            val validator = editText.createValidator(this) { text ->
-                viewModel.updatePhaseData(element, text)
-            }
-            viewModel.addValidator(element, validator)
-        }
-
+        setupInputFields()
         setSupportActionBar(binding.toolbar)
-
-
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -81,7 +75,7 @@ class MainFragment : Fragment() {
         this.menu = menu
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean = when (item.itemId) {
+    override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
         R.id.menu_ideal -> {
             viewModel.changeType(SolutionType.IDEAL)
             true
@@ -96,15 +90,50 @@ class MainFragment : Fragment() {
         }
         R.id.menu_sample -> {
             viewModel.showSmaple()
-
-            navigateNext(PhaseData(1000.0, 1300.0, 30.0, 20.0, 20000.0, 0.0, 10000.0, -10000.0))
             true
         }
         else -> super.onOptionsItemSelected(item)
     }
 
+    private fun setupInputFields() {
+        elementsLayoutPairs.forEach { (element, editText) ->
+            val validator = editText.createValidator(this, *createConditions(element)) { text ->
+                viewModel.updatePhaseData(element, text)
+            }
+            viewModel.addValidator(element, validator)
+        }
+    }
 
-    fun navigateNext(phaseData: PhaseData) {
+    private fun createConditions(element: Elements): Array<Pair<Condition, String>> {
+        val notEmpty = NotEmptyCondition()
+        val moreThanZero by lazy { MoreThanCondition(value = 0.0) }
+
+        return when(element) {
+            Elements.MELTING_TEMPERATURE_FIRST -> arrayOf(
+                notEmpty to getString(R.string.empty_first_temp),
+                moreThanZero to getString(R.string.small_first_temp),
+            )
+            Elements.ENTROP_FIRST -> arrayOf(
+                notEmpty to getString(R.string.empty_first_entrop),
+                moreThanZero to getString(R.string.small_first_entrop),
+            )
+            Elements.ALPHA_L_FIRST -> arrayOf(notEmpty to getString(R.string.empty_alpha_l))
+            Elements.ALPHA_S_FIRST -> arrayOf(notEmpty to getString(R.string.empty_alpha_s))
+
+            Elements.MELTING_TEMPERATURE_SECOND -> arrayOf(
+                notEmpty to getString(R.string.empty_second_temp),
+                moreThanZero to getString(R.string.small_second_temp),
+            )
+            Elements.ENTROP_SECOND -> arrayOf(
+                notEmpty to getString(R.string.empty_second_entrop),
+                moreThanZero to getString(R.string.small_second_entrop),
+            )
+            Elements.ALPHA_L_SECOND -> arrayOf(notEmpty to getString(R.string.empty_alpha_l))
+            Elements.ALPHA_S_SECOND -> arrayOf(notEmpty to getString(R.string.empty_alpha_s))
+        }
+    }
+
+    private fun navigateNext(phaseData: PhaseData) {
         val action = MainFragmentDirections.actionMainFragmentToDiagramFragment(phaseData)
         findNavController().navigate(action)
     }
@@ -121,12 +150,12 @@ class MainFragment : Fragment() {
             SolutionType.REGULAR -> {
                 binding.groupFirstAlphas.visibility = View.VISIBLE
                 binding.groupSecondAlphas.visibility = View.GONE
-                changeAlphaEditPosition(true)
+                changeAlphaEditPosition(isRegular = true)
             }
             SolutionType.SUBREGULAR -> {
                 binding.groupFirstAlphas.visibility = View.VISIBLE
                 binding.groupSecondAlphas.visibility = View.VISIBLE
-                changeAlphaEditPosition(false)
+                changeAlphaEditPosition(isRegular = false)
             }
         }
     }
@@ -138,18 +167,18 @@ class MainFragment : Fragment() {
      */
     private fun changeAlphaEditPosition(isRegular: Boolean) {
         val constraintSet = ConstraintSet()
-        constraintSet.clone(binding.cardConstraintLayout)
+        constraintSet.clone(binding.layoutCard)
 
         // change AlphaL position
         constraintSet.connect(
-            R.id.firstAlphaLLayout,
+            R.id.layout_first_alpha_l,
             ConstraintSet.START,
             if (isRegular) R.id.guideline_third_first else ConstraintSet.PARENT_ID,
             ConstraintSet.START,
             0
         )
         constraintSet.connect(
-            R.id.firstAlphaLLayout,
+            R.id.layout_first_alpha_l,
             ConstraintSet.END,
             if (isRegular) R.id.guideline_third_second else R.id.guideline_half,
             ConstraintSet.START,
@@ -158,21 +187,21 @@ class MainFragment : Fragment() {
 
         // change AlphaS position
         constraintSet.connect(
-            R.id.firstAlphaSLayout,
+            R.id.layout_first_alpha_s,
             ConstraintSet.START,
             if (isRegular) R.id.guideline_third_first else ConstraintSet.PARENT_ID,
             ConstraintSet.START,
             0
         )
         constraintSet.connect(
-            R.id.firstAlphaSLayout,
+            R.id.layout_first_alpha_s,
             ConstraintSet.END,
             if (isRegular) R.id.guideline_third_second else R.id.guideline_half,
             ConstraintSet.START,
             0
         )
 
-        constraintSet.applyTo(binding.cardConstraintLayout)
+        constraintSet.applyTo(binding.layoutCard)
     }
 
 

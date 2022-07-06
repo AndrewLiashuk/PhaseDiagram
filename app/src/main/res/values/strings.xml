@@ -2,16 +2,16 @@
     <string name="app_name" translatable="false">PhaseDiagram</string>
 
     <!-- fragment view -->
-    <string name="second_component_textView">Second component</string>
-    <string name="first_component_textView">First component</string>
-    <string name="melting_temp_textView">Melting temperature T, K</string>
-    <string name="temperature_editText">Temperature</string>
-    <string name="melting_entropy_textView">Melting entropy S, J/mol*K</string>
-    <string name="entropy_editText">Entropy</string>
-    <string name="alpha_desc_textView">Parameters of intermolecular interaction</string>
-    <string name="alpha_l_editText" translatable="false">Alpha L</string>
-    <string name="alpha_s_editText" translatable="false">Alpha S</string>
-    <string name="build_button_text">Build</string>
+    <string name="label_second_component">Second component</string>
+    <string name="label_first_component">First component</string>
+    <string name="label_melting_temp">Melting temperature T, K</string>
+    <string name="label_temperature">Temperature</string>
+    <string name="label_melting_entropy">Melting entropy S, J/mol*K</string>
+    <string name="label_entropy">Entropy</string>
+    <string name="label_alpha_desc">Parameters of intermolecular interaction</string>
+    <string name="label_alpha_l" translatable="false">Alpha L</string>
+    <string name="label_alpha_s" translatable="false">Alpha S</string>
+    <string name="label_build">Build</string>
 
     <!-- menu -->
     <string name="menu_solution_type">Solution Type</string>
@@ -51,10 +51,7 @@
     <string name="small_second_entrop">Entropy for second component must be bigger then 0</string>
     <string name="empty_alpha_l">Please enter alphaL</string>
     <string name="empty_alpha_s">Please enter alphaS</string>
-    <string name="empty_first_alpha_l">Please enter alphaL for first component</string>
-    <string name="empty_first_alpha_s">Please enter alphaS for first component</string>
-    <string name="empty_second_alpha_l">Please enter alphaL for second component</string>
-    <string name="empty_second_alpha_s">Please enter alphaS for second component</string>
+
     <string name="autor_label" translatable="false">Andrew Liashuk 2019</string>
 
 </resources>

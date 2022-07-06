@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import com.andrew.liashuk.phasediagram.MainFragment
 import com.andrew.liashuk.phasediagram.types.PhaseData
 import com.andrew.liashuk.phasediagram.types.SolutionType
+import com.andrew.liashuk.phasediagram.types.setValueByElement
 import com.andrew.liashuk.phasediagram.ui.validation.Validator
 import dagger.hilt.android.lifecycle.HiltViewModel
 import java.util.EnumMap
@@ -22,7 +23,7 @@ class MainViewModel @Inject constructor() : ViewModel() {
     }
 
     fun updatePhaseData(element: MainFragment.Elements, value: String?) {
-        // TODO
+        phaseData.setValueByElement(element, value?.toDoubleOrNull())
     }
 
     fun onBuildClick() {

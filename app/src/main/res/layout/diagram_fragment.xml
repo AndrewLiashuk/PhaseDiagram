@@ -74,7 +74,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:visibility="invisible"
-            app:constraint_referenced_ids="line_chart,label_percentage,textView6" />
+            app:constraint_referenced_ids="line_chart,label_percentage,label_temperature" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

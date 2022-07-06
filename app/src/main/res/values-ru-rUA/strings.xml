@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="first_component_textView">Перший компонент</string>
-    <string name="second_component_textView">Другий компонент</string>
-    <string name="melting_temp_textView">Температура плавлення T, K</string>
-    <string name="temperature_editText">Температура</string>
-    <string name="melting_entropy_textView">Ентропія плавлення S, Дж/моль*K</string>
-    <string name="entropy_editText">Ентропія</string>
-    <string name="alpha_desc_textView">Параметри міжмолекулярної взаємодії</string>
-    <string name="build_button_text">Побудувати</string>
+    <string name="label_first_component">Перший компонент</string>
+    <string name="label_second_component">Другий компонент</string>
+    <string name="label_melting_temp">Температура плавлення T, K</string>
+    <string name="label_temperature">Температура</string>
+    <string name="label_melting_entropy">Ентропія плавлення S, Дж/моль*K</string>
+    <string name="label_entropy">Ентропія</string>
+    <string name="label_alpha_desc">Параметри міжмолекулярної взаємодії</string>
+    <string name="label_build">Побудувати</string>
     <string name="menu_solution_type">Тип розчину</string>
     <string name="menu_ideal">Ідеальний</string>
     <string name="menu_regular">Регулярний</string>
@@ -25,10 +25,6 @@
     <string name="small_second_entrop">Ентропія другого компонента має бути більше 0</string>
     <string name="empty_alpha_l">Будь ласка, введіть alphaL</string>
     <string name="empty_alpha_s">Будь ласка, введіть alphaS</string>
-    <string name="empty_first_alpha_l">Будь ласка, введіть alphaL для першого компонента</string>
-    <string name="empty_first_alpha_s">Будь ласка, введіть alphaS для першого компонента</string>
-    <string name="empty_second_alpha_l">Будь ласка, введіть alphaL для другого компонента</string>
-    <string name="empty_second_alpha_s">Будь ласка, введіть alphaS для другого компонента</string>
     <string name="successful_image_save">Зображення збережено у галереї</string>
     <string name="failed_image_save">Помилка збереження!</string>
     <string name="internal_error">Внутрішня помилка</string>

@@ -25,7 +25,7 @@
         android:layout_height="match_parent">
 
         <androidx.cardview.widget.CardView
-            android:id="@+id/cardView"
+            android:id="@+id/card_view"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
@@ -43,12 +43,12 @@
                 android:fadeScrollbars="false">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/card_constraint_layout"
+                    android:id="@+id/layout_card"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
                     <TextView
-                        android:id="@+id/textView7"
+                        android:id="@+id/label_first_component"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
@@ -56,13 +56,13 @@
                         android:layout_marginTop="16dp"
                         android:layout_marginEnd="8dp"
                         android:layout_marginRight="8dp"
-                        android:text="@string/first_component_textView"
+                        android:text="@string/label_first_component"
                         app:layout_constraintEnd_toStartOf="@+id/guideline_half"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <TextView
-                        android:id="@+id/textView8"
+                        android:id="@+id/label_second_component"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
@@ -70,13 +70,13 @@
                         android:layout_marginTop="16dp"
                         android:layout_marginEnd="8dp"
                         android:layout_marginRight="8dp"
-                        android:text="@string/second_component_textView"
+                        android:text="@string/label_second_component"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="@+id/guideline_half"
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <TextView
-                        android:id="@+id/textView"
+                        android:id="@+id/label_melting_temp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
@@ -84,13 +84,13 @@
                         android:layout_marginTop="16dp"
                         android:layout_marginEnd="8dp"
                         android:layout_marginRight="8dp"
-                        android:text="@string/melting_temp_textView"
+                        android:text="@string/label_melting_temp"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/textView7" />
+                        app:layout_constraintTop_toBottomOf="@+id/label_first_component" />
 
                     <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/firstTempLayout"
+                        android:id="@+id/layout_first_temp"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
@@ -100,24 +100,24 @@
                         android:layout_marginRight="8dp"
                         app:layout_constraintEnd_toStartOf="@+id/guideline_half"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/textView">
+                        app:layout_constraintTop_toBottomOf="@+id/label_melting_temp">
 
                         <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/firstTemp"
+                            android:id="@+id/input_first_temp"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:ellipsize="start"
                             android:gravity="center_horizontal"
-                            android:hint="@string/temperature_editText"
+                            android:hint="@string/label_temperature"
                             android:imeOptions="actionNext"
                             android:inputType="numberDecimal"
                             android:maxLength="6"
-                            android:nextFocusForward="@+id/secondTempLayout"
+                            android:nextFocusForward="@+id/layout_second_temp"
                             android:singleLine="true" />
                     </com.google.android.material.textfield.TextInputLayout>
 
                     <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/secondTempLayout"
+                        android:id="@+id/layout_second_temp"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
@@ -127,24 +127,24 @@
                         android:layout_marginRight="8dp"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="@+id/guideline_half"
-                        app:layout_constraintTop_toBottomOf="@+id/textView">
+                        app:layout_constraintTop_toBottomOf="@+id/label_melting_temp">
 
                         <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/secondTemp"
+                            android:id="@+id/input_second_temp"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:ellipsize="start"
                             android:gravity="center_horizontal"
-                            android:hint="@string/temperature_editText"
+                            android:hint="@string/label_temperature"
                             android:imeOptions="actionNext"
                             android:inputType="numberDecimal"
                             android:maxLength="6"
-                            android:nextFocusForward="@+id/firstEntropLayout"
+                            android:nextFocusForward="@+id/layout_first_entrop"
                             android:singleLine="true" />
                     </com.google.android.material.textfield.TextInputLayout>
 
                     <TextView
-                        android:id="@+id/textView2"
+                        android:id="@+id/label_melting_entropy"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
@@ -152,13 +152,13 @@
                         android:layout_marginTop="16dp"
                         android:layout_marginEnd="8dp"
                         android:layout_marginRight="8dp"
-                        android:text="@string/melting_entropy_textView"
+                        android:text="@string/label_melting_entropy"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/firstTempLayout" />
+                        app:layout_constraintTop_toBottomOf="@+id/layout_first_temp" />
 
                     <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/firstEntropLayout"
+                        android:id="@+id/layout_first_entrop"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
@@ -168,24 +168,24 @@
                         android:layout_marginRight="8dp"
                         app:layout_constraintEnd_toStartOf="@+id/guideline_half"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/textView2">
+                        app:layout_constraintTop_toBottomOf="@+id/label_melting_entropy">
 
                         <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/firstEntrop"
+                            android:id="@+id/input_first_entrop"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:ellipsize="start"
                             android:gravity="center_horizontal"
-                            android:hint="@string/entropy_editText"
+                            android:hint="@string/label_entropy"
                             android:imeOptions="actionNext"
                             android:inputType="numberDecimal"
                             android:maxLength="6"
-                            android:nextFocusForward="@+id/secondEntropLayout"
+                            android:nextFocusForward="@+id/layout_second_entrop"
                             android:singleLine="true" />
                     </com.google.android.material.textfield.TextInputLayout>
 
                     <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/secondEntropLayout"
+                        android:id="@+id/layout_second_entrop"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
@@ -195,24 +195,24 @@
                         android:layout_marginRight="8dp"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="@+id/guideline_half"
-                        app:layout_constraintTop_toBottomOf="@+id/textView2">
+                        app:layout_constraintTop_toBottomOf="@+id/label_melting_entropy">
 
                         <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/secondEntrop"
+                            android:id="@+id/input_second_entrop"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:ellipsize="start"
                             android:gravity="center_horizontal"
-                            android:hint="@string/entropy_editText"
+                            android:hint="@string/label_entropy"
                             android:imeOptions="actionNext"
                             android:inputType="numberDecimal"
                             android:maxLength="6"
-                            android:nextFocusForward="@+id/firstAlphaLLayout"
+                            android:nextFocusForward="@+id/layout_first_alpha_l"
                             android:singleLine="true" />
                     </com.google.android.material.textfield.TextInputLayout>
 
                     <TextView
-                        android:id="@+id/textView3"
+                        android:id="@+id/label_alpha"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
@@ -220,13 +220,13 @@
                         android:layout_marginTop="16dp"
                         android:layout_marginEnd="8dp"
                         android:layout_marginRight="8dp"
-                        android:text="@string/alpha_desc_textView"
+                        android:text="@string/label_alpha_desc"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/firstEntropLayout" />
+                        app:layout_constraintTop_toBottomOf="@+id/layout_first_entrop" />
 
                     <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/firstAlphaLLayout"
+                        android:id="@+id/layout_first_alpha_l"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
@@ -236,22 +236,22 @@
                         android:layout_marginRight="8dp"
                         app:layout_constraintEnd_toStartOf="@+id/guideline_half"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/textView3">
+                        app:layout_constraintTop_toBottomOf="@+id/label_alpha">
 
                         <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/firstAlphaL"
+                            android:id="@+id/input_first_alpha_l"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:ellipsize="start"
                             android:gravity="center_horizontal"
-                            android:hint="@string/alpha_l_editText"
+                            android:hint="@string/label_alpha_l"
                             android:inputType="numberDecimal|numberSigned"
                             android:maxLength="8"
                             android:singleLine="true" />
                     </com.google.android.material.textfield.TextInputLayout>
 
                     <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/secondAlphaLLayout"
+                        android:id="@+id/layout_second_alpha_l"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
@@ -261,22 +261,22 @@
                         android:layout_marginRight="8dp"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="@+id/guideline_half"
-                        app:layout_constraintTop_toBottomOf="@+id/textView3">
+                        app:layout_constraintTop_toBottomOf="@+id/label_alpha">
 
                         <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/secondAlphaL"
+                            android:id="@+id/input_second_alpha_l"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:ellipsize="start"
                             android:gravity="center_horizontal"
-                            android:hint="@string/alpha_l_editText"
+                            android:hint="@string/label_alpha_l"
                             android:inputType="numberDecimal|numberSigned"
                             android:maxLength="8"
                             android:singleLine="true" />
                     </com.google.android.material.textfield.TextInputLayout>
 
                     <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/firstAlphaSLayout"
+                        android:id="@+id/layout_first_alpha_s"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
@@ -286,22 +286,22 @@
                         android:layout_marginRight="8dp"
                         app:layout_constraintEnd_toStartOf="@+id/guideline_half"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/firstAlphaLLayout">
+                        app:layout_constraintTop_toBottomOf="@+id/layout_first_alpha_l">
 
                         <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/firstAlphaS"
+                            android:id="@+id/input_first_alpha_s"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:ellipsize="start"
                             android:gravity="center_horizontal"
-                            android:hint="@string/alpha_s_editText"
+                            android:hint="@string/label_alpha_s"
                             android:inputType="numberDecimal|numberSigned"
                             android:maxLength="8"
                             android:singleLine="true" />
                     </com.google.android.material.textfield.TextInputLayout>
 
                     <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/secondAlphaSLayout"
+                        android:id="@+id/layout_second_alpha_s"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
@@ -311,15 +311,15 @@
                         android:layout_marginRight="8dp"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="@+id/guideline_half"
-                        app:layout_constraintTop_toBottomOf="@+id/secondAlphaLLayout">
+                        app:layout_constraintTop_toBottomOf="@+id/layout_second_alpha_l">
 
                         <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/secondAlphaS"
+                            android:id="@+id/input_second_alpha_s"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:ellipsize="start"
                             android:gravity="center_horizontal"
-                            android:hint="@string/alpha_s_editText"
+                            android:hint="@string/label_alpha_s"
                             android:inputType="numberDecimal|numberSigned"
                             android:maxLength="8"
                             android:singleLine="true" />
@@ -336,14 +336,13 @@
                         android:layout_marginRight="8dp"
                         android:layout_marginBottom="16dp"
                         android:background="@drawable/btn_build_background"
-                        android:text="@string/build_button_text"
+                        android:text="@string/label_build"
                         android:textAllCaps="true"
                         android:textSize="16sp"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/firstAlphaSLayout" />
-
+                        app:layout_constraintTop_toBottomOf="@+id/layout_first_alpha_s" />
 
                     <androidx.constraintlayout.widget.Guideline
                         android:id="@+id/guideline_half"
@@ -357,14 +356,14 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:visibility="visible"
-                        app:constraint_referenced_ids="textView3,firstAlphaLLayout,firstAlphaSLayout" />
+                        app:constraint_referenced_ids="label_alpha,layout_first_alpha_l,layout_first_alpha_s" />
 
                     <androidx.constraintlayout.widget.Group
                         android:id="@+id/group_second_alphas"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:visibility="visible"
-                        app:constraint_referenced_ids="secondAlphaLLayout,secondAlphaSLayout" />
+                        app:constraint_referenced_ids="layout_second_alpha_l,layout_second_alpha_s" />
 
                     <androidx.constraintlayout.widget.Guideline
                         android:id="@+id/guideline_third_first"
@@ -387,7 +386,6 @@
         </androidx.cardview.widget.CardView>
 
         <TextView
-            android:id="@+id/textView4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="16dp"
@@ -400,7 +398,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/cardView"
+            app:layout_constraintTop_toBottomOf="@+id/card_view"
             app:layout_constraintVertical_bias="0.9" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
