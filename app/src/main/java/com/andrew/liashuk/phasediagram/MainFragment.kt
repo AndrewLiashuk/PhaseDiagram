@@ -6,6 +6,8 @@ import androidx.constraintlayout.widget.ConstraintSet
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import com.andrew.liashuk.phasediagram.common.MainHandler
+import com.andrew.liashuk.phasediagram.common.mainHandler
 import com.andrew.liashuk.phasediagram.databinding.MainFragmentBinding
 import com.andrew.liashuk.phasediagram.ext.setSupportActionBar
 import com.andrew.liashuk.phasediagram.types.PhaseData
@@ -36,6 +38,7 @@ class MainFragment : Fragment() {
     }
 
     private val viewModel: MainViewModel by viewModels()
+    private val handler: MainHandler by mainHandler()
 
     private var _binding: MainFragmentBinding? = null
     private val binding: MainFragmentBinding
@@ -66,7 +69,7 @@ class MainFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.btnBuild.setOnClickListener { viewModel.onBuildClick() }
-        setupInputFields()
+        handler.postAction(action = ::setupInputFields)
         setSupportActionBar(binding.toolbar)
     }
 
@@ -89,7 +92,9 @@ class MainFragment : Fragment() {
             true
         }
         R.id.menu_sample -> {
-            viewModel.showSmaple()
+            // TODO
+            //viewModel.showSmaple()
+            navigateNext(PhaseData(1000.0, 1300.0, 30.0, 20.0, 20000.0, 0.0, 10000.0, -10000.0))
             true
         }
         else -> super.onOptionsItemSelected(item)
