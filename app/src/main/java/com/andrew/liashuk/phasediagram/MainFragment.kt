@@ -6,7 +6,7 @@ import androidx.constraintlayout.widget.ConstraintSet
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import com.andrew.liashuk.phasediagram.common.MainHandler
+import com.andrew.liashuk.phasediagram.common.resourceHolder
 import com.andrew.liashuk.phasediagram.common.mainHandler
 import com.andrew.liashuk.phasediagram.databinding.MainFragmentBinding
 import com.andrew.liashuk.phasediagram.ext.setSupportActionBar
@@ -23,6 +23,12 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class MainFragment : Fragment() {
 
+    private val viewModel: MainViewModel by viewModels()
+    private val handler by mainHandler()
+
+    private var menu: Menu by resourceHolder()
+    private var binding: MainFragmentBinding by resourceHolder()
+
     private val elementsLayoutPairs: List<Pair<Elements, TextInputLayout>> by lazy {
         listOf(
             Elements.MELTING_TEMPERATURE_FIRST to binding.layoutFirstTemp,
@@ -37,15 +43,6 @@ class MainFragment : Fragment() {
         )
     }
 
-    private val viewModel: MainViewModel by viewModels()
-    private val handler: MainHandler by mainHandler()
-
-    private var _binding: MainFragmentBinding? = null
-    private val binding: MainFragmentBinding
-        get() = checkNotNull(_binding) { "Binding property is only valid after onCreateView and before onDestroyView are called." }
-
-    private var menu: Menu? = null // set checked on sample menu click
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
@@ -55,14 +52,8 @@ class MainFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = MainFragmentBinding.inflate(inflater)
+        binding = MainFragmentBinding.inflate(inflater)
         return binding.root
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-        menu = null
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

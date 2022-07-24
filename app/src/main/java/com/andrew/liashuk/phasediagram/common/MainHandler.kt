@@ -44,15 +44,15 @@ class MainHandler {
 
 //TODO create unit tests
 @ExperimentalHandler
-fun LifecycleOwner.mainHandler() = object : ReadOnlyProperty<Any?, MainHandler> {
+fun mainHandler(ownerProducer: () -> LifecycleOwner) = object : ReadOnlyProperty<Any?, MainHandler> {
 
     private var mainHandler: MainHandler? = null
 
-    private val viewObserver = object : LifecycleEventObserver {
+    private val observer = object : LifecycleEventObserver {
         override fun onStateChanged(source: LifecycleOwner, event: Lifecycle.Event) {
             if (source.lifecycle.currentState == Lifecycle.State.DESTROYED) {
                 mainHandler?.finish()
-                this@mainHandler.lifecycle.removeObserver(this)
+                ownerProducer().lifecycle.removeObserver(this)
             }
         }
     }
@@ -62,9 +62,11 @@ fun LifecycleOwner.mainHandler() = object : ReadOnlyProperty<Any?, MainHandler> 
             mainHandler = MainHandler()
         }
 
-        if (mainHandler?.isActive == false && lifecycle.currentState != Lifecycle.State.DESTROYED) {
+        if (mainHandler?.isActive == false &&
+            ownerProducer().lifecycle.currentState != Lifecycle.State.DESTROYED
+        ) {
             mainHandler?.start()
-            this@mainHandler.lifecycle.addObserver(viewObserver)
+            ownerProducer().lifecycle.addObserver(observer)
         }
 
         return mainHandler!!
@@ -72,4 +74,4 @@ fun LifecycleOwner.mainHandler() = object : ReadOnlyProperty<Any?, MainHandler> 
 }
 
 @ExperimentalHandler
-fun Fragment.mainHandler() = this.viewLifecycleOwner.mainHandler()
+fun Fragment.mainHandler() = mainHandler(ownerProducer = { this.viewLifecycleOwner })
