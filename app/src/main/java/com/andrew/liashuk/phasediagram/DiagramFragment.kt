@@ -12,29 +12,31 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.content.ContextCompat
+import androidx.annotation.ColorInt
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.core.view.ViewCompat
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.andrew.liashuk.phasediagram.common.resourceHolder
 import com.andrew.liashuk.phasediagram.databinding.DiagramFragmentBinding
 import com.andrew.liashuk.phasediagram.ext.onLaidOut
+import com.andrew.liashuk.phasediagram.ext.runCoroutine
 import com.andrew.liashuk.phasediagram.ext.setSupportActionBar
-import com.andrew.liashuk.phasediagram.helpers.Helpers
-import com.andrew.liashuk.phasediagram.types.PhaseData
+import com.andrew.liashuk.phasediagram.ext.showToast
 import com.andrew.liashuk.phasediagram.ui.CustomMarkerView
 import com.andrew.liashuk.phasediagram.viewmodal.DiagramViewModel
 import com.github.mikephil.charting.components.XAxis
+import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
+import com.google.android.material.color.MaterialColors
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.TimeoutCancellationException
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeout
 
@@ -42,20 +44,18 @@ import kotlinx.coroutines.withTimeout
 class DiagramFragment : Fragment() {
 
     private val viewModel: DiagramViewModel by viewModels()
+    private var binding: DiagramFragmentBinding by resourceHolder()
 
-    private var _binding: DiagramFragmentBinding? = null
-    private val binding: DiagramFragmentBinding
-        get() = checkNotNull(_binding) { "Binding property is only valid after onCreateView and before onDestroyView are called." }
+    private var diagramIsSaving = false
 
-    private var mBuildDiagram = false
     private var documentUri: Uri? = null
     private var createDocument = registerForActivityResult(
-        ActivityResultContracts.CreateDocument(mimeType = "image/png")
+        ActivityResultContracts.CreateDocument(mimeType = MIME_TYPE)
     ) { uri: Uri? ->
         if (uri != null) {
             documentUri = uri
         } else {
-            Helpers.showToast(activity, R.string.permissions_not_grant)
+            requireContext().showToast(R.string.permissions_not_grant)
         }
     }
 
@@ -64,26 +64,27 @@ class DiagramFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = DiagramFragmentBinding.inflate(inflater)
+        binding = DiagramFragmentBinding.inflate(inflater)
         return binding.root
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.toolbar.title = getString(R.string.diagram_fragment_title)
-        setSupportActionBar(binding.toolbar)
         setupMenu()
+        setSupportActionBar(binding.toolbar)
+        binding.toolbar.title = getString(R.string.diagram_fragment_title)
 
         val phaseData = DiagramFragmentArgs.fromBundle(requireArguments()).phaseData
+        val (solidEntries, liquidEntries) = viewModel.createDiagramBranches(phaseData)
 
         setupPlot()
-        setPlotData(phaseData, animate = savedInstanceState == null)
+        setPlotData(liquidEntries, solidEntries, animate = savedInstanceState == null)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        saveDiagramIfNeeded()
     }
 
     private fun setupMenu() {
@@ -94,41 +95,28 @@ class DiagramFragment : Fragment() {
             }
 
             override fun onMenuItemSelected(menuItem: MenuItem) = when (menuItem.itemId) {
-                    android.R.id.home -> {
-                        findNavController().popBackStack()
-                        true
-                    }
-                    R.id.menu_save -> {
-                        if (mBuildDiagram) {
-                            createDocument.launch(requireContext().getString(R.string.saved_image_name))
-                        }
-                        true
-                    }
-                    else -> false
+                android.R.id.home -> {
+                    findNavController().popBackStack()
+                    true
                 }
+                R.id.menu_save -> {
+                    if (diagramIsSaving) {
+                        diagramIsSaving = false
+                        createDocument.launch(requireContext().getString(R.string.saved_image_name))
+                    }
+                    true
+                }
+                else -> false
+            }
 
         }, viewLifecycleOwner, Lifecycle.State.RESUMED)
-    }
-
-    override fun onResume() {
-        super.onResume()
-
-        documentUri?.let { uri ->
-            if(ViewCompat.isLaidOut(binding.layoutDiagram)) {
-                saveDiagram(uri)
-            } else {
-                binding.layoutDiagram.onLaidOut {
-                    saveDiagram(uri)
-                }
-            }
-        }
     }
 
     private fun setupPlot() = with(binding.lineChart) {
         setDrawGridBackground(false)
         description.isEnabled = false // no description text
-        setTouchEnabled(true) // enable touch gestures
         isDragEnabled = true // enable scaling and dragging
+        setTouchEnabled(true) // enable touch gestures
         setScaleEnabled(true)
         setPinchZoom(true)  // if disabled, scaling can be done on x- and y-axis separately
 
@@ -141,70 +129,93 @@ class DiagramFragment : Fragment() {
         }
     }
 
-    private fun setPlotData(phaseData: PhaseData, animate: Boolean) {
-        binding.lineChart.data = createDiagramData(phaseData)
-        binding.lineChart.invalidate()
-       if (animate) binding.lineChart.animateX(1000)
+    private fun setPlotData(
+        liquidEntries: ArrayList<Entry>,
+        solidEntries: ArrayList<Entry>, animate: Boolean
+    ) = with(binding) {
+        lineChart.data = LineData(
+            createDataSet(
+                entries = liquidEntries,
+                label = getString(R.string.diagram_liquid),
+                color = MaterialColors.getColor(requireView(), R.attr.colorPrimary)
+            ),
+            createDataSet(
+                entries = solidEntries,
+                label = getString(R.string.diagram_solid),
+                color = MaterialColors.getColor(requireView(), R.attr.colorAccent)
+            )
+        )
+        lineChart.invalidate()
+       if (animate) lineChart.animateX(1000)
 
-        mBuildDiagram = true
-        binding.groupDiagram.visibility = View.VISIBLE
-        binding.progressBar.visibility = View.GONE
+        diagramIsSaving = true
+        groupDiagram.isVisible = true
+        progressBar.isVisible = false
     }
 
-    private fun createDiagramData(phaseData: PhaseData): LineData {
-        val (solidEntries, liquidEntries) = viewModel.createDiagramBranches(phaseData)
-
-        val liquidDataSet = LineDataSet(liquidEntries, getString(R.string.diagram_liquid)).apply {
-            color = ContextCompat.getColor(requireActivity(), R.color.colorPrimary)
-            lineWidth = 1.5f
-            setDrawCircles(false)
-        }
-
-        val solidDataSet = LineDataSet(solidEntries, getString(R.string.diagram_solid)).apply {
-            color = ContextCompat.getColor(requireContext(), R.color.colorAccent)
-            lineWidth = 1.5f
-            setDrawCircles(false)
-        }
-
-        return LineData(liquidDataSet, solidDataSet)
+    private fun createDataSet(
+        entries: ArrayList<Entry>,
+        label: String,
+        @ColorInt color: Int
+    ) = LineDataSet(entries, label).also {
+        it.color = color
+        it.lineWidth = 1.5f
+        it.setDrawCircles(false)
     }
 
-    private fun saveDiagram(uri: Uri) = lifecycleScope.launch {
-        try {
-            binding.progressBar.visibility = View.VISIBLE
-            withTimeout(10000L) {
-                createAndSaveBitmap(uri)
+    private fun saveDiagramIfNeeded() {
+        documentUri?.let { uri ->
+            // TODO add comment
+            if (ViewCompat.isLaidOut(binding.layoutDiagram)) {
+                saveDiagram(uri)
+            } else {
+                binding.layoutDiagram.onLaidOut {
+                    saveDiagram(uri)
+                }
             }
-            Helpers.showToast(activity, R.string.successful_image_save)
-
-        } catch (timout: TimeoutCancellationException) {
-            //Crashlytics.getInstance().core.logException(timout)
-            Helpers.showErrorAlert(activity, R.string.long_time_save)
-        } catch (ex: Exception) {
-            //Crashlytics.getInstance().core.logException(ex)
-            Helpers.showToast(activity, R.string.failed_image_save)
-        } finally {
-            binding.progressBar.visibility = View.GONE
         }
     }
 
-    private suspend fun createAndSaveBitmap(uri: Uri) {
+    private fun saveDiagram(uri: Uri) = runCoroutine {
         val bitmap = Bitmap.createBitmap(
             binding.layoutDiagram.measuredWidth,
             binding.layoutDiagram.measuredHeight,
             Bitmap.Config.ARGB_8888
         )
+        try {
+            binding.progressBar.isVisible = true
+
+            val result = withTimeout(SAVE_TIMEOUT) { saveBitmap(bitmap, uri) }
+
+            val message = if (result) R.string.successful_image_save else R.string.failed_image_save
+            requireContext().showToast(message)
+        } catch (ex: Exception) {
+            val message = if (ex is TimeoutCancellationException) R.string.long_time_save else R.string.failed_image_save
+            requireContext().showToast(message)
+            //Crashlytics.getInstance().core.logException(ex)
+        } finally {
+            diagramIsSaving = true
+            documentUri = null
+            bitmap.recycle()
+            binding.progressBar.isVisible = false
+        }
+    }
+
+    private suspend fun saveBitmap(bitmap: Bitmap, uri: Uri): Boolean {
         val canvas = Canvas(bitmap).apply { drawColor(Color.WHITE) }
 
         withContext(Dispatchers.Default) { binding.layoutDiagram.draw(canvas) }
 
         @Suppress("BlockingMethodInNonBlockingContext")
-        withContext(Dispatchers.IO) {
+        return withContext(Dispatchers.IO) {
             requireActivity().contentResolver.openOutputStream(uri)?.use {
                 bitmap.compress(Bitmap.CompressFormat.PNG, 100, it)
-            }
+            } ?: false
         }
+    }
 
-        bitmap.recycle()
+    companion object {
+        private const val MIME_TYPE = "image/png"
+        private const val SAVE_TIMEOUT = 10000L
     }
 }
