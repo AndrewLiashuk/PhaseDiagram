@@ -11,12 +11,14 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import android.view.ViewTreeObserver.OnGlobalLayoutListener
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
+import androidx.core.view.MenuHost
+import androidx.core.view.MenuProvider
 import androidx.core.view.ViewCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.andrew.liashuk.phasediagram.databinding.DiagramFragmentBinding
@@ -57,11 +59,6 @@ class DiagramFragment : Fragment() {
         }
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setHasOptionsMenu(true)
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -76,20 +73,41 @@ class DiagramFragment : Fragment() {
         _binding = null
     }
 
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.menu_diagram, menu)
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         binding.toolbar.title = getString(R.string.diagram_fragment_title)
         setSupportActionBar(binding.toolbar)
+        setupMenu()
 
         val phaseData = DiagramFragmentArgs.fromBundle(requireArguments()).phaseData
 
         setupPlot()
         setPlotData(phaseData, animate = savedInstanceState == null)
+    }
+
+    private fun setupMenu() {
+        val menuHost: MenuHost = requireActivity()
+        menuHost.addMenuProvider(object : MenuProvider {
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                menuInflater.inflate(R.menu.menu_diagram, menu)
+            }
+
+            override fun onMenuItemSelected(menuItem: MenuItem) = when (menuItem.itemId) {
+                    android.R.id.home -> {
+                        findNavController().popBackStack()
+                        true
+                    }
+                    R.id.menu_save -> {
+                        if (mBuildDiagram) {
+                            createDocument.launch(requireContext().getString(R.string.saved_image_name))
+                        }
+                        true
+                    }
+                    else -> false
+                }
+
+        }, viewLifecycleOwner, Lifecycle.State.RESUMED)
     }
 
     override fun onResume() {
@@ -103,22 +121,6 @@ class DiagramFragment : Fragment() {
                     saveDiagram(uri)
                 }
             }
-        }
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            android.R.id.home -> {
-                findNavController().popBackStack()
-                true
-            }
-            R.id.menu_save -> {
-                if (mBuildDiagram) {
-                    createDocument.launch(requireContext().getString(R.string.saved_image_name))
-                }
-                true
-            }
-            else -> super.onOptionsItemSelected(item)
         }
     }
 

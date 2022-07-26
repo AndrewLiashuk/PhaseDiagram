@@ -3,8 +3,11 @@ package com.andrew.liashuk.phasediagram
 import android.os.Bundle
 import android.view.*
 import androidx.constraintlayout.widget.ConstraintSet
+import androidx.core.view.MenuHost
+import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
 import com.andrew.liashuk.phasediagram.common.resourceHolder
 import com.andrew.liashuk.phasediagram.common.mainHandler
@@ -59,36 +62,39 @@ class MainFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        setupMenu()
+
         binding.btnBuild.setOnClickListener { viewModel.onBuildClick() }
         handler.postAction(action = ::setupInputFields)
         setSupportActionBar(binding.toolbar)
     }
 
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.menu_main, menu)
-        this.menu = menu
-    }
+    private fun setupMenu() {
+        val menuHost: MenuHost = requireActivity()
+        menuHost.addMenuProvider(object : MenuProvider {
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                menuInflater.inflate(R.menu.menu_main, menu)
+                this@MainFragment.menu = menu
+            }
 
-    override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
-        R.id.menu_ideal -> {
-            viewModel.changeType(SolutionType.IDEAL)
-            true
-        }
-        R.id.menu_regular -> {
-            viewModel.changeType(SolutionType.REGULAR)
-            true
-        }
-        R.id.menu_subregular -> {
-            viewModel.changeType(SolutionType.SUBREGULAR)
-            true
-        }
-        R.id.menu_sample -> {
-            // TODO
-            //viewModel.showSmaple()
-            navigateNext(PhaseData(1000.0, 1300.0, 30.0, 20.0, 20000.0, 0.0, 10000.0, -10000.0))
-            true
-        }
-        else -> super.onOptionsItemSelected(item)
+            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                when (menuItem.itemId) {
+                    R.id.menu_ideal -> viewModel.changeType(SolutionType.IDEAL)
+
+                    R.id.menu_regular -> viewModel.changeType(SolutionType.REGULAR)
+
+                    R.id.menu_subregular -> viewModel.changeType(SolutionType.SUBREGULAR)
+
+                    R.id.menu_sample -> {
+                        // TODO
+                        //viewModel.showSmaple()
+                        navigateNext(PhaseData(1000.0, 1300.0, 30.0, 20.0, 20000.0, 0.0, 10000.0, -10000.0))
+                    }
+                    else -> return false
+                }
+                return true
+            }
+        }, viewLifecycleOwner, Lifecycle.State.RESUMED)
     }
 
     private fun setupInputFields() {
