@@ -16,5 +16,5 @@ fun Fragment.setSupportActionBar(toolbar: Toolbar?) {
 fun Fragment.runCoroutine(
     context: CoroutineContext = EmptyCoroutineContext,
     block: suspend CoroutineScope.() -> Unit
-) = viewLifecycleOwner.lifecycleScope.launch(context) { block() }
+) = viewLifecycleOwner.lifecycleScope.launch(context, block = block)
 
