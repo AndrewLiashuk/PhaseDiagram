@@ -6,6 +6,10 @@ import android.widget.Toast
 import androidx.annotation.StringRes
 import com.andrew.liashuk.phasediagram.R
 
+fun Context.showToast(message: String) {
+    Toast.makeText(this, message, Toast.LENGTH_LONG).show()
+}
+
 fun Context.showToast(@StringRes messageId: Int) {
     Toast.makeText(this, messageId, Toast.LENGTH_LONG).show()
 }

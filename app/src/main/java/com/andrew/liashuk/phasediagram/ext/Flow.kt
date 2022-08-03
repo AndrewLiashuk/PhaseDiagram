@@ -10,6 +10,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.launch
 
@@ -25,13 +26,13 @@ import kotlinx.coroutines.launch
  * again.
  * @param action The block to run when the lifecycle is at least in [minActiveState] state.
  */
-inline fun <T> Flow<T>.collectFlow(
+inline fun <T> Flow<T>.collectWithLifecycle(
     owner: LifecycleOwner,
     minActiveState: Lifecycle.State = Lifecycle.State.STARTED,
     crossinline action: suspend (value: T) -> Unit
 ) = owner.lifecycleScope.launch {
     owner.repeatOnLifecycle(minActiveState) {
-        this@collectFlow.collect {
+        this@collectWithLifecycle.collect {
             action(it)
         }
     }
@@ -40,15 +41,19 @@ inline fun <T> Flow<T>.collectFlow(
 /**
  * Extension function that allows an easier call to the API from [Fragment].
  *
- * @see Flow.collectFlow
+ * @see Flow.collectWithLifecycle
  */
-inline fun <T> Flow<T>.collectFlow(
+inline fun <T> Flow<T>.collectWithLifecycle(
     fragment: Fragment,
     minActiveState: Lifecycle.State = Lifecycle.State.STARTED,
     crossinline action: suspend (value: T) -> Unit
 ) {
-    collectFlow(fragment.viewLifecycleOwner, minActiveState, action)
+    collectWithLifecycle(fragment.viewLifecycleOwner, minActiveState, action)
 }
+
+fun <T> StateFlow<T?>.isEmpty(): Boolean = this.value == null
+
+fun <T> StateFlow<T?>.isNotEmpty(): Boolean = this.value != null
 
 fun EditText.textChanges(): Flow<String?> = callbackFlow {
     val watcher = object : TextWatcher {
