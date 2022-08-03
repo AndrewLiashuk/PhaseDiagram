@@ -11,6 +11,8 @@ import androidx.annotation.IntegerRes
 import androidx.annotation.StringRes
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.content.res.ResourcesCompat
+import dagger.hilt.android.qualifiers.ApplicationContext
+import javax.inject.Inject
 
 interface ResourceResolver {
 
@@ -29,15 +31,11 @@ interface ResourceResolver {
     fun getColor(@ColorRes colorRes: Int, theme: Resources.Theme? = null): Int
 }
 
-class DefaultResourceResolverImpl(
-    private val context: Context
+class DefaultResourceResolverImpl @Inject constructor(
+    @ApplicationContext private val context: Context
 ) : ResourceResolver {
     override fun getString(resId: Int, vararg formatArgs: Any): String =
-        if (formatArgs.isEmpty()) {
-            context.resources.getString(resId)
-        } else {
-            context.resources.getString(resId, *formatArgs)
-        }
+        context.resources.getString(resId, formatArgs)
     override fun getInt(resId: Int): Int = context.resources.getInteger(resId)
     override fun getBoolean(resId: Int): Boolean = context.resources.getBoolean(resId)
     override fun getDimension(id: Int): Float = context.resources.getDimension(id)

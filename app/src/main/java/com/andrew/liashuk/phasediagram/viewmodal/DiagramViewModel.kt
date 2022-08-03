@@ -2,10 +2,9 @@ package com.andrew.liashuk.phasediagram.viewmodal
 
 import android.net.Uri
 import androidx.lifecycle.ViewModel
+import com.andrew.liashuk.phasediagram.common.DispatcherProvider
 import com.andrew.liashuk.phasediagram.common.Event
-import com.andrew.liashuk.phasediagram.common.HideProgress
-import com.andrew.liashuk.phasediagram.common.ShowProgress
-import com.andrew.liashuk.phasediagram.common.ShowToast
+import com.andrew.liashuk.phasediagram.common.ResourceResolver
 import com.andrew.liashuk.phasediagram.common.showProgress
 import com.andrew.liashuk.phasediagram.common.showToast
 import com.andrew.liashuk.phasediagram.ext.isNotEmpty
@@ -25,11 +24,13 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.receiveAsFlow
-import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 
 @HiltViewModel
-class DiagramViewModel @Inject constructor() : ViewModel() {
+class DiagramViewModel @Inject constructor(
+    private val resourceResolver: ResourceResolver,
+    private val dispatcherProvider: DispatcherProvider,
+) : ViewModel() {
 
     private var documentIsRequested = false
 
