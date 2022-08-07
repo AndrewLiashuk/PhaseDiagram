@@ -19,8 +19,7 @@ class PhaseDiagramCalc(
      *
      * Change very carefully it very fast increases calculation time
      */
-    @Suppress("MemberVisibilityCanBePrivate")
-    val calculationStep = 0.0001
+    private val calculationStep = 0.001
 
     private val startVal = calculationStep
     private val finishVal = 0.99995 // not 1 because it greatly increases the calculation time
@@ -47,7 +46,7 @@ class PhaseDiagramCalc(
      * @return  collection of PhasePoints that store value of solid and liquid phase
      *          depending on temperature.
      */
-    fun calculatePhaseDiagram() : MutableCollection<PhasePoint> {
+    fun calculatePhaseDiagram() : List<PhasePoint> {
         mPoints.add(PhasePoint(0.0, 0.0, mMeltingTempFirst)) // add first point
 
         for (i in startVal..finishVal step calculationStep) {

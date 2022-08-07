@@ -1,19 +1,22 @@
 package com.andrew.liashuk.phasediagram.viewmodal
 
 import android.net.Uri
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import com.andrew.liashuk.phasediagram.R
 import com.andrew.liashuk.phasediagram.common.DispatcherProvider
 import com.andrew.liashuk.phasediagram.common.Event
 import com.andrew.liashuk.phasediagram.common.ResourceResolver
 import com.andrew.liashuk.phasediagram.common.showProgress
 import com.andrew.liashuk.phasediagram.common.showToast
+import com.andrew.liashuk.phasediagram.ext.firstNotNull
+import com.andrew.liashuk.phasediagram.ext.getMutableStateFlow
 import com.andrew.liashuk.phasediagram.ext.isNotEmpty
 import com.andrew.liashuk.phasediagram.ext.runCoroutine
 import com.andrew.liashuk.phasediagram.logic.PhaseDiagramCalc
 import com.andrew.liashuk.phasediagram.types.PhaseData
 import com.github.mikephil.charting.data.Entry
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.TimeoutCancellationException
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
@@ -28,6 +31,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class DiagramViewModel @Inject constructor(
+    savedStateHandle: SavedStateHandle,
     private val resourceResolver: ResourceResolver,
     private val dispatcherProvider: DispatcherProvider,
 ) : ViewModel() {
@@ -39,10 +43,11 @@ class DiagramViewModel @Inject constructor(
     val uiEvents: Flow<Event> = _uiEvents.receiveAsFlow()
 
     // TODO create action only if ui is active
-    private val _saveDocument = MutableSharedFlow<Uri>()
-    val saveDocument: SharedFlow<Uri> = _saveDocument.asSharedFlow()
+    private val _createDocument = MutableSharedFlow<String>(extraBufferCapacity = 1)
+    val createDocument: SharedFlow<String> = _createDocument.asSharedFlow()
 
-    private val _diagramData = MutableStateFlow<DiagramData?>(null)
+    private val _diagramData: MutableStateFlow<DiagramData?> =
+        savedStateHandle.getMutableStateFlow(KEY_DIAGRAM_DATA, initialValue = null)
     val diagramData: Flow<DiagramData> = _diagramData.asStateFlow().filterNotNull()
 
     /**
@@ -56,7 +61,7 @@ class DiagramViewModel @Inject constructor(
      * @throws Exception    Throw exception if input phaseData doesn't contain meltingTempFirst or
      *                      meltingTempSecond or entropFirst or entropSecond.
      */
-    fun createDiagramBranches(phaseData: PhaseData) = runCoroutine(Dispatchers.Default) {
+    fun createDiagramBranches(phaseData: PhaseData) = runCoroutine(dispatcherProvider.default()) {
         if (_diagramData.isNotEmpty()) return@runCoroutine // return DiagramData if exist
         _uiEvents.showProgress(show = true)
 
@@ -88,31 +93,42 @@ class DiagramViewModel @Inject constructor(
     fun saveDiagram() {
         if (!documentIsRequested) {
             documentIsRequested = true
-            _uiEvents.trySend(CreateDocument("File name"))  //R.string.saved_image_name
+            _createDocument.tryEmit(resourceResolver.getString(R.string.saved_image_name))
         }
     }
 
-    fun setDiagramUri(uri: Uri?) {
+    fun setDiagramUri(uri: Uri?) = runCoroutine {
         documentIsRequested = false
 
         if (uri != null) {
+            // save document only after diagram data calculation
+            _diagramData.firstNotNull()
+
+            _uiEvents.trySend(SaveDocument(uri))
             _uiEvents.showProgress(show = true)
-            _saveDocument.tryEmit(uri)
+
         } else {
-            _uiEvents.showToast("permissions_not_grant") //R.string.permissions_not_grant
+            _uiEvents.showToast(resourceResolver.getString(R.string.permissions_not_grant))
         }
     }
 
     fun setSaveDiagramResult(result: Result<Boolean>) {
-        var message: String? = null
+        var messageRes: Int? = null
 
-        result.onSuccess {
-            message = if (it) "successful_image_save" else "failed_image_save" //R.string.successful_image_save R.string.failed_image_save
-        }.onFailure {
-            message = if (it is TimeoutCancellationException) "long_time_save" else "failed_image_save" //R.string.long_time_save  R.string.failed_image_save
-        }
+        result.fold(
+            onSuccess = {
+                messageRes = if (it) R.string.successful_image_save else R.string.failed_image_save
+            },
+            onFailure = {
+                messageRes = if (it is TimeoutCancellationException) R.string.long_time_save else R.string.failed_image_save
+            }
+        )
 
-        _uiEvents.showToast(message!!)
+        _uiEvents.showToast(resourceResolver.getString(messageRes!!))
         _uiEvents.showProgress(show = false)
+    }
+
+    companion object {
+        private const val KEY_DIAGRAM_DATA = "diagram_data"
     }
 }

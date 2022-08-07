@@ -34,7 +34,7 @@ import com.andrew.liashuk.phasediagram.viewmodal.DiagramViewModel
 import com.andrew.liashuk.phasediagram.common.HideProgress
 import com.andrew.liashuk.phasediagram.common.ShowProgress
 import com.andrew.liashuk.phasediagram.common.ShowToast
-import com.andrew.liashuk.phasediagram.viewmodal.CreateDocument
+import com.andrew.liashuk.phasediagram.viewmodal.SaveDocument
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
@@ -77,7 +77,6 @@ class DiagramFragment : Fragment() {
 
         collectViewModel(firstStart = savedInstanceState == null)
         setupChart()
-
     }
 
     private fun setupMenu() {
@@ -101,19 +100,21 @@ class DiagramFragment : Fragment() {
     }
 
     private fun collectViewModel(firstStart: Boolean) {
-        viewModel.uiEvents.collectWithLifecycle(this) { event ->
+        viewModel.createDocument.collectWithLifecycle(this) { name ->
+            createDocument.launch(name)
+        }
+        viewModel.diagramData.collectWithLifecycle(this, Lifecycle.State.CREATED) {
+            setChartData(it, animate = firstStart)
+        }
+        viewModel.uiEvents.collectWithLifecycle(this, Lifecycle.State.RESUMED) { event ->
             when (event) {
                 is ShowProgress, is HideProgress ->
                     binding.progressBar.isVisible = event is ShowProgress
 
                 is ShowToast -> requireContext().showToast(event.message)
 
-                is CreateDocument -> createDocument.launch(event.name)
+                is SaveDocument -> saveDiagramIfReady(event.uri)
             }
-        }
-        viewModel.saveDocument.collectWithLifecycle(this, action = ::saveDiagramIfReady)
-        viewModel.diagramData.collectWithLifecycle(this) {
-            setChartData(it, animate = firstStart)
         }
     }
 

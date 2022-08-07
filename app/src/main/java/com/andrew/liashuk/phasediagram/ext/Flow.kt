@@ -8,10 +8,12 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 /**
@@ -51,9 +53,16 @@ inline fun <T> Flow<T>.collectWithLifecycle(
     collectWithLifecycle(fragment.viewLifecycleOwner, minActiveState, action)
 }
 
-fun <T> StateFlow<T?>.isEmpty(): Boolean = this.value == null
-
-fun <T> StateFlow<T?>.isNotEmpty(): Boolean = this.value != null
+inline fun <T> Flow<T>.collect(
+    scope: CoroutineScope,
+    crossinline action: suspend (value: T) -> Unit
+) {
+    scope.launch {
+        this@collect.collect {
+            action(it)
+        }
+    }
+}
 
 fun EditText.textChanges(): Flow<String?> = callbackFlow {
     val watcher = object : TextWatcher {
@@ -68,3 +77,9 @@ fun EditText.textChanges(): Flow<String?> = callbackFlow {
 
     awaitClose { removeTextChangedListener(watcher) }
 }
+
+fun <T> StateFlow<T?>.isEmpty(): Boolean = value == null
+
+fun <T> StateFlow<T?>.isNotEmpty(): Boolean = value != null
+
+suspend fun <T> StateFlow<T?>.firstNotNull(): T = this.first { it != null }!!
