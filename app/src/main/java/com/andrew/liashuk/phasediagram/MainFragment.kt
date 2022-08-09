@@ -167,43 +167,21 @@ class MainFragment : Fragment() {
      *                      params and place between guideline_third_first and guideline_third_second
      *                      <code>false</code> return to initial constraint params
      */
-    private fun changeAlphaEditPosition(isRegular: Boolean) {
-        val constraintSet = ConstraintSet()
-        constraintSet.clone(binding.layoutCard)
+    private fun changeAlphaEditPosition(isRegular: Boolean) = with(ConstraintSet()) {
+        clone(binding.layoutCard)
+
+        val startId = if (isRegular) R.id.guideline_third_first else ConstraintSet.PARENT_ID
+        val endId = if (isRegular) R.id.guideline_third_second else R.id.guideline_half
 
         // change AlphaL position
-        constraintSet.connect(
-            R.id.layout_first_alpha_l,
-            ConstraintSet.START,
-            if (isRegular) R.id.guideline_third_first else ConstraintSet.PARENT_ID,
-            ConstraintSet.START,
-            0
-        )
-        constraintSet.connect(
-            R.id.layout_first_alpha_l,
-            ConstraintSet.END,
-            if (isRegular) R.id.guideline_third_second else R.id.guideline_half,
-            ConstraintSet.START,
-            0
-        )
+        connect(R.id.layout_first_alpha_l, ConstraintSet.START, startId, ConstraintSet.START, 0)
+        connect(R.id.layout_first_alpha_l, ConstraintSet.END, endId, ConstraintSet.START, 0)
 
         // change AlphaS position
-        constraintSet.connect(
-            R.id.layout_first_alpha_s,
-            ConstraintSet.START,
-            if (isRegular) R.id.guideline_third_first else ConstraintSet.PARENT_ID,
-            ConstraintSet.START,
-            0
-        )
-        constraintSet.connect(
-            R.id.layout_first_alpha_s,
-            ConstraintSet.END,
-            if (isRegular) R.id.guideline_third_second else R.id.guideline_half,
-            ConstraintSet.START,
-            0
-        )
+        connect(R.id.layout_first_alpha_s, ConstraintSet.START, startId, ConstraintSet.START, 0)
+        connect(R.id.layout_first_alpha_s, ConstraintSet.END, endId, ConstraintSet.START, 0)
 
-        constraintSet.applyTo(binding.layoutCard)
+        applyTo(binding.layoutCard)
     }
 
 

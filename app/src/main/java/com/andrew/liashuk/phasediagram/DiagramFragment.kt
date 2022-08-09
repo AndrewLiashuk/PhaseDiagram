@@ -21,6 +21,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.andrew.liashuk.phasediagram.common.resourceHolder
 import com.andrew.liashuk.phasediagram.databinding.DiagramFragmentBinding
 import com.andrew.liashuk.phasediagram.ext.collectWithLifecycle
@@ -48,6 +49,7 @@ import kotlinx.coroutines.withTimeout
 @AndroidEntryPoint
 class DiagramFragment : Fragment() {
 
+    private val args: DiagramFragmentArgs by navArgs()
     private val viewModel: DiagramViewModel by viewModels()
     private var binding: DiagramFragmentBinding by resourceHolder()
 
@@ -71,10 +73,7 @@ class DiagramFragment : Fragment() {
         setSupportActionBar(binding.toolbar)
         binding.toolbar.title = getString(R.string.diagram_fragment_title)
 
-        // TODO improve
-        val phaseData = DiagramFragmentArgs.fromBundle(requireArguments()).phaseData
-        viewModel.createDiagramBranches(phaseData)
-
+        viewModel.setPhaseData(args.phaseData)
         collectViewModel(firstStart = savedInstanceState == null)
         setupChart()
     }

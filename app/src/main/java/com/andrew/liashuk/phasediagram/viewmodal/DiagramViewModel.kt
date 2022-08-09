@@ -9,8 +9,10 @@ import com.andrew.liashuk.phasediagram.common.Event
 import com.andrew.liashuk.phasediagram.common.ResourceResolver
 import com.andrew.liashuk.phasediagram.common.showProgress
 import com.andrew.liashuk.phasediagram.common.showToast
+import com.andrew.liashuk.phasediagram.common.withProgress
 import com.andrew.liashuk.phasediagram.ext.firstNotNull
 import com.andrew.liashuk.phasediagram.ext.getMutableStateFlow
+import com.andrew.liashuk.phasediagram.ext.isEmpty
 import com.andrew.liashuk.phasediagram.ext.isNotEmpty
 import com.andrew.liashuk.phasediagram.ext.runCoroutine
 import com.andrew.liashuk.phasediagram.logic.PhaseDiagramCalc
@@ -50,21 +52,15 @@ class DiagramViewModel @Inject constructor(
         savedStateHandle.getMutableStateFlow(KEY_DIAGRAM_DATA, initialValue = null)
     val diagramData: Flow<DiagramData> = _diagramData.asStateFlow().filterNotNull()
 
-    /**
-     * Calculate and store diagram points.
-     *
-     * @param phaseData     Input class that contains variables for diagram calculation.
-     *
-     * @return              Pair of ArrayList with Entrys. First is solid diagram data and second
-     *                      liquid diagram data.
-     *
-     * @throws Exception    Throw exception if input phaseData doesn't contain meltingTempFirst or
-     *                      meltingTempSecond or entropFirst or entropSecond.
-     */
-    fun createDiagramBranches(phaseData: PhaseData) = runCoroutine(dispatcherProvider.default()) {
-        if (_diagramData.isNotEmpty()) return@runCoroutine // return DiagramData if exist
-        _uiEvents.showProgress(show = true)
+    fun setPhaseData(phaseData: PhaseData) {
+        if (_diagramData.isEmpty()) {
+            _uiEvents.withProgress {
+                createDiagram(phaseData)
+            }
+        }
+    }
 
+    private fun createDiagram(phaseData: PhaseData) = runCoroutine(dispatcherProvider.default()) {
         val phaseDiagram = PhaseDiagramCalc(
             phaseData.meltingTempFirst ?: throw IllegalArgumentException("First melting temperature not set!"),
             phaseData.meltingTempSecond ?: throw IllegalArgumentException("Second melting temperature not set!"),
@@ -87,7 +83,6 @@ class DiagramViewModel @Inject constructor(
         }
 
         _diagramData.value = DiagramData(liquidEntries = liquidEntries, solidEntries = solidEntries)
-        _uiEvents.showProgress(show = false)
     }
 
     fun saveDiagram() {
