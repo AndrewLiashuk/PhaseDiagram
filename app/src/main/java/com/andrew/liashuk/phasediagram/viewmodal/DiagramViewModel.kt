@@ -13,9 +13,8 @@ import com.andrew.liashuk.phasediagram.common.withProgress
 import com.andrew.liashuk.phasediagram.ext.firstNotNull
 import com.andrew.liashuk.phasediagram.ext.getMutableStateFlow
 import com.andrew.liashuk.phasediagram.ext.isEmpty
-import com.andrew.liashuk.phasediagram.ext.isNotEmpty
 import com.andrew.liashuk.phasediagram.ext.runCoroutine
-import com.andrew.liashuk.phasediagram.logic.PhaseDiagramCalc
+import com.andrew.liashuk.phasediagram.logic.DiagramCalculator
 import com.andrew.liashuk.phasediagram.types.PhaseData
 import com.github.mikephil.charting.data.Entry
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -61,18 +60,9 @@ class DiagramViewModel @Inject constructor(
     }
 
     private fun createDiagram(phaseData: PhaseData) = runCoroutine(dispatcherProvider.default()) {
-        val phaseDiagram = PhaseDiagramCalc(
-            phaseData.meltingTempFirst ?: throw IllegalArgumentException("First melting temperature not set!"),
-            phaseData.meltingTempSecond ?: throw IllegalArgumentException("Second melting temperature not set!"),
-            phaseData.entropFirst ?: throw IllegalArgumentException("First entropy not set!"),
-            phaseData.entropSecond ?: throw IllegalArgumentException("Second entropy not set!"),
-            phaseData.alphaLFirst ?: 0.0, // if not set 0 for ideal formula
-            phaseData.alphaSFirst ?: 0.0,
-            phaseData.alphaLSecond ?: -1.0, // if not set -1 for regular formula
-            phaseData.alphaSSecond ?: -1.0
-        )
+        val phaseDiagram = DiagramCalculator(phaseData)
+        val points = phaseDiagram.build()
 
-        val points = phaseDiagram.calculatePhaseDiagram()
         val solidEntries = ArrayList<Entry>(points.size)
         val liquidEntries = ArrayList<Entry>(points.size)
 
