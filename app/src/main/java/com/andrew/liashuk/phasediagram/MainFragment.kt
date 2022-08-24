@@ -1,10 +1,16 @@
 package com.andrew.liashuk.phasediagram
 
 import android.os.Bundle
-import android.view.*
+import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.view.View
+import android.view.ViewGroup
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -12,6 +18,7 @@ import androidx.navigation.fragment.findNavController
 import com.andrew.liashuk.phasediagram.common.resourceHolder
 import com.andrew.liashuk.phasediagram.common.mainHandler
 import com.andrew.liashuk.phasediagram.databinding.MainFragmentBinding
+import com.andrew.liashuk.phasediagram.ext.collectWithLifecycle
 import com.andrew.liashuk.phasediagram.ext.setSupportActionBar
 import com.andrew.liashuk.phasediagram.types.PhaseData
 import com.andrew.liashuk.phasediagram.types.SolutionType
@@ -19,6 +26,7 @@ import com.andrew.liashuk.phasediagram.ui.validation.Condition
 import com.andrew.liashuk.phasediagram.ui.validation.MoreThanCondition
 import com.andrew.liashuk.phasediagram.ui.validation.NotEmptyCondition
 import com.andrew.liashuk.phasediagram.ui.validation.createValidator
+import com.andrew.liashuk.phasediagram.viewmodal.MainUiState
 import com.andrew.liashuk.phasediagram.viewmodal.MainViewModel
 import com.google.android.material.textfield.TextInputLayout
 import dagger.hilt.android.AndroidEntryPoint
@@ -26,10 +34,8 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class MainFragment : Fragment() {
 
-    private val viewModel: MainViewModel by viewModels()
     private val handler by mainHandler()
-
-    private var menu: Menu by resourceHolder()
+    private val viewModel: MainViewModel by viewModels()
     private var binding: MainFragmentBinding by resourceHolder()
 
     private val elementsLayoutPairs: List<Pair<Elements, TextInputLayout>> by lazy {
@@ -46,11 +52,6 @@ class MainFragment : Fragment() {
         )
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setHasOptionsMenu(true)
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -63,10 +64,20 @@ class MainFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         setupMenu()
-
-        binding.btnBuild.setOnClickListener { viewModel.onBuildClick() }
-        handler.postAction(action = ::setupInputFields)
         setSupportActionBar(binding.toolbar)
+
+        handler.postAction(action = ::setupInputFields)
+        binding.btnBuild.setOnClickListener { viewModel.onBuildClick() }
+        viewModel.uiState.collectWithLifecycle(this, action = ::updateUiState)
+    }
+
+    private fun updateUiState(state: MainUiState) {
+        changePhaseType(state.solutionType)
+
+        if (state.openDiagram) {
+            openDiagramScreen(state.phaseData)
+            viewModel.onDiagramOpened()
+        }
     }
 
     private fun setupMenu() {
@@ -74,7 +85,14 @@ class MainFragment : Fragment() {
         menuHost.addMenuProvider(object : MenuProvider {
             override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
                 menuInflater.inflate(R.menu.menu_main, menu)
-                this@MainFragment.menu = menu
+
+                // update selected item once menu is created
+                val itemId = when (viewModel.uiState.value.solutionType) {
+                    SolutionType.IDEAL -> R.id.menu_ideal
+                    SolutionType.REGULAR -> R.id.menu_regular
+                    SolutionType.SUBREGULAR -> R.id.menu_subregular
+                }
+                menu.findItem(itemId).isChecked = true
             }
 
             override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
@@ -85,11 +103,8 @@ class MainFragment : Fragment() {
 
                     R.id.menu_subregular -> viewModel.changeType(SolutionType.SUBREGULAR)
 
-                    R.id.menu_sample -> {
-                        // TODO
-                        //viewModel.showSmaple()
-                        navigateNext(PhaseData(1000.0, 1300.0, 30.0, 20.0, 20000.0, 0.0, 10000.0, -10000.0))
-                    }
+                    R.id.menu_sample -> viewModel.sampleData()
+
                     else -> return false
                 }
                 return true
@@ -135,55 +150,49 @@ class MainFragment : Fragment() {
         }
     }
 
-    private fun navigateNext(phaseData: PhaseData) {
+    private fun openDiagramScreen(phaseData: PhaseData) {
         val action = MainFragmentDirections.actionMainFragmentToDiagramFragment(phaseData)
         findNavController().navigate(action)
     }
 
-    /**
-     *  Depending on the solution type show or hide some alpha editTexts
-     */
-    private fun changePhaseType(type: SolutionType) {
+    private fun changePhaseType(type: SolutionType) = with(binding) {
         when (type) {
             SolutionType.IDEAL -> {
-                binding.groupFirstAlphas.visibility = View.GONE
-                binding.groupSecondAlphas.visibility = View.GONE
+                groupFirstAlphas.isVisible = false
+                groupSecondAlphas.isVisible = false
+                toolbar.menu.findItem(R.id.menu_ideal)?.isChecked = true
             }
             SolutionType.REGULAR -> {
-                binding.groupFirstAlphas.visibility = View.VISIBLE
-                binding.groupSecondAlphas.visibility = View.GONE
-                changeAlphaEditPosition(isRegular = true)
+                groupFirstAlphas.isVisible = true
+                groupSecondAlphas.isVisible = false
+                toolbar.menu.findItem(R.id.menu_regular)?.isChecked = true
+                changeAlphaFieldsPosition(centerFirstGroup = true)
             }
             SolutionType.SUBREGULAR -> {
-                binding.groupFirstAlphas.visibility = View.VISIBLE
-                binding.groupSecondAlphas.visibility = View.VISIBLE
-                changeAlphaEditPosition(isRegular = false)
+                groupFirstAlphas.isVisible = true
+                groupSecondAlphas.isVisible = true
+                toolbar.menu.findItem(R.id.menu_subregular)?.isChecked = true
+                changeAlphaFieldsPosition(centerFirstGroup = false)
             }
         }
     }
 
-    /**
-     * @param isRegular     <code>true</code> center alphaL and alphaS textViews by set constraint
-     *                      params and place between guideline_third_first and guideline_third_second
-     *                      <code>false</code> return to initial constraint params
-     */
-    private fun changeAlphaEditPosition(isRegular: Boolean) = with(ConstraintSet()) {
+    private fun changeAlphaFieldsPosition(centerFirstGroup: Boolean) = with(ConstraintSet()) {
         clone(binding.layoutCard)
 
-        val startId = if (isRegular) R.id.guideline_third_first else ConstraintSet.PARENT_ID
-        val endId = if (isRegular) R.id.guideline_third_second else R.id.guideline_half
+        val startId = if (centerFirstGroup) R.id.guideline_third_first else ConstraintSet.PARENT_ID
+        val endId = if (centerFirstGroup) R.id.guideline_third_second else R.id.guideline_half
 
-        // change AlphaL position
+        // change AlphaL field position
         connect(R.id.layout_first_alpha_l, ConstraintSet.START, startId, ConstraintSet.START, 0)
         connect(R.id.layout_first_alpha_l, ConstraintSet.END, endId, ConstraintSet.START, 0)
 
-        // change AlphaS position
+        // change AlphaS field position
         connect(R.id.layout_first_alpha_s, ConstraintSet.START, startId, ConstraintSet.START, 0)
         connect(R.id.layout_first_alpha_s, ConstraintSet.END, endId, ConstraintSet.START, 0)
 
         applyTo(binding.layoutCard)
     }
-
 
     enum class Elements {
         MELTING_TEMPERATURE_FIRST,

@@ -73,5 +73,4 @@ fun mainHandler(ownerProducer: () -> LifecycleOwner) = object : ReadOnlyProperty
     }
 }
 
-@ExperimentalHandler
 fun Fragment.mainHandler() = mainHandler(ownerProducer = { this.viewLifecycleOwner })

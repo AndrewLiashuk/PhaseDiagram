@@ -87,7 +87,7 @@ class DiagramFragment : Fragment() {
 
             override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
                 when (menuItem.itemId) {
-                    android.R.id.home -> findNavController().popBackStack()
+                    android.R.id.home -> findNavController().navigateUp()
 
                     R.id.menu_save -> viewModel.saveDiagram()
 
