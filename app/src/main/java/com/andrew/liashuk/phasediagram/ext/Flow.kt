@@ -14,6 +14,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 
 /**
@@ -61,6 +62,14 @@ inline fun <T> Flow<T>.collect(
         this@collect.collect {
             action(it)
         }
+    }
+}
+
+fun <T> Flow<T>.accumulate(initial: T? = null): Flow<Pair<T?, T>> = flow {
+    var accumulator = initial
+    collect { value ->
+        emit(Pair(accumulator, value))
+        accumulator = value
     }
 }
 

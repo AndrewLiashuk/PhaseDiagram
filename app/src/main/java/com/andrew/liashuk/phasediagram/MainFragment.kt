@@ -18,15 +18,17 @@ import androidx.navigation.fragment.findNavController
 import com.andrew.liashuk.phasediagram.common.resourceHolder
 import com.andrew.liashuk.phasediagram.common.mainHandler
 import com.andrew.liashuk.phasediagram.databinding.MainFragmentBinding
+import com.andrew.liashuk.phasediagram.ext.accumulate
 import com.andrew.liashuk.phasediagram.ext.collectWithLifecycle
 import com.andrew.liashuk.phasediagram.ext.setSupportActionBar
+import com.andrew.liashuk.phasediagram.types.Elements
 import com.andrew.liashuk.phasediagram.types.PhaseData
 import com.andrew.liashuk.phasediagram.types.SolutionType
+import com.andrew.liashuk.phasediagram.types.toNormalString
 import com.andrew.liashuk.phasediagram.ui.validation.Condition
 import com.andrew.liashuk.phasediagram.ui.validation.MoreThanCondition
 import com.andrew.liashuk.phasediagram.ui.validation.NotEmptyCondition
 import com.andrew.liashuk.phasediagram.ui.validation.createValidator
-import com.andrew.liashuk.phasediagram.viewmodal.MainUiState
 import com.andrew.liashuk.phasediagram.viewmodal.MainViewModel
 import com.google.android.material.textfield.TextInputLayout
 import dagger.hilt.android.AndroidEntryPoint
@@ -38,8 +40,8 @@ class MainFragment : Fragment() {
     private val viewModel: MainViewModel by viewModels()
     private var binding: MainFragmentBinding by resourceHolder()
 
-    private val elementsLayoutPairs: List<Pair<Elements, TextInputLayout>> by lazy {
-        listOf(
+    private val elementsLayoutPairs: List<Pair<Elements, TextInputLayout>>
+        get() = listOf(
             Elements.MELTING_TEMPERATURE_FIRST to binding.layoutFirstTemp,
             Elements.ENTROP_FIRST to binding.layoutFirstEntrop,
             Elements.ALPHA_L_FIRST to binding.layoutFirstAlphaL,
@@ -50,7 +52,6 @@ class MainFragment : Fragment() {
             Elements.ALPHA_L_SECOND to binding.layoutSecondAlphaL,
             Elements.ALPHA_S_SECOND to binding.layoutSecondAlphaS,
         )
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -68,15 +69,54 @@ class MainFragment : Fragment() {
 
         handler.postAction(action = ::setupInputFields)
         binding.btnBuild.setOnClickListener { viewModel.onBuildClick() }
-        viewModel.uiState.collectWithLifecycle(this, action = ::updateUiState)
+        collectUiState()
     }
 
-    private fun updateUiState(state: MainUiState) {
-        changePhaseType(state.solutionType)
+    private fun collectUiState() {
+        viewModel.uiState.accumulate().collectWithLifecycle(this) { (previousStep, newState) ->
+            if (previousStep?.phaseData != newState.phaseData) {
+                updatePhaseDataFields(newState.phaseData)
+            }
 
-        if (state.openDiagram) {
-            openDiagramScreen(state.phaseData)
-            viewModel.onDiagramOpened()
+            if (previousStep?.solutionType != newState.solutionType) {
+                changePhaseType(newState.solutionType)
+            }
+
+            binding.btnBuild.isEnabled = newState.buildBtnEnabled
+
+            if (newState.openDiagram) {
+                openDiagramScreen(newState.phaseData)
+                viewModel.onDiagramOpened()
+            }
+        }
+    }
+
+    private fun updatePhaseDataFields(data: PhaseData) {
+        // such code is required for cases when the number of `PhaseData` fields will be updated
+        for (element in Elements.values()) {
+           val value = when (element) {
+                Elements.MELTING_TEMPERATURE_FIRST -> data.meltingTempFirst
+                Elements.ENTROP_FIRST -> data.entropFirst
+                Elements.ALPHA_L_FIRST -> data.alphaLFirst
+                Elements.ALPHA_S_FIRST -> data.alphaSFirst
+
+                Elements.MELTING_TEMPERATURE_SECOND -> data.meltingTempSecond
+                Elements.ENTROP_SECOND -> data.entropSecond
+                Elements.ALPHA_L_SECOND -> data.alphaLSecond
+                Elements.ALPHA_S_SECOND -> data.alphaSSecond
+            }
+            updateField(element, value)
+        }
+    }
+
+    private fun updateField(element: Elements, value: Double?) {
+        val layout = elementsLayoutPairs.first { it.first == element }.second
+        layout.editText?.let {
+            val newValue = value.toNormalString()
+
+            if (it.text.toString() != newValue) {
+                it.setText(newValue)
+            }
         }
     }
 
@@ -192,17 +232,5 @@ class MainFragment : Fragment() {
         connect(R.id.layout_first_alpha_s, ConstraintSet.END, endId, ConstraintSet.START, 0)
 
         applyTo(binding.layoutCard)
-    }
-
-    enum class Elements {
-        MELTING_TEMPERATURE_FIRST,
-        ENTROP_FIRST,
-        ALPHA_L_FIRST,
-        ALPHA_S_FIRST,
-
-        MELTING_TEMPERATURE_SECOND,
-        ENTROP_SECOND,
-        ALPHA_L_SECOND,
-        ALPHA_S_SECOND,
     }
 }
