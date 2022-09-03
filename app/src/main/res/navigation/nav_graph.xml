@@ -7,9 +7,9 @@
 
     <fragment
         android:id="@+id/paramsFragment"
-        android:name="com.andrew.liashuk.phasediagram.ParamsFragment"
+        android:name="com.andrew.liashuk.phasediagram.ui.params.ParamsFragment"
         android:label="ParamsFragment"
-        tools:layout="@layout/params_fragment">
+        tools:layout="@layout/fragment_params">
         <action
             android:id="@+id/action_paramsFragment_to_diagramFragment"
             app:destination="@id/diagramFragment"
@@ -21,9 +21,9 @@
 
     <fragment
         android:id="@+id/diagramFragment"
-        android:name="com.andrew.liashuk.phasediagram.DiagramFragment"
-        android:label="diagram_fragment"
-        tools:layout="@layout/diagram_fragment" >
+        android:name="com.andrew.liashuk.phasediagram.ui.diagram.DiagramFragment"
+        android:label="Diagramfragment"
+        tools:layout="@layout/fragment_diagram" >
         <argument
             android:name="phaseData"
             app:argType="com.andrew.liashuk.phasediagram.types.PhaseData"

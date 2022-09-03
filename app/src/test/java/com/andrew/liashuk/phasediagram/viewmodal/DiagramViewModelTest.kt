@@ -2,6 +2,7 @@ package com.andrew.liashuk.phasediagram.viewmodal
 
 
 import com.andrew.liashuk.phasediagram.types.PhaseData
+import com.andrew.liashuk.phasediagram.ui.diagram.DiagramViewModel
 import org.junit.Test
 import org.junit.Assert.*
 

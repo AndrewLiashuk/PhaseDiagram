@@ -5,14 +5,14 @@
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
-        android:name=".PhaseDiagramApplication"
+        android:name=".App"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:theme="@style/AppTheme">
 
         <activity
-            android:name=".MainActivity"
+            android:name=".ui.MainActivity"
             android:theme="@style/AppTheme.NoActionBar"
             android:exported="true">
             <intent-filter>
@@ -22,5 +22,4 @@
             </intent-filter>
         </activity>
     </application>
-
 </manifest>
