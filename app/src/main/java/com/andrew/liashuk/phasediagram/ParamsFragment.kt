@@ -17,7 +17,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
 import com.andrew.liashuk.phasediagram.common.resourceHolder
 import com.andrew.liashuk.phasediagram.common.mainHandler
-import com.andrew.liashuk.phasediagram.databinding.MainFragmentBinding
+import com.andrew.liashuk.phasediagram.databinding.ParamsFragmentBinding
 import com.andrew.liashuk.phasediagram.ext.accumulate
 import com.andrew.liashuk.phasediagram.ext.collectWithLifecycle
 import com.andrew.liashuk.phasediagram.ext.setSupportActionBar
@@ -29,16 +29,16 @@ import com.andrew.liashuk.phasediagram.ui.validation.Condition
 import com.andrew.liashuk.phasediagram.ui.validation.MoreThanCondition
 import com.andrew.liashuk.phasediagram.ui.validation.NotEmptyCondition
 import com.andrew.liashuk.phasediagram.ui.validation.createValidator
-import com.andrew.liashuk.phasediagram.viewmodal.MainViewModel
+import com.andrew.liashuk.phasediagram.viewmodal.ParamsViewModel
 import com.google.android.material.textfield.TextInputLayout
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class MainFragment : Fragment() {
+class ParamsFragment : Fragment() {
 
     private val handler by mainHandler()
-    private val viewModel: MainViewModel by viewModels()
-    private var binding: MainFragmentBinding by resourceHolder()
+    private val viewModel: ParamsViewModel by viewModels()
+    private var binding: ParamsFragmentBinding by resourceHolder()
 
     private val elementsLayoutPairs: List<Pair<Elements, TextInputLayout>>
         get() = listOf(
@@ -57,7 +57,7 @@ class MainFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = MainFragmentBinding.inflate(inflater)
+        binding = ParamsFragmentBinding.inflate(inflater)
         return binding.root
     }
 
@@ -124,7 +124,7 @@ class MainFragment : Fragment() {
         val menuHost: MenuHost = requireActivity()
         menuHost.addMenuProvider(object : MenuProvider {
             override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
-                menuInflater.inflate(R.menu.menu_main, menu)
+                menuInflater.inflate(R.menu.menu_params, menu)
 
                 // update selected item once menu is created
                 val itemId = when (viewModel.uiState.value.solutionType) {
@@ -191,7 +191,7 @@ class MainFragment : Fragment() {
     }
 
     private fun openDiagramScreen(phaseData: PhaseData) {
-        val action = MainFragmentDirections.actionMainFragmentToDiagramFragment(phaseData)
+        val action = ParamsFragmentDirections.actionParamsFragmentToDiagramFragment(phaseData)
         findNavController().navigate(action)
     }
 

@@ -3,15 +3,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/mainFragment">
+    app:startDestination="@id/paramsFragment">
 
     <fragment
-        android:id="@+id/mainFragment"
-        android:name="com.andrew.liashuk.phasediagram.MainFragment"
-        android:label="MainFragment"
-        tools:layout="@layout/main_fragment">
+        android:id="@+id/paramsFragment"
+        android:name="com.andrew.liashuk.phasediagram.ParamsFragment"
+        android:label="ParamsFragment"
+        tools:layout="@layout/params_fragment">
         <action
-            android:id="@+id/action_mainFragment_to_diagramFragment"
+            android:id="@+id/action_paramsFragment_to_diagramFragment"
             app:destination="@id/diagramFragment"
             app:enterAnim="@anim/nav_default_enter_anim"
             app:exitAnim="@anim/nav_default_exit_anim"

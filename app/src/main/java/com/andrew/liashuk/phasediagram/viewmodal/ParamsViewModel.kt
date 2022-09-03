@@ -17,10 +17,10 @@ import javax.inject.Inject
 private typealias ValidatorMap = EnumMap<Elements, Validator>
 
 @HiltViewModel
-class MainViewModel @Inject constructor() : ViewModel() {
+class ParamsViewModel @Inject constructor() : ViewModel() {
 
-    private val _uiState = MutableStateFlow(MainUiState())
-    val uiState: StateFlow<MainUiState> = _uiState.asStateFlow()
+    private val _uiState = MutableStateFlow(ParamsUiState())
+    val uiState: StateFlow<ParamsUiState> = _uiState.asStateFlow()
 
     private val validators: ValidatorMap = EnumMap(Elements::class.java)
 

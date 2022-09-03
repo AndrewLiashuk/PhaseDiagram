@@ -21,7 +21,7 @@ annotation class ProcessCoroutineScope
 
 @Module
 @InstallIn(SingletonComponent::class)
-abstract class MainModule {
+abstract class CommonModule {
 
     @Binds
     abstract fun bindDispatcherProvider(
