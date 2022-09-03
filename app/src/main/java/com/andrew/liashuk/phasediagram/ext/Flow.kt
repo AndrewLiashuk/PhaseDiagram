@@ -73,20 +73,6 @@ fun <T> Flow<T>.accumulate(initial: T? = null): Flow<Pair<T?, T>> = flow {
     }
 }
 
-fun EditText.textChanges(): Flow<String?> = callbackFlow {
-    val watcher = object : TextWatcher {
-        override fun afterTextChanged(editable: Editable) = Unit
-        override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) = Unit
-        override fun onTextChanged(text: CharSequence?, start: Int, before: Int, count: Int) {
-            trySend(text?.toString())
-        }
-    }
-
-    addTextChangedListener(watcher)
-
-    awaitClose { removeTextChangedListener(watcher) }
-}
-
 fun <T> StateFlow<T?>.isEmpty(): Boolean = value == null
 
 fun <T> StateFlow<T?>.isNotEmpty(): Boolean = value != null

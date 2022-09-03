@@ -10,6 +10,4 @@ import kotlin.coroutines.EmptyCoroutineContext
 fun ViewModel.runCoroutine(
     context: CoroutineContext = EmptyCoroutineContext,
     block: suspend CoroutineScope.() -> Unit
-) {
-    viewModelScope.launch(context, block = block)
-}
+) = viewModelScope.launch(context, block = block)

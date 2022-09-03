@@ -6,33 +6,33 @@ import android.widget.Toast
 import androidx.annotation.StringRes
 import com.andrew.liashuk.phasediagram.R
 
-fun Context.showToast(message: String) {
-    Toast.makeText(this, message, Toast.LENGTH_LONG).show()
+fun Context.showToast(message: String, duration: Int = Toast.LENGTH_LONG) {
+    Toast.makeText(this, message, duration).show()
 }
 
-fun Context.showToast(@StringRes messageId: Int) {
-    Toast.makeText(this, messageId, Toast.LENGTH_LONG).show()
+fun Context.showToast(@StringRes messageId: Int, duration: Int = Toast.LENGTH_LONG) {
+    showToast(getString(messageId), duration)
 }
 
 fun Context.showAlert(@StringRes messageId: Int) {
     AlertDialog.Builder(this)
         .setMessage(messageId)
-        .setPositiveButton(this.getString(android.R.string.ok), null)
+        .setPositiveButton(getString(android.R.string.ok), null)
         .create()
         .show()
 }
 
-fun Context.showErrorAlert(errorMessage: String?, title: String? = null) {
+fun Context.showErrorAlert(errorMessage: String, title: String? = null) {
     AlertDialog.Builder(this)
         .setTitle(title ?: getString(R.string.exception_title))
-        .setMessage(errorMessage ?: getString(R.string.null_message))
+        .setMessage(errorMessage)
         .setIcon(android.R.drawable.ic_dialog_alert)
-        .setPositiveButton(android.R.string.ok) { dialog, _ -> dialog.cancel() }
+        .setPositiveButton(android.R.string.ok, null)
         .show()
 }
 
 fun Context.showErrorAlert(exception: Exception) {
-    showErrorAlert(exception.message ?: getString(R.string.internal_error))
+    exception.message?.let(::showErrorAlert)
 }
 
 fun Context.showErrorAlert(@StringRes messageId: Int) {
