@@ -23,6 +23,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.andrew.liashuk.phasediagram.R
+import com.andrew.liashuk.phasediagram.common.DispatcherProvider
 import com.andrew.liashuk.phasediagram.common.resourceHolder
 import com.andrew.liashuk.phasediagram.common.ext.collectWithLifecycle
 import com.andrew.liashuk.phasediagram.common.ext.onLaidOut
@@ -44,6 +45,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeout
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class DiagramFragment : Fragment() {
@@ -52,9 +54,15 @@ class DiagramFragment : Fragment() {
     private val viewModel: DiagramViewModel by viewModels()
     private var binding: FragmentDiagramBinding by resourceHolder()
 
+    @Inject
+    lateinit var dispatcherProvider: DispatcherProvider
+
     private var createDocument = registerForActivityResult(
         ActivityResultContracts.CreateDocument(mimeType = MIME_TYPE)
-    ) { uri: Uri? -> viewModel.setDiagramUri(uri) }
+    ) { uri: Uri? ->
+        // function references can't be used because ViewModel initialized later
+        viewModel.setDiagramUri(uri)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -191,7 +199,7 @@ class DiagramFragment : Fragment() {
         withContext(Dispatchers.Default) { binding.layoutDiagram.draw(canvas) }
 
         @Suppress("BlockingMethodInNonBlockingContext")
-        return withContext(Dispatchers.IO) {
+        return withContext(dispatcherProvider.io()) {
             requireActivity().contentResolver.openOutputStream(uri)?.use {
                 bitmap.compress(Bitmap.CompressFormat.PNG, 100, it)
             } ?: false
