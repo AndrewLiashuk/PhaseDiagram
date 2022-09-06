@@ -30,7 +30,7 @@
     <string name="saved_image_name" translatable="false">Diagram_image</string>
     <string name="saved_image_desc" translatable="false">"Diagram image build in PhaseDiagram app"</string>
 
-    <!-- diaglogs -->
+    <!-- dialogs -->
     <string name="try_again">Please try again.</string>
     <string name="successful_image_save">Image saved in gallery</string>
     <string name="failed_image_save">Saving FAILED!</string>
@@ -52,6 +52,6 @@
     <string name="empty_alpha_l">Please enter alphaL</string>
     <string name="empty_alpha_s">Please enter alphaS</string>
 
-    <string name="autor_label" translatable="false">Andrew Liashuk 2019</string>
+    <string name="author_label" translatable="false">Andrew Liashuk 2019</string>
 
 </resources>
