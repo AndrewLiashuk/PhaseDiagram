@@ -118,7 +118,7 @@
                         android:layout_height="wrap_content"
                         android:hint="@string/label_temperature"
                         android:imeOptions="actionNext"
-                        android:nextFocusForward="@+id/layout_first_entrop" />
+                        android:nextFocusForward="@+id/layout_first_entropy" />
 
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -134,7 +134,7 @@
                     app:layout_constraintTop_toBottomOf="@+id/layout_first_temp" />
 
                 <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/layout_first_entrop"
+                    android:id="@+id/layout_first_entropy"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="8dp"
@@ -144,18 +144,18 @@
                     app:layout_constraintTop_toBottomOf="@+id/label_melting_entropy">
 
                     <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/input_first_entrop"
+                        android:id="@+id/input_first_entropy"
                         style="@style/ParameterEditText"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/label_entropy"
                         android:imeOptions="actionNext"
-                        android:nextFocusForward="@+id/layout_second_entrop" />
+                        android:nextFocusForward="@+id/layout_second_entropy" />
 
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/layout_second_entrop"
+                    android:id="@+id/layout_second_entropy"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="8dp"
@@ -165,7 +165,7 @@
                     app:layout_constraintTop_toBottomOf="@+id/label_melting_entropy">
 
                     <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/input_second_entrop"
+                        android:id="@+id/input_second_entropy"
                         style="@style/ParameterEditText"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -184,7 +184,7 @@
                     android:text="@string/label_alpha_desc"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/layout_first_entrop" />
+                    app:layout_constraintTop_toBottomOf="@+id/layout_first_entropy" />
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/layout_first_alpha_l"

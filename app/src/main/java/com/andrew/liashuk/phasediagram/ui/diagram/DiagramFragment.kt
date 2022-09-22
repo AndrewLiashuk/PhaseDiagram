@@ -170,7 +170,7 @@ class DiagramFragment : Fragment() {
     }
 
     private fun saveDiagramIfReady(uri: Uri) {
-        // TODO add comment
+        // Checks if the view is fully drawn, if not wait until it is ready
         if (ViewCompat.isLaidOut(binding.layoutDiagram)) {
             saveDiagram(uri)
         } else {

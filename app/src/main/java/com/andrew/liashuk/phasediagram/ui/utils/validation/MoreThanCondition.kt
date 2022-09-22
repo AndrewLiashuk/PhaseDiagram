@@ -6,7 +6,7 @@ class MoreThanCondition(
 ) : Condition {
 
     override fun check(input: String?): Boolean {
-        // TODO for empty field validation
+        // should not validate on empty input, this is required for optional fields
         if (input.isNullOrEmpty()) return true
 
         val inputNumber = input.toDoubleOrNull() ?: return false

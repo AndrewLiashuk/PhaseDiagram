@@ -45,10 +45,10 @@
     <string name="small_first_temp">Temperature for first component must be bigger then 0</string>
     <string name="empty_second_temp">Please enter temperature for second component</string>
     <string name="small_second_temp">Temperature for second component must be bigger then 0</string>
-    <string name="empty_first_entrop">Please enter entropy for first component</string>
-    <string name="small_first_entrop">Entropy for first component must be bigger then 0</string>
-    <string name="empty_second_entrop">Please enter entropy for second component</string>
-    <string name="small_second_entrop">Entropy for second component must be bigger then 0</string>
+    <string name="empty_first_entropy">Please enter entropy for first component</string>
+    <string name="small_first_entropy">Entropy for first component must be bigger then 0</string>
+    <string name="empty_second_entropy">Please enter entropy for second component</string>
+    <string name="small_second_entropy">Entropy for second component must be bigger then 0</string>
     <string name="empty_alpha_l">Please enter alphaL</string>
     <string name="empty_alpha_s">Please enter alphaS</string>
 

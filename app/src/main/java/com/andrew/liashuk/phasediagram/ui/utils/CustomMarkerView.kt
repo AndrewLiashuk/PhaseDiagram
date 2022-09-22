@@ -12,7 +12,9 @@ import com.github.mikephil.charting.highlight.Highlight
 import com.github.mikephil.charting.utils.MPPointF
 import com.github.mikephil.charting.utils.Utils
 
-// TODO add explanations
+/**
+ * The MakerView class displays a customized (popup) View whenever a value is highlighted in the chart.
+ */
 @SuppressLint("ViewConstructor")
 class CustomMarkerView(context: Context, layoutResource: Int) : MarkerView(context, layoutResource) {
 

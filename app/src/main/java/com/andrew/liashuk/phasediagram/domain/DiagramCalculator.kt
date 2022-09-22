@@ -9,8 +9,8 @@ fun DiagramCalculator(phaseData: PhaseData): DiagramCalculator {
     return DiagramCalculator(
         phaseData.meltingTempFirst ?: throw IllegalArgumentException("First melting temperature not set!"),
         phaseData.meltingTempSecond ?: throw IllegalArgumentException("Second melting temperature not set!"),
-        phaseData.entropFirst ?: throw IllegalArgumentException("First entropy not set!"),
-        phaseData.entropSecond ?: throw IllegalArgumentException("Second entropy not set!"),
+        phaseData.entropyFirst ?: throw IllegalArgumentException("First entropy not set!"),
+        phaseData.entropySecond ?: throw IllegalArgumentException("Second entropy not set!"),
         phaseData.alphaLFirst ?: 0.0, // if not set 0 for ideal formula
         phaseData.alphaSFirst ?: 0.0,
         phaseData.alphaLSecond ?: -1.0, // if not set -1 for regular formula
@@ -21,8 +21,8 @@ fun DiagramCalculator(phaseData: PhaseData): DiagramCalculator {
 class DiagramCalculator(
     private val meltingTempFirst: Double, //melting Points (temperature of fusion), K
     private val meltingTempSecond: Double,
-    private val entropFirst: Double, //entropies of fusion, J/K/mol
-    private val entropSecond: Double,
+    private val entropyFirst: Double, //entropy of fusion, J/K/mol
+    private val entropySecond: Double,
     private val alphaLiquidFirst: Double = 0.0, //interaction parameter in Liquid phase
     private val alphaSolidFirst: Double = 0.0, // if not set 0 for ideal formula
     private val alphaLiquidSecond: Double = -1.0, // if -1 use regular formula
@@ -98,10 +98,10 @@ class DiagramCalculator(
             alphaSSecond = alphaSolidFirst
         }
 
-        val ta1 = entropFirst * meltingTempFirst + alphaLFirst * i.pow(2) - alphaSFirst * x.pow(2)
-        val ta2 = entropFirst + GAS_CONSTANTE * ln((1 - x) / (1 - i))
-        val tb1 = entropSecond * meltingTempSecond + alphaLSecond * (1 - i).pow(2) - alphaSSecond * (1 - x).pow(2)
-        val tb2 = entropSecond + GAS_CONSTANTE * ln(x / i)
+        val ta1 = entropyFirst * meltingTempFirst + alphaLFirst * i.pow(2) - alphaSFirst * x.pow(2)
+        val ta2 = entropyFirst + GAS_CONSTANTE * ln((1 - x) / (1 - i))
+        val tb1 = entropySecond * meltingTempSecond + alphaLSecond * (1 - i).pow(2) - alphaSSecond * (1 - x).pow(2)
+        val tb2 = entropySecond + GAS_CONSTANTE * ln(x / i)
 
         temperature = (ta1 / ta2 + tb1 / tb2) / 2
         return ta1 * tb2 - tb1 * ta2

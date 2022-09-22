@@ -18,11 +18,11 @@
     <string name="empty_first_temp">Пожалуйста, введите температуру плавления для первого компонента</string>
     <string name="small_first_temp">Температура плавления первого компонента должна быть больше 0</string>
     <string name="empty_second_temp">Пожалуйста, введите температуру плавления для второго компонента</string>
-    <string name="empty_first_entrop">Пожалуйста, введите энтропию для первого компонента</string>
-    <string name="empty_second_entrop">Пожалуйста, введите энтропию для второго компонента</string>
+    <string name="empty_first_entropy">Пожалуйста, введите энтропию для первого компонента</string>
+    <string name="empty_second_entropy">Пожалуйста, введите энтропию для второго компонента</string>
     <string name="small_second_temp">Температура плавления второго компонента должна быть больше 0</string>
-    <string name="small_first_entrop">Энтропия первого компонента должна быть больше 0</string>
-    <string name="small_second_entrop">Энтропия второго компонента должна быть больше 0</string>
+    <string name="small_first_entropy">Энтропия первого компонента должна быть больше 0</string>
+    <string name="small_second_entropy">Энтропия второго компонента должна быть больше 0</string>
     <string name="empty_alpha_l">Пожалуйста, введите alphaL</string>
     <string name="empty_alpha_s">Пожалуйста, введите alphaS</string>
     <string name="successful_image_save">Изображение сохранено в галерее</string>

@@ -38,13 +38,14 @@ class DiagramViewModel @Inject constructor(
     private val dispatcherProvider: DispatcherProvider,
 ) : ViewModel() {
 
+    // The state can be lost, this flag just prevents multiple clicking
     private var documentIsRequested = false
 
-    // TODO for ui events that should be done only once
+    // Stores events until someone collects them. Analog of SingleLiveEvent
     private val _uiEvents = Channel<Event>(Channel.BUFFERED)
     val uiEvents: Flow<Event> = _uiEvents.receiveAsFlow()
 
-    // TODO create action only if ui is active
+    // Emits event and remove it immediately. Even if there is no collector event will be deleted. It can be used in rare cases.
     private val _createDocument = MutableSharedFlow<String>(extraBufferCapacity = 1)
     val createDocument: SharedFlow<String> = _createDocument.asSharedFlow()
 
