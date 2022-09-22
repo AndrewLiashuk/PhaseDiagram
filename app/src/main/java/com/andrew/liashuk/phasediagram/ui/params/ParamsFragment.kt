@@ -43,12 +43,12 @@ class ParamsFragment : Fragment() {
     private val elementsLayoutPairs: List<Pair<Elements, TextInputLayout>>
         get() = listOf(
             Elements.MELTING_TEMPERATURE_FIRST to binding.layoutFirstTemp,
-            Elements.ENTROP_FIRST to binding.layoutFirstEntrop,
+            Elements.ENTROPY_FIRST to binding.layoutFirstEntropy,
             Elements.ALPHA_L_FIRST to binding.layoutFirstAlphaL,
             Elements.ALPHA_S_FIRST to binding.layoutFirstAlphaS,
 
             Elements.MELTING_TEMPERATURE_SECOND to binding.layoutSecondTemp,
-            Elements.ENTROP_SECOND to binding.layoutSecondEntrop,
+            Elements.ENTROPY_SECOND to binding.layoutSecondEntropy,
             Elements.ALPHA_L_SECOND to binding.layoutSecondAlphaL,
             Elements.ALPHA_S_SECOND to binding.layoutSecondAlphaS,
         )
@@ -96,12 +96,12 @@ class ParamsFragment : Fragment() {
         for (element in Elements.values()) {
            val value = when (element) {
                 Elements.MELTING_TEMPERATURE_FIRST -> data.meltingTempFirst
-                Elements.ENTROP_FIRST -> data.entropFirst
+                Elements.ENTROPY_FIRST -> data.entropyFirst
                 Elements.ALPHA_L_FIRST -> data.alphaLFirst
                 Elements.ALPHA_S_FIRST -> data.alphaSFirst
 
                 Elements.MELTING_TEMPERATURE_SECOND -> data.meltingTempSecond
-                Elements.ENTROP_SECOND -> data.entropSecond
+                Elements.ENTROPY_SECOND -> data.entropySecond
                 Elements.ALPHA_L_SECOND -> data.alphaLSecond
                 Elements.ALPHA_S_SECOND -> data.alphaSSecond
             }
@@ -170,9 +170,9 @@ class ParamsFragment : Fragment() {
                 notEmpty to getString(R.string.empty_first_temp),
                 moreThanZero to getString(R.string.small_first_temp),
             )
-            Elements.ENTROP_FIRST -> arrayOf(
-                notEmpty to getString(R.string.empty_first_entrop),
-                moreThanZero to getString(R.string.small_first_entrop),
+            Elements.ENTROPY_FIRST -> arrayOf(
+                notEmpty to getString(R.string.empty_first_entropy),
+                moreThanZero to getString(R.string.small_first_entropy),
             )
             Elements.ALPHA_L_FIRST -> arrayOf(notEmpty to getString(R.string.empty_alpha_l))
             Elements.ALPHA_S_FIRST -> arrayOf(notEmpty to getString(R.string.empty_alpha_s))
@@ -181,9 +181,9 @@ class ParamsFragment : Fragment() {
                 notEmpty to getString(R.string.empty_second_temp),
                 moreThanZero to getString(R.string.small_second_temp),
             )
-            Elements.ENTROP_SECOND -> arrayOf(
-                notEmpty to getString(R.string.empty_second_entrop),
-                moreThanZero to getString(R.string.small_second_entrop),
+            Elements.ENTROPY_SECOND -> arrayOf(
+                notEmpty to getString(R.string.empty_second_entropy),
+                moreThanZero to getString(R.string.small_second_entropy),
             )
             Elements.ALPHA_L_SECOND -> arrayOf(notEmpty to getString(R.string.empty_alpha_l))
             Elements.ALPHA_S_SECOND -> arrayOf(notEmpty to getString(R.string.empty_alpha_s))

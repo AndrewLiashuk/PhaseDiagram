@@ -7,8 +7,8 @@ import kotlinx.parcelize.Parcelize
 data class PhaseData(
     val meltingTempFirst: Double? = null,
     val meltingTempSecond: Double? = null,
-    val entropFirst: Double? = null,
-    val entropSecond: Double? = null,
+    val entropyFirst: Double? = null,
+    val entropySecond: Double? = null,
     val alphaLFirst: Double? = null,
     val alphaSFirst: Double? = null,
     val alphaLSecond: Double? = null,
@@ -19,8 +19,8 @@ fun PhaseData.copy(element: Elements, value: Double?): PhaseData {
     return PhaseData(
         meltingTempFirst = if (Elements.MELTING_TEMPERATURE_FIRST == element) value else meltingTempFirst,
         meltingTempSecond = if (Elements.MELTING_TEMPERATURE_SECOND == element) value else meltingTempSecond,
-        entropFirst = if (Elements.ENTROP_FIRST == element) value else entropFirst,
-        entropSecond = if (Elements.ENTROP_SECOND == element) value else entropSecond,
+        entropyFirst = if (Elements.ENTROPY_FIRST == element) value else entropyFirst,
+        entropySecond = if (Elements.ENTROPY_SECOND == element) value else entropySecond,
         alphaLFirst = if (Elements.ALPHA_L_FIRST == element) value else alphaLFirst,
         alphaSFirst = if (Elements.ALPHA_S_FIRST == element) value else alphaSFirst,
         alphaLSecond = if (Elements.ALPHA_L_SECOND == element) value else alphaLSecond,
@@ -30,12 +30,12 @@ fun PhaseData.copy(element: Elements, value: Double?): PhaseData {
 
 enum class Elements {
     MELTING_TEMPERATURE_FIRST,
-    ENTROP_FIRST,
+    ENTROPY_FIRST,
     ALPHA_L_FIRST,
     ALPHA_S_FIRST,
 
     MELTING_TEMPERATURE_SECOND,
-    ENTROP_SECOND,
+    ENTROPY_SECOND,
     ALPHA_L_SECOND,
     ALPHA_S_SECOND,
 }

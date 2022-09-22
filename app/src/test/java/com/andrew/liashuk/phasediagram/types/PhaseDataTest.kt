@@ -27,14 +27,14 @@ class PhaseDataTest {
         phaseData.entropFirstStr = "5.220"
         assertEquals(
             "Can't convert first entropy from str variable",
-            phaseData.entropFirst,
+            phaseData.entropyFirst,
             5.22
         )
 
         phaseData.entropSecondStr = "0.5"
         assertEquals(
             "Can't convert second entropy from str variable",
-            phaseData.entropSecond,
+            phaseData.entropySecond,
             0.5
         )
 
@@ -86,14 +86,14 @@ class PhaseDataTest {
             "20.1"
         )
 
-        phaseData.entropFirst = 5.220
+        phaseData.entropyFirst = 5.220
         assertEquals(
             "Can't convert first entropy from double variable to string",
             phaseData.entropFirstStr,
             "5.22"
         )
 
-        phaseData.entropSecond = 0.5
+        phaseData.entropySecond = 0.5
         assertEquals(
             "Can't convert second entropy from double variable to string",
             phaseData.entropSecondStr,
@@ -194,15 +194,15 @@ class PhaseDataTest {
         assertTrue("Not detect missing meltingTempSecond",meltingTempSecond != null)
         phaseDiagram.meltingTempSecond = 0.0
 
-        phaseDiagram.entropFirst = null
+        phaseDiagram.entropyFirst = null
         val entropFirst = phaseDiagram.checkData(SolutionType.SUBREGULAR)
         assertTrue("Not detect missing entropFirst",entropFirst != null)
-        phaseDiagram.entropFirst = 0.0
+        phaseDiagram.entropyFirst = 0.0
 
-        phaseDiagram.entropSecond = null
+        phaseDiagram.entropySecond = null
         val entropSecond = phaseDiagram.checkData(SolutionType.SUBREGULAR)
         assertTrue("Not detect missing entropSecond",entropSecond != null)
-        phaseDiagram.entropSecond = 0.0
+        phaseDiagram.entropySecond = 0.0
 
         phaseDiagram.alphaSFirst = null
         val alphaSFirst = phaseDiagram.checkData(SolutionType.SUBREGULAR)

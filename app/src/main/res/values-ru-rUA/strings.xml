@@ -18,11 +18,11 @@
     <string name="empty_first_temp">Будь ласка, введіть температуру плавлення для першого компонента</string>
     <string name="small_first_temp">Температура плавлення першого компонента має бути більшою за 0</string>
     <string name="empty_second_temp">Будь ласка, введіть температуру плавлення для другого компонента</string>
-    <string name="empty_first_entrop">Будь ласка, введіть ентропію для першого компонента</string>
-    <string name="empty_second_entrop">Будь ласка, введіть ентропію для другого компонента</string>
+    <string name="empty_first_entropy">Будь ласка, введіть ентропію для першого компонента</string>
+    <string name="empty_second_entropy">Будь ласка, введіть ентропію для другого компонента</string>
     <string name="small_second_temp">Температура плавлення другого компонента має бути більшою за 0</string>
-    <string name="small_first_entrop">Ентропія першого компонента має бути більше 0</string>
-    <string name="small_second_entrop">Ентропія другого компонента має бути більше 0</string>
+    <string name="small_first_entropy">Ентропія першого компонента має бути більше 0</string>
+    <string name="small_second_entropy">Ентропія другого компонента має бути більше 0</string>
     <string name="empty_alpha_l">Будь ласка, введіть alphaL</string>
     <string name="empty_alpha_s">Будь ласка, введіть alphaS</string>
     <string name="successful_image_save">Зображення збережено у галереї</string>

@@ -50,7 +50,7 @@ class ParamsViewModel @Inject constructor() : ViewModel() {
     fun onBuildClick() {
         if (validators.isActive) {
             if (validators.isValid) {
-                 // TODO validation check
+                 // TODO add extra check of phaseData consistency
                 _uiState.update { it.copy(openDiagram = true) }
             } else {
                 updateBuildBtnState()
@@ -82,8 +82,8 @@ class ParamsViewModel @Inject constructor() : ViewModel() {
                 phaseData = PhaseData(
                     meltingTempFirst = 1000.0,
                     meltingTempSecond = 1300.0,
-                    entropFirst = 30.0,
-                    entropSecond = 20.0,
+                    entropyFirst = 30.0,
+                    entropySecond = 20.0,
                     alphaLFirst = 20000.0,
                     alphaSFirst = 0.0,
                     alphaLSecond = 10000.0,
