@@ -41,11 +41,11 @@ class DiagramViewModel @Inject constructor(
     // The state can be lost, this flag just prevents multiple clicking
     private var documentIsRequested = false
 
-    // Stores events until someone executes them. Analog of SingleLiveEvent
+    // Stores events until someone collects them. Analog of SingleLiveEvent
     private val _uiEvents = Channel<Event>(Channel.BUFFERED)
     val uiEvents: Flow<Event> = _uiEvents.receiveAsFlow()
 
-    // Emits the event and removes it immediately. Even if there are no collectors event will be deleted. It can be used in rare cases.
+    // Emits event and remove it immediately. Even if there is no collector event will be deleted. It can be used in rare cases.
     private val _createDocument = MutableSharedFlow<String>(extraBufferCapacity = 1)
     val createDocument: SharedFlow<String> = _createDocument.asSharedFlow()
 
