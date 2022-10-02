@@ -30,8 +30,15 @@ class ParamsViewModel @Inject constructor() : ViewModel() {
     private val ValidatorMap.isValid: Boolean
         get() = this.values.filter { it.isActive }.all { it.isValid }
 
-    fun addValidator(element: Elements, validator: Validator) {
-        validators[element] = validator
+    fun addValidator(vararg validatorElementPair: Pair<Elements, Validator>) {
+        for ((element, validator) in validatorElementPair) {
+            validators[element] = validator
+        }
+
+        if (_uiState.value.buildBtnEnabled.not()) {
+            // update validators status if it was triggered
+            onBuildClick()
+        }
     }
 
     fun updatePhaseData(element: Elements, value: String?) {

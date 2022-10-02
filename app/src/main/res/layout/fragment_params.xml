@@ -25,12 +25,12 @@
     <androidx.cardview.widget.CardView
         android:id="@+id/card_view"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         android:layout_margin="8dp"
         app:cardCornerRadius="4dp"
+        app:layout_constrainedHeight="true"
         app:layout_constraintBottom_toTopOf="@+id/lbl_author"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHeight_default="wrap"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/appBarLayout">
 
@@ -46,39 +46,39 @@
 
                 <TextView
                     android:id="@+id/label_first_component"
-                    android:layout_width="0dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="8dp"
                     android:layout_marginTop="16dp"
                     android:text="@string/label_first_component"
+                    app:layout_constrainedWidth="true"
                     app:layout_constraintEnd_toStartOf="@+id/guideline_half"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintWidth_default="wrap" />
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
                     android:id="@+id/label_second_component"
-                    android:layout_width="0dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="8dp"
                     android:layout_marginTop="16dp"
                     android:text="@string/label_second_component"
+                    app:layout_constrainedWidth="true"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="@+id/guideline_half"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintWidth_default="wrap" />
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
                     android:id="@+id/label_melting_temp"
-                    android:layout_width="0dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="8dp"
                     android:layout_marginTop="16dp"
                     android:text="@string/label_melting_temp"
+                    app:layout_constrainedWidth="true"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/label_first_component"
-                    app:layout_constraintWidth_default="wrap" />
+                    app:layout_constraintTop_toBottomOf="@+id/label_first_component" />
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/layout_first_temp"

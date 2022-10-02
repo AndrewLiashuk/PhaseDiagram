@@ -153,12 +153,14 @@ class ParamsFragment : Fragment() {
     }
 
     private fun setupInputFields() {
-        elementsLayoutPairs.forEach { (element, editText) ->
+        val validators = elementsLayoutPairs.map { (element, editText) ->
             val validator = editText.createValidator(this, *createConditions(element)) { text ->
                 viewModel.updatePhaseData(element, text)
             }
-            viewModel.addValidator(element, validator)
-        }
+            element to validator
+        }.toTypedArray()
+
+        viewModel.addValidator(*validators)
     }
 
     private fun createConditions(element: Elements): Array<Pair<Condition, String>> {
