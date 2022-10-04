@@ -1,6 +1,8 @@
 package com.andrew.liashuk.phasediagram.ui.params
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import com.andrew.liashuk.phasediagram.common.ext.getMutableStateFlow
 import com.andrew.liashuk.phasediagram.model.Elements
 import com.andrew.liashuk.phasediagram.model.PhaseData
 import com.andrew.liashuk.phasediagram.model.SolutionType
@@ -16,9 +18,11 @@ import javax.inject.Inject
 private typealias ValidatorMap = EnumMap<Elements, Validator>
 
 @HiltViewModel
-class ParamsViewModel @Inject constructor() : ViewModel() {
+class ParamsViewModel @Inject constructor(
+    savedStateHandle: SavedStateHandle,
+) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(ParamsUiState())
+    private val _uiState = savedStateHandle.getMutableStateFlow(KEY_UI_STATE, initialValue = ParamsUiState())
     val uiState: StateFlow<ParamsUiState> = _uiState.asStateFlow()
 
     private val validators: ValidatorMap = EnumMap(Elements::class.java)
@@ -135,5 +139,9 @@ class ParamsViewModel @Inject constructor() : ViewModel() {
         if (validators.isActive) {
             _uiState.update { it.copy(buildBtnEnabled = validators.isValid) }
         }
+    }
+
+    companion object {
+        private const val KEY_UI_STATE = "ui_state"
     }
 }
