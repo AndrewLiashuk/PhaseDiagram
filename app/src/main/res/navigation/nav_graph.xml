@@ -26,7 +26,7 @@
         tools:layout="@layout/fragment_diagram" >
         <argument
             android:name="phaseData"
-            app:argType="com.andrew.liashuk.phasediagram.types.PhaseData"
+            app:argType="com.andrew.liashuk.phasediagram.model.PhaseData"
             app:nullable="false" />
     </fragment>
 </navigation>

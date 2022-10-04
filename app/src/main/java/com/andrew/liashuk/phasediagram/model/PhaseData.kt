@@ -1,4 +1,4 @@
-package com.andrew.liashuk.phasediagram.types
+package com.andrew.liashuk.phasediagram.model
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize

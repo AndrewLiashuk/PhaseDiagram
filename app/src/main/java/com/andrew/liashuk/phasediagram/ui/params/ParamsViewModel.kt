@@ -1,13 +1,12 @@
 package com.andrew.liashuk.phasediagram.ui.params
 
 import androidx.lifecycle.ViewModel
-import com.andrew.liashuk.phasediagram.types.Elements
-import com.andrew.liashuk.phasediagram.types.PhaseData
+import com.andrew.liashuk.phasediagram.model.Elements
+import com.andrew.liashuk.phasediagram.model.PhaseData
 import com.andrew.liashuk.phasediagram.model.SolutionType
-import com.andrew.liashuk.phasediagram.types.copy
+import com.andrew.liashuk.phasediagram.model.copy
 import com.andrew.liashuk.phasediagram.ui.utils.validation.Validator
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update

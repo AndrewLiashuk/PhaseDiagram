@@ -1,5 +1,6 @@
 package com.andrew.liashuk.phasediagram.types
 
+import com.andrew.liashuk.phasediagram.model.PhaseData
 import com.andrew.liashuk.phasediagram.model.SolutionType
 import org.junit.Assert.*
 import org.junit.Test

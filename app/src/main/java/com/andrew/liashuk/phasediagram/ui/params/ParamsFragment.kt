@@ -22,10 +22,10 @@ import com.andrew.liashuk.phasediagram.common.ext.accumulate
 import com.andrew.liashuk.phasediagram.common.ext.collectWithLifecycle
 import com.andrew.liashuk.phasediagram.common.ext.setSupportActionBar
 import com.andrew.liashuk.phasediagram.databinding.FragmentParamsBinding
-import com.andrew.liashuk.phasediagram.types.Elements
-import com.andrew.liashuk.phasediagram.types.PhaseData
+import com.andrew.liashuk.phasediagram.model.Elements
+import com.andrew.liashuk.phasediagram.model.PhaseData
 import com.andrew.liashuk.phasediagram.model.SolutionType
-import com.andrew.liashuk.phasediagram.types.toNormalString
+import com.andrew.liashuk.phasediagram.model.toNormalString
 import com.andrew.liashuk.phasediagram.ui.utils.validation.Condition
 import com.andrew.liashuk.phasediagram.ui.utils.validation.MoreThanCondition
 import com.andrew.liashuk.phasediagram.ui.utils.validation.NotEmptyCondition

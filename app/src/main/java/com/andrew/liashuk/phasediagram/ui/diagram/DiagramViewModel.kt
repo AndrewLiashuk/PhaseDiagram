@@ -16,7 +16,7 @@ import com.andrew.liashuk.phasediagram.common.ext.showToast
 import com.andrew.liashuk.phasediagram.common.ext.withProgress
 import com.andrew.liashuk.phasediagram.domain.DiagramCalculator
 import com.andrew.liashuk.phasediagram.model.DiagramData
-import com.andrew.liashuk.phasediagram.types.PhaseData
+import com.andrew.liashuk.phasediagram.model.PhaseData
 import com.github.mikephil.charting.data.Entry
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.TimeoutCancellationException

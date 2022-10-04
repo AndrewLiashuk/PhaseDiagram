@@ -1,7 +1,9 @@
 package com.andrew.liashuk.phasediagram.ui.params
 
-import com.andrew.liashuk.phasediagram.types.PhaseData
+import android.os.Parcelable
+import com.andrew.liashuk.phasediagram.model.PhaseData
 import com.andrew.liashuk.phasediagram.model.SolutionType
+import kotlinx.parcelize.Parcelize
 
 data class ParamsUiState(
     val phaseData: PhaseData = PhaseData(),

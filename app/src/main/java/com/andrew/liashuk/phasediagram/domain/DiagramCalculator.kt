@@ -2,7 +2,7 @@ package com.andrew.liashuk.phasediagram.domain
 
 import androidx.annotation.WorkerThread
 import com.andrew.liashuk.phasediagram.common.ext.step
-import com.andrew.liashuk.phasediagram.types.PhaseData
+import com.andrew.liashuk.phasediagram.model.PhaseData
 import kotlin.math.*
 
 fun DiagramCalculator(phaseData: PhaseData): DiagramCalculator {
