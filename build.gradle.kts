@@ -1,10 +1,13 @@
 buildscript {
+    // import doesn't work for the buildscript block
+    val gradlePlugins = com.andrew.liashuk.buildsrc.GradlePlugins
+
     dependencies {
-        classpath ("com.android.tools.build:gradle:7.3.0")
-        classpath ("org.jetbrains.kotlin:kotlin-gradle-plugin:1.7.10")
-        classpath ("androidx.navigation:navigation-safe-args-gradle-plugin:2.5.0")
-        classpath ("com.google.dagger:hilt-android-gradle-plugin:2.38.1")
-        classpath ("com.google.firebase:firebase-crashlytics-gradle:2.9.0")
+        classpath (gradlePlugins.android)
+        classpath (gradlePlugins.kotlin)
+        classpath (gradlePlugins.safeArgs)
+        classpath (gradlePlugins.hilt)
+        classpath (gradlePlugins.crashlytics)
     }
 
     repositories {
