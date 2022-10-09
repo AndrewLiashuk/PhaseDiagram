@@ -3,11 +3,12 @@ buildscript {
     val gradlePlugins = com.andrew.liashuk.buildsrc.GradlePlugins
 
     dependencies {
-        classpath (gradlePlugins.android)
-        classpath (gradlePlugins.kotlin)
-        classpath (gradlePlugins.safeArgs)
-        classpath (gradlePlugins.hilt)
-        classpath (gradlePlugins.crashlytics)
+        classpath(gradlePlugins.android)
+        classpath(gradlePlugins.kotlin)
+        classpath(gradlePlugins.safeArgs)
+        classpath(gradlePlugins.hilt)
+        classpath(gradlePlugins.crashlytics)
+        classpath(gradlePlugins.gms)
     }
 
     repositories {

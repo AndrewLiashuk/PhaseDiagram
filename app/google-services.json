@@ -23,6 +23,14 @@
           }
         },
         {
+          "client_id": "928006525539-hlc482oni77ko689ifgsotph5oe4aucf.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.andrew.liashuk.phasediagram",
+            "certificate_hash": "cbd8d82133fdc0bccc5f2a61110368ad4f09f311"
+          }
+        },
+        {
           "client_id": "928006525539-vrpf3cusjqg0qn9jh8f00io7qh7kjkb2.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -33,20 +41,13 @@
         }
       ],
       "services": {
-        "analytics_service": {
-          "status": 1
-        },
         "appinvite_service": {
-          "status": 2,
           "other_platform_oauth_client": [
             {
               "client_id": "928006525539-vrpf3cusjqg0qn9jh8f00io7qh7kjkb2.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
-        },
-        "ads_service": {
-          "status": 2
         }
       }
     }

@@ -13,6 +13,7 @@ plugins {
     id(plugins.hilt)
     id(plugins.safeargs)
     id(plugins.crashlytics)
+    id(plugins.gms)
 }
 
 android {
@@ -82,11 +83,11 @@ dependencies {
     implementation(Libraries.hiltAndroid)
     kapt(Libraries.hiltCompiler)
 
-    implementation(Libraries.mpAndroidChart)
+    implementation(platform(Libraries.firebaseBom))
+    implementation(Libraries.firebaseCrashlytics)
+    implementation(Libraries.firebaseAnalytics)
 
-    // Import the BoM for the Firebase platform
-    //implementation platform("com.google.firebase:firebase-bom:30.1.0")
-    //implementation("com.google.firebase:firebase-crashlytics")
+    implementation(Libraries.mpAndroidChart)
 
     testImplementation(TestLibraries.junit4)
     testImplementation(TestLibraries.coroutinesTest)

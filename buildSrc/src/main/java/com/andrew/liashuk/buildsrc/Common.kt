@@ -16,10 +16,7 @@ object Plugins {
     const val hilt = "dagger.hilt.android.plugin"
     const val safeargs = "androidx.navigation.safeargs"
     const val crashlytics = "com.google.firebase.crashlytics"
-
-    object Kotlin {
-
-    }
+    const val gms = "com.google.gms.google-services"
 }
 
 object GradlePlugins {
@@ -29,6 +26,7 @@ object GradlePlugins {
         const val safeArgsVersion = "2.5.2"
         const val hiltVersion = "2.38.1"
         const val crashlyticsVersion = "2.9.2"
+        const val gms = "4.3.3"
     }
 
     const val android = "com.android.tools.build:gradle:${Versions.buildToolsVersion}"
@@ -36,4 +34,5 @@ object GradlePlugins {
     const val safeArgs = "androidx.navigation:navigation-safe-args-gradle-plugin:${Versions.safeArgsVersion}"
     const val hilt = "com.google.dagger:hilt-android-gradle-plugin:${Versions.hiltVersion}"
     const val crashlytics = "com.google.firebase:firebase-crashlytics-gradle:${Versions.crashlyticsVersion}"
+    const val gms = "com.google.gms:google-services:${Versions.gms}"
 }

@@ -18,6 +18,7 @@ object Libraries {
         const val hilt = "2.43.1"
 
         const val mpChart = "v3.1.0"
+        const val firebaseBom = "30.5.0"
     }
 
     object Kotlin {
@@ -44,6 +45,9 @@ object Libraries {
     const val hiltCompiler = "com.google.dagger:hilt-compiler:${Versions.hilt}"
 
     const val mpAndroidChart = "com.github.PhilJay:MPAndroidChart:${Versions.mpChart}"
+    const val firebaseBom = "com.google.firebase:firebase-bom:${Versions.firebaseBom}"
+    const val firebaseCrashlytics = "com.google.firebase:firebase-crashlytics-ktx"
+    const val firebaseAnalytics = "com.google.firebase:firebase-analytics-ktx"
 }
 
 object TestLibraries {
