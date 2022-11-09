@@ -21,6 +21,7 @@ android {
 
     defaultConfig {
         applicationId = AndroidSdk.applicationId
+        namespace = AndroidSdk.applicationId
         minSdk = AndroidSdk.min
         targetSdk = AndroidSdk.target
         versionCode = 5
