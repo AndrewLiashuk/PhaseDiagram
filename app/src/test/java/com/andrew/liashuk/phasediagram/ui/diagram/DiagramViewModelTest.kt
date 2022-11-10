@@ -1,14 +1,10 @@
-package com.andrew.liashuk.phasediagram.viewmodal
-
+package com.andrew.liashuk.phasediagram.ui.diagram
 
 import com.andrew.liashuk.phasediagram.model.PhaseData
-import com.andrew.liashuk.phasediagram.ui.diagram.DiagramViewModel
-import org.junit.Test
 import org.junit.Assert.*
+import org.junit.Test
 
-
-
-
+//TODO update tests
 class DiagramViewModelTest {
 
     private val diagramViewModel = DiagramViewModel()

@@ -4,6 +4,7 @@ import org.junit.Test
 
 import org.junit.Assert.*
 
+//TODO update tests
 class DiagramCalculatorTest {
 
     @Test
