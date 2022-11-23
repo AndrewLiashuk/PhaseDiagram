@@ -92,6 +92,8 @@ dependencies {
     implementation(Libraries.mpAndroidChart)
 
     testImplementation(TestLibraries.junit4)
+    testImplementation(TestLibraries.mockk)
+    testImplementation(TestLibraries.turbine)
     testImplementation(TestLibraries.coroutinesTest)
 
     androidTestImplementation(TestLibraries.testRunner)

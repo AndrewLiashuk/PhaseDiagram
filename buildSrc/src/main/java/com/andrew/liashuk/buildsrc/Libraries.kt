@@ -54,11 +54,15 @@ object TestLibraries {
 
     internal object Versions {
         const val junit4 = "4.13.2"
+        const val mockk = "1.13.2"
+        const val turbine = "0.12.1"
         const val testRunner = "1.4.0"
         const val espresso = "3.4.0"
     }
 
     const val junit4 = "junit:junit:${Versions.junit4}"
+    const val mockk = "io.mockk:mockk:${Versions.mockk}"
+    const val turbine = "app.cash.turbine:turbine:${Versions.turbine}"
     const val coroutinesTest = "org.jetbrains.kotlinx:kotlinx-coroutines-test:${Libraries.Versions.coroutines}"
     const val testRunner = "androidx.test:runner:${Versions.testRunner}"
     const val espresso = "androidx.test.espresso:espresso-core:${Versions.espresso}"
