@@ -1,5 +1,6 @@
 package com.andrew.liashuk.phasediagram.ui.params
 
+import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import com.andrew.liashuk.phasediagram.common.ext.getMutableStateFlow
@@ -33,7 +34,7 @@ class ParamsViewModel @Inject constructor(
     private val ValidatorMap.isValid: Boolean
         get() = this.values.filter { it.isActive }.all { it.isValid }
 
-    fun addValidator(vararg validatorElementPair: Pair<Elements, Validator>) {
+    fun addValidator(vararg validatorElementPair: Pair<Elements, Validator>) { // tested
         for ((element, validator) in validatorElementPair) {
             validators[element] = validator
         }
@@ -44,7 +45,7 @@ class ParamsViewModel @Inject constructor(
         }
     }
 
-    fun updatePhaseData(element: Elements, value: String?) {
+    fun updatePhaseData(element: Elements, value: String?) { // tested
         updateBuildBtnState()
 
         _uiState.update { state ->
@@ -57,7 +58,7 @@ class ParamsViewModel @Inject constructor(
         }
     }
 
-    fun onBuildClick() {
+    fun onBuildClick() { // tested
         if (validators.isActive) {
             if (validators.isValid) {
                 _uiState.update { it.copy(openDiagram = true) }
@@ -74,7 +75,7 @@ class ParamsViewModel @Inject constructor(
         }
     }
 
-    fun onDiagramOpened() = _uiState.update { state ->
+    fun onDiagramOpened() = _uiState.update { state -> // tested
         state.copy(openDiagram = false)
     }
 
@@ -83,7 +84,7 @@ class ParamsViewModel @Inject constructor(
         updateValidators(solutionType)
     }
 
-    fun sampleData() {
+    fun sampleData() { // tested
         changeType(SolutionType.SUBREGULAR)
 
         _uiState.update { state ->
@@ -141,6 +142,7 @@ class ParamsViewModel @Inject constructor(
     }
 
     companion object {
-        private const val KEY_UI_STATE = "ui_state"
+        @VisibleForTesting
+        const val KEY_UI_STATE = "ui_state"
     }
 }

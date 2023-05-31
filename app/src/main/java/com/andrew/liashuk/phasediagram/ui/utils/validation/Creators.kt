@@ -19,7 +19,7 @@ fun TextInputLayout.createValidator(
             }
         }
 
-        this.editText?.textChanges()?.collectWithLifecycle(owner = owner) { text ->
+        this.editText?.textChanges()?.collectWithLifecycle(owner = owner) { text -> // TODO add debounce
             validate(text)
             onTextChanged?.invoke(text)
         }
