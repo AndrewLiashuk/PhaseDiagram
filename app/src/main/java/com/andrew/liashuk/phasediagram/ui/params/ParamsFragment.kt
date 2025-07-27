@@ -93,7 +93,7 @@ class ParamsFragment : Fragment() {
 
     private fun updatePhaseDataFields(data: PhaseData) {
         // such code is required for cases when the number of `PhaseData` fields will be updated
-        for (element in Elements.values()) {
+        for (element in Elements.entries) {
            val value = when (element) {
                 Elements.MELTING_TEMPERATURE_FIRST -> data.meltingTempFirst
                 Elements.ENTROPY_FIRST -> data.entropyFirst

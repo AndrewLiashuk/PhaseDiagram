@@ -13,6 +13,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.ColorInt
+import androidx.appcompat.R as AndroidR
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.core.view.ViewCompat
@@ -46,6 +47,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeout
 import javax.inject.Inject
+import androidx.core.graphics.createBitmap
 
 @AndroidEntryPoint
 class DiagramFragment : Fragment() {
@@ -146,12 +148,12 @@ class DiagramFragment : Fragment() {
             createDataSet(
                 entries = diagramData.liquidEntries,
                 label = getString(R.string.diagram_liquid),
-                color = MaterialColors.getColor(requireView(), R.attr.colorPrimary)
+                color = MaterialColors.getColor(requireView(), AndroidR.attr.colorPrimary)
             ),
             createDataSet(
                 entries = diagramData.solidEntries,
                 label = getString(R.string.diagram_solid),
-                color = MaterialColors.getColor(requireView(), R.attr.colorAccent)
+                color = MaterialColors.getColor(requireView(), AndroidR.attr.colorAccent)
             )
         )
         lineChart.invalidate()
@@ -181,11 +183,8 @@ class DiagramFragment : Fragment() {
     }
 
     private fun saveDiagram(uri: Uri) = runCoroutine {
-        val bitmap = Bitmap.createBitmap(
-            binding.layoutDiagram.measuredWidth,
-            binding.layoutDiagram.measuredHeight,
-            Bitmap.Config.ARGB_8888
-        )
+        val view = binding.layoutDiagram
+        val bitmap = createBitmap(width = view.measuredWidth, height = view.measuredHeight)
 
         val result = runCatching {
             withTimeout(SAVE_TIMEOUT) { saveBitmap(bitmap, uri) }
