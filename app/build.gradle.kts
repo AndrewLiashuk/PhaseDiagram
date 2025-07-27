@@ -17,7 +17,6 @@ plugins {
 }
 
 android {
-    namespace = "com.andrew.liashuk.phasediagram"
     compileSdk = AndroidSdk.compile
 
     defaultConfig {
