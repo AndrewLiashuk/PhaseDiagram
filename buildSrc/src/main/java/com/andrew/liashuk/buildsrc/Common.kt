@@ -23,10 +23,10 @@ object GradlePlugins {
 
     internal object Versions {
         const val buildToolsVersion = "8.11.1"
-        const val safeArgsVersion = "2.5.2"
-        const val hiltVersion = "2.38.1"
-        const val crashlyticsVersion = "2.9.2"
-        const val gms = "4.3.3"
+        const val safeArgsVersion = "2.9.2"
+        const val hiltVersion = "2.56.1"
+        const val crashlyticsVersion = "3.0.5"
+        const val gms = "4.4.3"
     }
 
     const val android = "com.android.tools.build:gradle:${Versions.buildToolsVersion}"
