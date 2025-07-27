@@ -1,4 +1,4 @@
-package com.andrew.liashuk.phasediagram.mocks
+package com.andrew.liashuk.phasediagram
 
 import android.content.res.Resources
 import android.graphics.drawable.Drawable

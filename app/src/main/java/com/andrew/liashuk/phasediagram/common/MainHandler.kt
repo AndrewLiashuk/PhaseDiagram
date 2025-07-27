@@ -12,6 +12,7 @@ import kotlin.reflect.KProperty
 @RequiresOptIn(message = "This API is experimental", level = RequiresOptIn.Level.WARNING)
 @Retention(AnnotationRetention.BINARY)
 @Target(AnnotationTarget.CLASS, AnnotationTarget.FUNCTION)
+@Retention(AnnotationRetention.BINARY)
 annotation class ExperimentalHandler
 
 @ExperimentalHandler
@@ -43,7 +44,6 @@ class MainHandler {
     }
 }
 
-//TODO create unit tests
 @ExperimentalHandler
 fun mainHandler(ownerProducer: () -> LifecycleOwner) = object : ReadOnlyProperty<Any?, MainHandler> {
 

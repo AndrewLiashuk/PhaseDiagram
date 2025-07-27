@@ -60,7 +60,6 @@ class ParamsViewModel @Inject constructor(
     fun onBuildClick() {
         if (validators.isActive) {
             if (validators.isValid) {
-                 // TODO add extra check of phaseData consistency
                 _uiState.update { it.copy(openDiagram = true) }
             } else {
                 updateBuildBtnState()
@@ -68,7 +67,7 @@ class ParamsViewModel @Inject constructor(
         } else {
             // activate all validators
             validators.values.forEach { it.start() }
-            // diactivate validators that is not needed for such solution type
+            // deactivate validators that are not needed for such a solution type
             updateValidators(uiState.value.solutionType)
             // check if can go next
             onBuildClick()

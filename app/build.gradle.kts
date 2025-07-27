@@ -22,6 +22,7 @@ android {
 
     defaultConfig {
         applicationId = AndroidSdk.applicationId
+        namespace = AndroidSdk.applicationId
         minSdk = AndroidSdk.min
         targetSdk = AndroidSdk.target
         versionCode = 5
@@ -92,6 +93,8 @@ dependencies {
     implementation(Libraries.mpAndroidChart)
 
     testImplementation(TestLibraries.junit4)
+    testImplementation(TestLibraries.mockk)
+    testImplementation(TestLibraries.turbine)
     testImplementation(TestLibraries.coroutinesTest)
 
     androidTestImplementation(TestLibraries.testRunner)

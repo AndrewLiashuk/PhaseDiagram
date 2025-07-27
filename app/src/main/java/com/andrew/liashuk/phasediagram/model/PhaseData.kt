@@ -41,23 +41,3 @@ enum class Elements {
     ALPHA_L_SECOND,
     ALPHA_S_SECOND,
 }
-
-/**
- * Show double in normal format
- *
- * 20.00 show as 20,
- * 20.10 as 20.1
- * if null, show nothing
- *
- * TODO move and refactor
- */
-fun Double?.toNormalString(): String {
-    return when (this) {
-        null -> ""
-
-        // round double by converting to long and compare with original double, if same show rounded
-        this.toLong().toDouble() -> String.format("%d", this.toLong()) // show 20.0 as 20
-
-        else -> String.format("%s", this)
-    }
-}

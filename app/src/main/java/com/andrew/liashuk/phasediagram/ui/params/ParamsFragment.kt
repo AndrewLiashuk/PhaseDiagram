@@ -21,11 +21,11 @@ import com.andrew.liashuk.phasediagram.common.mainHandler
 import com.andrew.liashuk.phasediagram.common.ext.accumulate
 import com.andrew.liashuk.phasediagram.common.ext.collectWithLifecycle
 import com.andrew.liashuk.phasediagram.common.ext.setSupportActionBar
+import com.andrew.liashuk.phasediagram.common.ext.toPrettyString
 import com.andrew.liashuk.phasediagram.databinding.FragmentParamsBinding
 import com.andrew.liashuk.phasediagram.model.Elements
 import com.andrew.liashuk.phasediagram.model.PhaseData
 import com.andrew.liashuk.phasediagram.model.SolutionType
-import com.andrew.liashuk.phasediagram.model.toNormalString
 import com.andrew.liashuk.phasediagram.ui.utils.validation.Condition
 import com.andrew.liashuk.phasediagram.ui.utils.validation.MoreThanCondition
 import com.andrew.liashuk.phasediagram.ui.utils.validation.NotEmptyCondition
@@ -112,7 +112,7 @@ class ParamsFragment : Fragment() {
     private fun updateField(element: Elements, value: Double?) {
         val layout = elementsLayoutPairs.first { it.first == element }.second
         layout.editText?.let {
-            val newValue = value.toNormalString()
+            val newValue = value.toPrettyString()
 
             if (it.text.toString() != newValue) {
                 it.setText(newValue)

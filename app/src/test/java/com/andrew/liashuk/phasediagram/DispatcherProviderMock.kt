@@ -1,4 +1,4 @@
-package com.andrew.liashuk.phasediagram.mocks
+package com.andrew.liashuk.phasediagram
 
 import com.andrew.liashuk.phasediagram.common.DispatcherProvider
 import kotlinx.coroutines.CoroutineDispatcher

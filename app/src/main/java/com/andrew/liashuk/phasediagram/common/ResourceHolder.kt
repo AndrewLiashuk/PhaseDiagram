@@ -7,7 +7,6 @@ import androidx.lifecycle.LifecycleOwner
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
 
-// TODO create unit tests
 fun <T> resourceHolder(
     ownerProducer: () -> LifecycleOwner,
     initValue: T? = null,
