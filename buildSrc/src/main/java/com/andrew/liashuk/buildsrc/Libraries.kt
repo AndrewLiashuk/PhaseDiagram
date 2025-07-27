@@ -1,6 +1,6 @@
 package com.andrew.liashuk.buildsrc
 
-internal const val kotlinVersion = "1.7.10"
+internal const val kotlinVersion = "2.1.10"
 
 object Libraries {
 
@@ -15,7 +15,7 @@ object Libraries {
         const val navigation = "2.5.2"
         const val coroutines = "1.6.4"
         const val material = "1.6.1"
-        const val hilt = "2.43.1"
+        const val hilt = "2.56.1"
 
         const val mpChart = "v3.1.0"
         const val firebaseBom = "30.5.0"

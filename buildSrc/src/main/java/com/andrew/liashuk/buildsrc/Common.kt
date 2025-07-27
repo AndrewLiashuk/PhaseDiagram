@@ -1,8 +1,8 @@
 package com.andrew.liashuk.buildsrc
 
 object AndroidSdk {
-    const val min = 21
-    const val compile = 33
+    const val min = 24
+    const val compile = 35
     const val target = compile
     const val applicationId = "com.andrew.liashuk.phasediagram"
 }
@@ -22,7 +22,7 @@ object Plugins {
 object GradlePlugins {
 
     internal object Versions {
-        const val buildToolsVersion = "7.3.0"
+        const val buildToolsVersion = "8.11.1"
         const val safeArgsVersion = "2.5.2"
         const val hiltVersion = "2.38.1"
         const val crashlyticsVersion = "2.9.2"
