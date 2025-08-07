@@ -24,8 +24,8 @@ android {
         namespace = AndroidSdk.applicationId
         minSdk = AndroidSdk.min
         targetSdk = AndroidSdk.target
-        versionCode = 6
-        versionName = "2.2"
+        versionCode = 7
+        versionName = "2.3"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
